@@ -1,0 +1,4272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TP Macros — Cycle 4 • ESTIC Don Bosco</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbfaf7;
+  --paper:#ffffff;
+  --ink:#1a1d24;
+  --ink-soft:#4a5160;
+  --ink-mute:#8a91a0;
+  --line:#e6e3da;
+  --line-soft:#f1eee6;
+  --accent:#1e6d4a;       /* vert profond */
+  --accent-soft:#d9efe2;
+  --accent-deep:#0f4a30;
+  --warn:#c2410c;
+  --warn-soft:#fff1e6;
+  --gold:#b8830a;
+  --gold-soft:#fdf3d4;
+  --blue:#1d4ed8;
+  --blue-soft:#e0e7ff;
+  --selected:#1e6d4a;
+  --grid:#d4d0c5;
+  --grid-head:#f5f2ea;
+  --shadow:0 1px 0 rgba(0,0,0,.02), 0 8px 24px -12px rgba(20,30,40,.18);
+}
+
+*{box-sizing:border-box; margin:0; padding:0}
+html, body{scroll-behavior:smooth}
+body{
+  font-family:'Outfit', -apple-system, sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(30,109,74,0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 100%, rgba(184,131,10,0.04) 0%, transparent 50%);
+  background-attachment:fixed;
+}
+
+/* === HEADER === */
+.topbar{
+  position:sticky; top:0; z-index:100;
+  background:rgba(251,250,247,0.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  padding:14px 28px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.brand{display:flex; align-items:center; gap:14px}
+.brand-mark{
+  width:48px; height:48px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  background:#fff;
+  box-shadow:0 4px 12px -4px rgba(30,109,74,0.3);
+  overflow:hidden; flex-shrink:0;
+}
+.brand-mark img, .brand-mark svg{width:100%; height:100%; object-fit:cover; display:block}
+.brand-text h1{
+  font-family:'Fraunces',serif; font-weight:600; font-size:17px;
+  letter-spacing:-0.01em; line-height:1.1;
+}
+.brand-text p{font-size:11px; color:var(--ink-mute); text-transform:uppercase; letter-spacing:0.08em; margin-top:2px}
+.brand-teacher{font-size:11px; color:var(--ink-soft); margin-top:1px; font-style:italic}
+.topbar-right{display:flex; align-items:center; gap:16px}
+.duration-pill{
+  font-size:12px; padding:6px 12px; border-radius:20px;
+  background:var(--accent-soft); color:var(--accent-deep);
+  font-weight:600; letter-spacing:0.02em;
+}
+.progress-bar{
+  position:fixed; top:67px; left:0; right:0; height:3px;
+  background:transparent; z-index:99;
+}
+.progress-fill{
+  height:100%; width:0%;
+  background:linear-gradient(90deg, var(--accent) 0%, var(--gold) 100%);
+  transition:width .25s ease;
+}
+
+/* === LAYOUT === */
+.layout{display:grid; grid-template-columns:260px 1fr; gap:0; max-width:1400px; margin:0 auto}
+
+/* === SIDEBAR === */
+.sidebar{
+  position:sticky; top:70px;
+  height:calc(100vh - 70px);
+  padding:32px 20px 32px 28px;
+  overflow-y:auto;
+  border-right:1px solid var(--line);
+}
+.sidebar-title{
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:13px; text-transform:uppercase; letter-spacing:0.12em;
+  color:var(--ink-mute); margin-bottom:18px;
+}
+.sidebar nav ul{list-style:none}
+.sidebar nav li{margin-bottom:2px}
+.sidebar nav a{
+  display:flex; align-items:center; gap:10px;
+  padding:9px 12px; border-radius:8px;
+  color:var(--ink-soft); text-decoration:none;
+  font-size:14px; font-weight:500;
+  transition:all .15s ease;
+  border-left:3px solid transparent;
+}
+.sidebar nav a:hover{background:var(--line-soft); color:var(--ink)}
+.sidebar nav a.active{
+  background:var(--accent-soft); color:var(--accent-deep);
+  border-left-color:var(--accent); font-weight:600;
+}
+.sidebar nav a .num{
+  font-family:'JetBrains Mono', monospace; font-size:11px;
+  color:var(--ink-mute); width:18px;
+}
+.sidebar nav a.active .num{color:var(--accent)}
+.sidebar nav .group-label{
+  font-size:10px; text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--ink-mute); padding:14px 12px 6px 12px; font-weight:600;
+}
+
+/* === MAIN === */
+main{padding:48px 56px 120px 48px; max-width:920px}
+section{margin-bottom:96px; scroll-margin-top:90px}
+.section-tag{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'JetBrains Mono',monospace; font-size:11px;
+  color:var(--accent); letter-spacing:0.1em; text-transform:uppercase;
+  padding:4px 10px; background:var(--accent-soft); border-radius:4px;
+  margin-bottom:14px;
+}
+h2.section-title{
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:42px; line-height:1.05; letter-spacing:-0.02em;
+  margin-bottom:8px;
+}
+.section-subtitle{
+  font-size:18px; color:var(--ink-soft); margin-bottom:36px;
+  max-width:700px;
+}
+h3{
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:26px; line-height:1.2; letter-spacing:-0.01em;
+  margin:36px 0 14px;
+}
+h4{
+  font-family:'Outfit',sans-serif; font-weight:600;
+  font-size:17px; margin:24px 0 10px;
+}
+p{margin-bottom:14px}
+strong{font-weight:600; color:var(--ink)}
+code{
+  font-family:'JetBrains Mono',monospace; font-size:0.88em;
+  background:var(--line-soft); padding:2px 6px; border-radius:4px;
+  color:var(--accent-deep); font-weight:600;
+}
+
+/* === CARDS === */
+.card{
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:12px; padding:24px 26px;
+  margin:20px 0;
+  box-shadow:var(--shadow);
+}
+.card.tip{border-left:4px solid var(--accent); background:linear-gradient(to right, var(--accent-soft) 0%, var(--paper) 30%)}
+.card.warn{border-left:4px solid var(--warn); background:linear-gradient(to right, var(--warn-soft) 0%, var(--paper) 30%)}
+.card.info{border-left:4px solid var(--blue); background:linear-gradient(to right, var(--blue-soft) 0%, var(--paper) 30%)}
+.card-title{
+  display:flex; align-items:center; gap:10px;
+  font-family:'Fraunces',serif; font-weight:600; font-size:18px;
+  margin-bottom:10px;
+}
+.card-title .icon{
+  width:28px; height:28px; border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--accent); color:#fff; font-size:14px;
+}
+.card.warn .card-title .icon{background:var(--warn)}
+.card.info .card-title .icon{background:var(--blue)}
+
+/* === COVER === */
+.cover{
+  position:relative;
+  padding:60px 0 40px;
+  margin-bottom:60px;
+}
+.cover-grid{
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:48px 32px;
+  opacity:0.35;
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 80%);
+}
+.cover-content{position:relative; z-index:1}
+.cover h1{
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:72px; line-height:0.95; letter-spacing:-0.03em;
+  margin:18px 0 20px;
+}
+.cover h1 em{
+  font-style:italic; color:var(--accent);
+  font-weight:600;
+}
+.cover-lead{
+  font-size:20px; color:var(--ink-soft); max-width:580px;
+  line-height:1.5; margin-bottom:32px;
+}
+.cover-meta{
+  display:flex; flex-wrap:wrap; gap:24px;
+  padding:20px 24px;
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:12px; box-shadow:var(--shadow);
+  max-width:680px;
+}
+.cover-meta-item{display:flex; flex-direction:column; gap:2px}
+.cover-meta-item .label{
+  font-size:11px; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--ink-mute); font-weight:600;
+}
+.cover-meta-item .value{font-weight:600; color:var(--ink)}
+
+/* === TABLEUR === */
+.spreadsheet-wrap{
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:10px; overflow:hidden;
+  margin:18px 0; box-shadow:var(--shadow);
+}
+.ss-toolbar{
+  display:flex; align-items:center; gap:10px;
+  padding:8px 12px; background:var(--grid-head);
+  border-bottom:1px solid var(--line);
+  font-size:13px;
+}
+.ss-cellref{
+  font-family:'JetBrains Mono',monospace;
+  font-weight:600; font-size:12px;
+  background:var(--paper); padding:6px 12px;
+  border:1px solid var(--line); border-radius:5px;
+  min-width:60px; text-align:center;
+  color:var(--accent-deep);
+}
+.ss-fx{
+  font-family:'Fraunces',serif; font-style:italic;
+  color:var(--ink-mute); font-size:14px;
+  padding:0 6px;
+}
+.ss-formula{
+  flex:1;
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+  padding:6px 10px; border:1px solid var(--line);
+  border-radius:5px; background:var(--paper);
+  outline:none;
+}
+.ss-formula:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.ss-grid{
+  display:block; overflow-x:auto; max-height:380px; overflow-y:auto;
+  background:var(--paper);
+}
+.ss-grid table{
+  border-collapse:separate; border-spacing:0;
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+}
+.ss-grid th, .ss-grid td{
+  border:1px solid var(--grid);
+  padding:0; height:24px;
+  background:var(--paper);
+}
+.ss-grid th{
+  background:var(--grid-head); color:var(--ink-soft);
+  font-weight:600; text-align:center;
+  min-width:32px;
+  position:sticky; top:0; z-index:2;
+  font-size:11px;
+}
+.ss-grid th.row-head{
+  position:sticky; left:0; z-index:3;
+  min-width:32px; width:32px;
+}
+.ss-grid th.corner{z-index:4; left:0}
+.ss-grid td{min-width:80px; width:80px; cursor:cell; position:relative}
+.ss-grid td.col-head-cell{}
+.ss-grid td .cellview{
+  padding:3px 6px;
+  width:100%; height:100%; min-height:22px;
+  overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+}
+.ss-grid td.num .cellview{text-align:right}
+.ss-grid td.txt .cellview{text-align:left; color:var(--ink)}
+.ss-grid td.formula-cell .cellview{color:var(--accent-deep); font-weight:600}
+.ss-grid td.selected{outline:2px solid var(--accent); outline-offset:-2px; z-index:1}
+.ss-grid td.range-hilite{background:var(--accent-soft) !important}
+.ss-grid td input.cellinput{
+  border:none; outline:none;
+  width:100%; height:100%;
+  padding:3px 6px; font-family:'JetBrains Mono',monospace;
+  font-size:12px; background:#fffbeb;
+}
+.ss-grid td.error .cellview{color:var(--warn); font-weight:600}
+.ss-grid td.locked{background:#fafaf6}
+.ss-grid td.target-cell{background:var(--gold-soft)}
+.ss-statusbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 12px; background:var(--grid-head);
+  border-top:1px solid var(--line);
+  font-size:11px; color:var(--ink-mute);
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* === EXERCICES === */
+.exercise{
+  background:var(--paper); border:2px solid var(--accent);
+  border-radius:14px; padding:28px;
+  margin:32px 0; position:relative;
+  box-shadow:0 4px 12px -6px rgba(30,109,74,0.2);
+}
+.exercise-badge{
+  position:absolute; top:-14px; left:24px;
+  background:var(--accent); color:#fff;
+  padding:4px 12px; border-radius:20px;
+  font-size:11px; font-weight:700; letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+.exercise h4{margin-top:0; font-size:20px; font-family:'Fraunces',serif}
+.exercise .task{
+  background:var(--accent-soft); border-radius:8px;
+  padding:14px 18px; margin:14px 0;
+  font-size:14px;
+}
+.exercise .task ol, .exercise .task ul{margin-left:18px; margin-top:6px}
+.exercise .task li{margin:4px 0}
+.check-btn{
+  background:var(--accent); color:#fff; border:none;
+  padding:10px 22px; border-radius:8px;
+  font-family:'Outfit',sans-serif; font-weight:600; font-size:14px;
+  cursor:pointer; transition:all .15s ease;
+  margin-top:10px;
+}
+.check-btn:hover{background:var(--accent-deep); transform:translateY(-1px)}
+.check-btn:active{transform:translateY(0)}
+.check-btn.reset{background:var(--ink-mute)}
+.feedback{
+  margin-top:14px; padding:14px 18px; border-radius:8px;
+  font-size:14px; display:none;
+}
+.feedback.show{display:block; animation:slideIn .3s ease}
+.feedback.ok{background:#e6f5ec; color:var(--accent-deep); border-left:4px solid var(--accent)}
+.feedback.ko{background:var(--warn-soft); color:var(--warn); border-left:4px solid var(--warn)}
+@keyframes slideIn{from{opacity:0; transform:translateY(-4px)} to{opacity:1; transform:translateY(0)}}
+
+/* === ANIMATIONS PEDAGOGIQUES === */
+.demo-stage{
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:12px; padding:24px; margin:20px 0;
+  box-shadow:var(--shadow);
+}
+.demo-caption{
+  background:var(--ink); color:#fff;
+  padding:10px 16px; border-radius:8px;
+  font-size:14px; line-height:1.4;
+  margin-bottom:18px; position:relative;
+  min-height:42px;
+  display:flex; align-items:center; gap:10px;
+}
+.demo-caption::before{content:'▸'; color:var(--gold); font-size:18px}
+.demo-controls{
+  display:flex; gap:10px; margin-top:16px; align-items:center;
+}
+.demo-controls button{
+  background:var(--paper); border:1px solid var(--line);
+  padding:8px 16px; border-radius:6px;
+  font-family:'Outfit',sans-serif; font-weight:500; font-size:13px;
+  cursor:pointer; transition:all .15s ease;
+}
+.demo-controls button:hover{background:var(--accent-soft); border-color:var(--accent)}
+.demo-controls .scene-dot{
+  width:9px; height:9px; border-radius:50%;
+  background:var(--line); transition:all .2s;
+}
+.demo-controls .scene-dot.active{background:var(--accent); transform:scale(1.3)}
+
+/* SVG anatomy */
+.anatomy-svg{width:100%; max-width:700px; display:block; margin:14px auto}
+.anatomy-svg .label-line{stroke:var(--ink-mute); stroke-width:1; fill:none}
+.anatomy-svg .label-text{font-family:'Outfit',sans-serif; font-size:12px; fill:var(--ink); font-weight:600}
+.anatomy-svg .label-bg{fill:var(--gold-soft); stroke:var(--gold); stroke-width:1}
+.anatomy-svg .cell-rect{fill:var(--paper); stroke:var(--grid); stroke-width:1}
+.anatomy-svg .cell-rect.hilite{fill:var(--accent-soft); stroke:var(--accent); stroke-width:2}
+.anatomy-svg .cell-rect.col{fill:rgba(30,109,74,0.15); stroke:var(--accent)}
+.anatomy-svg .cell-rect.row{fill:rgba(184,131,10,0.15); stroke:var(--gold)}
+.anatomy-svg .head{fill:var(--grid-head); stroke:var(--grid)}
+.anatomy-svg text{font-family:'JetBrains Mono',monospace; font-size:11px; fill:var(--ink-soft)}
+
+/* Score panel */
+.score-display{
+  position:fixed; top:80px; right:24px;
+  background:var(--paper); border:2px solid var(--accent);
+  padding:14px 20px; border-radius:12px;
+  box-shadow:0 8px 24px -6px rgba(30,109,74,0.3);
+  z-index:50; display:none;
+  min-width:200px;
+}
+.score-display.show{display:block}
+.score-display .lbl{font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink-mute); font-weight:600}
+.score-display .val{font-family:'Fraunces',serif; font-size:36px; font-weight:600; color:var(--accent); line-height:1}
+.score-display .total{font-size:18px; color:var(--ink-mute)}
+.score-display .details{margin-top:8px; font-size:11px; color:var(--ink-soft); font-family:'JetBrains Mono',monospace}
+
+/* ====================================================================
+   TABLEAU DE BORD PROF
+==================================================================== */
+.dash-lock{
+  text-align:center; padding:50px 30px;
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:14px; margin:20px 0;
+}
+.dash-lock-icon{font-size:54px; margin-bottom:14px}
+.dash-stat{
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:8px; padding:12px;
+}
+.dash-stat .lbl{
+  font-size:10px; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--ink-soft); font-weight:600;
+}
+.dash-stat .val{
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:22px; color:var(--accent-deep); margin-top:2px;
+}
+.dash-stat.warn .val{color:var(--warn)}
+.dash-stat.gold .val{color:var(--gold)}
+.dash-grade-badge{
+  display:inline-block; padding:4px 10px; border-radius:6px;
+  font-family:'JetBrains Mono',monospace; font-weight:700;
+  font-size:14px;
+}
+.dash-grade-badge.ok{background:var(--accent-soft); color:var(--accent-deep)}
+.dash-grade-badge.warn{background:#fff5d6; color:var(--gold)}
+.dash-grade-badge.fail{background:var(--warn-soft); color:var(--warn)}
+.dash-task-dots{
+  display:flex; gap:3px;
+}
+.dash-task-dot{
+  width:16px; height:16px; border-radius:3px;
+  font-size:9px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-family:'JetBrains Mono',monospace;
+}
+.dash-task-dot.full{background:var(--accent)}
+.dash-task-dot.partial{background:var(--gold)}
+.dash-task-dot.zero{background:#d4d8de; color:var(--ink-soft)}
+#dashTable tbody tr{border-bottom:1px solid var(--line-soft)}
+#dashTable tbody tr:hover{background:var(--bg)}
+#dashTable tbody td{padding:10px 12px; vertical-align:middle}
+
+/* ====================================================================
+   FOOTER copyright
+==================================================================== */
+.tp-footer{
+  margin-top:80px; padding:30px 0 20px;
+  border-top:1px solid var(--line-soft);
+}
+.tp-footer-inner{
+  max-width:920px; margin:0 auto;
+  display:flex; justify-content:space-between; align-items:flex-start;
+  gap:20px; flex-wrap:wrap;
+}
+.tp-footer-brand{
+  display:flex; align-items:center; gap:12px;
+}
+.tp-footer-brand svg{
+  border-radius:6px; flex-shrink:0;
+  box-shadow:0 2px 8px -2px rgba(30,109,74,0.3);
+}
+.tp-footer-text{
+  font-size:12px; color:var(--ink-soft); line-height:1.6;
+}
+.tp-footer-text strong{color:var(--ink); font-weight:600}
+.tp-footer-copy{
+  font-size:11px; color:var(--ink-mute);
+  text-align:right; line-height:1.6;
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.02em;
+}
+
+@media (max-width:780px){
+  .tp-footer-inner{justify-content:flex-start}
+  .tp-footer-copy{text-align:left}
+}
+
+/* Copyright sur la copie imprimée */
+@media print{
+  .tp-footer{margin-top:30px; page-break-inside:avoid}
+  .tp-footer-inner{justify-content:space-between}
+}
+
+/* ====================================================================
+   ÉVALUATION OFFICIELLE VERROUILLÉE
+==================================================================== */
+.lock-section{
+  background:linear-gradient(135deg, #1a1d24 0%, #2a2f3a 100%);
+  color:#fff; border-radius:16px;
+  padding:50px 40px 40px; margin-top:30px;
+  position:relative; overflow:hidden;
+}
+.lock-section::before{
+  content:""; position:absolute; top:-60px; right:-60px;
+  width:240px; height:240px; border-radius:50%;
+  background:radial-gradient(circle, rgba(184,131,10,0.15) 0%, transparent 70%);
+}
+.lock-section .lock-stamp{
+  position:absolute; top:16px; right:16px;
+  background:#1a1d24; color:#ffba6e;
+  border:1px solid #b8830a;
+  padding:6px 16px; border-radius:20px;
+  font-size:11px; font-weight:700; letter-spacing:0.12em;
+  text-transform:uppercase;
+  z-index:2;
+}
+.lock-screen{
+  text-align:center; padding:30px 0; position:relative;
+}
+.lock-screen .lock-icon{
+  font-size:72px; margin-bottom:14px;
+  filter:drop-shadow(0 0 20px rgba(184,131,10,0.3));
+}
+.lock-screen h2{
+  font-family:'Fraunces',serif; font-weight:500;
+  font-size:32px; margin-bottom:8px; color:#fff;
+}
+.lock-screen .lock-sub{
+  color:#a0a8b4; font-size:15px; line-height:1.6;
+  max-width:520px; margin:0 auto 26px;
+}
+/* Les strong dans le bloc sombre doivent rester visibles */
+.lock-screen .lock-sub strong,
+.lock-screen .lock-sub b{
+  color:#ffba6e; font-weight:700;
+}
+.lock-screen .lock-form{
+  max-width:380px; margin:0 auto;
+  display:flex; flex-direction:column; gap:10px;
+}
+.lock-screen input[type="password"]{
+  width:100%; padding:14px 18px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff; font-family:'JetBrains Mono',monospace;
+  font-size:16px; border-radius:10px;
+  outline:none; transition:all .15s;
+  text-align:center; letter-spacing:0.1em;
+}
+.lock-screen input[type="password"]:focus{
+  border-color:#b8830a; background:rgba(255,255,255,0.1);
+}
+.lock-screen input[type="password"]::placeholder{
+  color:#5a6470; letter-spacing:normal; font-family:'Outfit',sans-serif;
+}
+.lock-screen .unlock-btn{
+  background:#b8830a; color:#1a1d24;
+  border:none; padding:14px 24px; border-radius:10px;
+  font-family:'Outfit',sans-serif; font-weight:700;
+  font-size:15px; cursor:pointer;
+  transition:transform .15s;
+  text-transform:uppercase; letter-spacing:0.05em;
+}
+.lock-screen .unlock-btn:hover{transform:translateY(-1px); background:#d99a23}
+.lock-screen .unlock-err{
+  color:#ffa775; font-size:13px;
+  background:rgba(194,65,12,0.15);
+  border:1px solid rgba(194,65,12,0.3);
+  padding:10px; border-radius:8px;
+  display:none;
+}
+.lock-screen .unlock-err.show{display:block; animation:shake .3s}
+.lock-info{
+  margin-top:30px; padding-top:20px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  font-size:12px; color:#7a8290; line-height:1.6;
+}
+.lock-info strong{color:#9fdfb4}
+
+.eval-final-content{display:none}
+.eval-final-content.show{display:block; animation:slideIn .4s ease}
+.eval-final-content h2{
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:32px; color:#ffba6e; margin-bottom:8px;
+}
+.eval-final-content .eval-context{
+  background:rgba(255,255,255,0.04);
+  border-left:3px solid #b8830a;
+  padding:14px 18px; border-radius:8px;
+  font-size:14px; line-height:1.6; margin:18px 0;
+  color:#d4d8de;
+}
+.eval-final-content .eval-task-list{
+  display:grid; grid-template-columns:1fr 1fr; gap:12px;
+  margin:18px 0;
+}
+.eval-final-content .eval-task{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px; padding:12px 16px;
+  font-size:13px; display:flex; align-items:flex-start; gap:10px;
+  color:#d4d8de;
+}
+.eval-final-content .eval-task .pt{
+  font-family:'JetBrains Mono',monospace;
+  background:rgba(184,131,10,0.2); color:#ffba6e;
+  padding:2px 8px; border-radius:4px;
+  font-weight:600; font-size:11px; flex-shrink:0; margin-top:2px;
+}
+.eval-final-content .eval-task strong{color:#fff}
+.eval-final-content .eval-task code{
+  background:rgba(255,255,255,0.08); color:#9fdfb4;
+  padding:1px 6px; border-radius:3px;
+}
+.eval-final-content .eval-task.done{
+  background:rgba(159,223,180,0.1); border-color:rgba(159,223,180,0.4);
+}
+.eval-final-content .eval-task.done .pt{background:#9fdfb4; color:#1a1d24}
+.eval-final-content .actions-row{
+  display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;
+}
+.eval-final-content .check-btn{
+  background:#b8830a; color:#1a1d24;
+  border:none; padding:11px 20px; border-radius:8px;
+  font-family:'Outfit',sans-serif; font-weight:700; font-size:14px;
+  cursor:pointer;
+}
+.eval-final-content .check-btn:hover{background:#d99a23}
+.eval-final-content .check-btn.reset{
+  background:rgba(255,255,255,0.08); color:#d4d8de;
+}
+.eval-final-content .ss-grade{
+  text-align:center; padding:30px;
+  background:linear-gradient(135deg, #155738 0%, #1e6d4a 100%);
+  color:#fff; border-radius:12px; margin-top:24px;
+  display:none;
+}
+.eval-final-content .ss-grade.show{display:block; animation:slideIn .4s ease}
+.eval-final-content .ss-grade .grade{
+  font-family:'Fraunces',serif; font-size:64px; font-weight:600;
+  line-height:1;
+}
+.eval-final-content .ss-grade .msg{margin-top:10px; font-size:16px; opacity:0.95}
+.eval-final-content .ss-grade button{
+  margin-top:16px; background:#fff; color:#155738;
+  border:none; padding:10px 22px; border-radius:8px;
+  font-weight:600; cursor:pointer;
+}
+
+/* Mini-tableur dans l'éval verrouillée : adaptation thème sombre */
+.eval-final-content .spreadsheet-wrap{
+  background:rgba(255,255,255,0.95);
+  border-radius:10px; padding:14px;
+}
+.eval-final-content .ss-grid td .cellview{color:var(--ink)}
+.eval-final-content .ss-grid td.num .cellview{color:var(--ink)}
+.eval-final-content .ss-grid td.txt .cellview{color:var(--ink)}
+.eval-final-content .ss-grid td.formula-cell .cellview{color:var(--accent-deep)}
+.eval-final-content .ss-grid th{color:var(--ink-soft)}
+.eval-final-content .ss-cellref, .eval-final-content .ss-formula{color:var(--ink)}
+.eval-final-content .ss-status{color:var(--ink-soft)}
+
+@media print{
+  .lock-screen{display:none}
+  .lock-section{background:#fff; color:#1a1d24; border:2px solid #b8830a}
+  .lock-section .lock-stamp{background:#b8830a; color:#fff}
+  .eval-final-content h2, .eval-final-content .eval-task{color:#1a1d24}
+  .eval-final-content .eval-task{background:#fff; border-color:#e2e0d6}
+  .eval-final-content .eval-task .pt{background:#fff5d6; color:#8a6300}
+  .eval-final-content .eval-context{background:#fff8e1; color:#1a1d24}
+  .eval-final-content .ss-grade{background:#155738 !important; color:#fff}
+}
+
+/* Eval */
+.eval-section{
+  background:linear-gradient(135deg, #fffdf5 0%, #ffffff 60%);
+  border:2px solid var(--gold);
+  border-radius:16px; padding:36px; margin-top:60px;
+  position:relative;
+}
+.eval-stamp{
+  position:absolute; top:-18px; right:24px;
+  background:var(--gold); color:#fff;
+  padding:6px 16px; border-radius:20px;
+  font-size:12px; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase;
+}
+.eval-section h2{
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:36px; margin-bottom:8px; color:var(--gold);
+}
+.eval-task-list{
+  display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  margin:20px 0;
+}
+.eval-task{
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:8px; padding:12px 16px;
+  font-size:13px; display:flex; align-items:flex-start; gap:10px;
+}
+.eval-task .pt{
+  font-family:'JetBrains Mono',monospace;
+  background:var(--accent-soft); color:var(--accent-deep);
+  padding:2px 8px; border-radius:4px;
+  font-weight:600; font-size:11px; flex-shrink:0;
+  margin-top:2px;
+}
+.eval-task.done{background:#e6f5ec; border-color:var(--accent)}
+.eval-task.done .pt{background:var(--accent); color:#fff}
+.eval-final{
+  text-align:center; padding:30px;
+  background:var(--accent); color:#fff;
+  border-radius:12px; margin-top:24px;
+  display:none;
+}
+.eval-final.show{display:block; animation:slideIn .4s ease}
+.eval-final .grade{
+  font-family:'Fraunces',serif; font-size:64px; font-weight:600;
+  line-height:1;
+}
+.eval-final .msg{margin-top:10px; font-size:16px; opacity:0.95}
+
+/* ====================================================================
+   ARCADE — jeux d'entraînement
+==================================================================== */
+.game-card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:28px;
+  margin-bottom:28px;
+  position:relative;
+  overflow:hidden;
+}
+.game-card::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:4px;
+  background:linear-gradient(90deg, var(--accent), var(--gold), var(--blue));
+}
+.game-head{
+  display:flex; align-items:center; gap:16px; margin-bottom:8px;
+}
+.game-head .icon{
+  font-size:34px; line-height:1;
+  width:54px; height:54px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--accent-soft);
+}
+.game-head h3{
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:26px; color:var(--ink);
+  margin:0;
+}
+.game-head .sub{
+  font-size:13px; color:var(--ink-soft);
+  text-transform:uppercase; letter-spacing:0.08em; margin-top:2px;
+}
+.game-rules{
+  background:var(--accent-soft); border-radius:8px;
+  padding:12px 16px; font-size:14px; color:var(--ink);
+  margin:16px 0 20px; line-height:1.55;
+}
+.game-rules strong{color:var(--accent-deep)}
+
+.game-hud{
+  display:flex; gap:10px; flex-wrap:wrap;
+  margin-bottom:16px;
+}
+.hud-pill{
+  background:var(--bg); border:1px solid var(--line);
+  padding:8px 14px; border-radius:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px; display:flex; align-items:center; gap:8px;
+}
+.hud-pill .lbl{color:var(--ink-soft); font-size:11px; text-transform:uppercase; letter-spacing:0.08em}
+.hud-pill .val{font-weight:700; color:var(--ink); font-size:16px}
+.hud-pill.timer .val{color:var(--warn)}
+.hud-pill.score .val{color:var(--accent)}
+.hud-pill.combo .val{color:var(--gold)}
+
+/* === Cible-Formule === */
+.target-board{
+  background:linear-gradient(135deg, #f5fbf8 0%, #fff 70%);
+  border:1px solid var(--accent-soft);
+  border-radius:12px; padding:24px;
+  margin-bottom:16px;
+}
+.target-display{
+  text-align:center; margin-bottom:20px;
+}
+.target-display .lbl{
+  font-size:13px; color:var(--ink-soft);
+  text-transform:uppercase; letter-spacing:0.1em;
+}
+.target-display .num{
+  font-family:'Fraunces',serif; font-weight:600;
+  font-size:78px; line-height:1; color:var(--accent-deep);
+  margin-top:4px;
+}
+.target-cells{
+  display:grid; grid-template-columns:repeat(6, 1fr);
+  gap:10px; max-width:560px; margin:0 auto;
+}
+.target-cell{
+  background:var(--paper); border:2px solid var(--line);
+  border-radius:8px; padding:14px 8px;
+  text-align:center; font-family:'JetBrains Mono',monospace;
+  cursor:pointer; transition:all .15s;
+}
+.target-cell:hover{border-color:var(--accent); transform:translateY(-2px)}
+.target-cell .ref{font-size:11px; color:var(--ink-soft)}
+.target-cell .val{font-size:22px; font-weight:700; color:var(--ink); margin-top:2px}
+.target-input-row{
+  display:flex; gap:10px; align-items:center; margin-top:18px;
+}
+.target-input-row .eq{
+  font-family:'JetBrains Mono',monospace;
+  font-size:24px; font-weight:700; color:var(--accent);
+}
+.target-input{
+  flex:1; font-family:'JetBrains Mono',monospace;
+  font-size:18px; padding:12px 14px;
+  border:2px solid var(--line); border-radius:8px;
+  background:#fff; outline:none;
+  transition:border-color .15s;
+}
+.target-input:focus{border-color:var(--accent)}
+.target-result{
+  margin-top:14px; padding:14px; border-radius:8px;
+  font-size:15px; min-height:50px;
+  display:flex; align-items:center; gap:10px;
+  background:var(--bg); color:var(--ink-soft);
+  font-family:'JetBrains Mono',monospace;
+}
+.target-result.win{background:var(--accent-soft); color:var(--accent-deep); font-weight:600}
+.target-result.lose{background:var(--warn-soft); color:var(--warn)}
+.target-buttons{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap}
+.target-buttons button{
+  padding:10px 18px; border:none; border-radius:8px;
+  font-family:'Outfit',sans-serif; font-weight:600; font-size:14px;
+  cursor:pointer; transition:transform .15s;
+}
+.target-buttons button:hover{transform:translateY(-1px)}
+.btn-fire{background:var(--accent); color:#fff}
+.btn-next{background:var(--gold); color:#fff}
+.btn-ghost{background:transparent; color:var(--ink-soft); border:1px solid var(--line) !important}
+
+/* === Sprint Fonctions === */
+.sprint-arena{
+  background:linear-gradient(135deg, #fff9e6 0%, #fff 60%);
+  border:1px solid #f5d480;
+  border-radius:12px; padding:24px;
+}
+.sprint-question{
+  font-family:'Fraunces',serif; font-size:22px; font-weight:500;
+  text-align:center; margin-bottom:14px; min-height:60px;
+  display:flex; align-items:center; justify-content:center;
+}
+.sprint-table{
+  display:grid; gap:0; max-width:420px; margin:0 auto 18px;
+  border:1px solid var(--line); border-radius:8px; overflow:hidden;
+  font-family:'JetBrains Mono',monospace;
+  background:var(--paper);
+}
+.sprint-table .row{display:grid; border-bottom:1px solid var(--line)}
+.sprint-table .row:last-child{border-bottom:none}
+.sprint-table .cell{
+  padding:10px; text-align:center; font-size:15px;
+  border-right:1px solid var(--line);
+}
+.sprint-table .cell:last-child{border-right:none}
+.sprint-table .head{background:var(--bg); color:var(--ink-soft); font-size:12px; font-weight:600}
+.sprint-options{
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+.sprint-opt{
+  background:var(--paper); border:2px solid var(--line);
+  border-radius:8px; padding:14px;
+  font-family:'JetBrains Mono',monospace; font-size:15px;
+  cursor:pointer; transition:all .15s;
+  text-align:left;
+}
+.sprint-opt:hover{border-color:var(--accent); background:var(--accent-soft)}
+.sprint-opt.correct{background:var(--accent); color:#fff; border-color:var(--accent); animation:pulseWin .4s}
+.sprint-opt.wrong{background:var(--warn-soft); border-color:var(--warn); color:var(--warn); animation:shake .3s}
+@keyframes pulseWin{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.sprint-start, .sprint-over{
+  text-align:center; padding:24px;
+}
+.sprint-over .final-score{
+  font-family:'Fraunces',serif; font-size:56px; font-weight:600;
+  color:var(--gold); margin:14px 0;
+}
+.sprint-over .ranks{
+  display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+  margin-top:14px;
+}
+.sprint-over .rank-msg{
+  font-size:17px; font-weight:600; margin:10px 0;
+}
+.timer-bar{
+  height:8px; background:var(--line-soft); border-radius:4px;
+  overflow:hidden; margin-bottom:14px;
+}
+.timer-bar .fill{
+  height:100%; background:linear-gradient(90deg, var(--accent), var(--gold), var(--warn));
+  width:100%; transition:width .25s linear;
+}
+
+/* === Détective === */
+.detective-board{
+  background:linear-gradient(135deg, #f5f8ff 0%, #fff 60%);
+  border:1px solid #c8d8f0;
+  border-radius:12px; padding:24px;
+}
+.case-file{
+  background:var(--paper); border:1px dashed var(--blue);
+  border-radius:8px; padding:14px 18px; margin-bottom:16px;
+  font-size:14px; color:var(--ink);
+}
+.case-file .case-num{
+  font-family:'JetBrains Mono',monospace; font-size:11px;
+  background:var(--blue); color:#fff; padding:2px 8px;
+  border-radius:4px; margin-right:8px;
+}
+.case-grid{
+  display:grid; grid-template-columns:80px 1fr 1fr 1fr;
+  gap:0; border:1px solid var(--line); border-radius:8px;
+  overflow:hidden; font-family:'JetBrains Mono',monospace;
+  background:var(--paper); margin-bottom:16px;
+}
+.case-grid .gc{
+  padding:10px 12px; border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line); text-align:center;
+  font-size:14px;
+}
+.case-grid .gc.head{background:var(--bg); color:var(--ink-soft); font-size:12px; font-weight:600}
+.case-grid .gc.suspect{
+  background:#fff5d6; color:var(--warn); font-weight:600;
+  position:relative;
+}
+.case-grid .gc.suspect::after{
+  content:"?"; position:absolute; top:2px; right:4px;
+  font-size:10px; color:var(--warn);
+}
+.case-formula-row{
+  display:flex; gap:10px; align-items:center;
+  margin-bottom:14px;
+}
+.case-formula-row .ref-tag{
+  background:var(--ink); color:#fff; padding:8px 12px;
+  border-radius:6px; font-family:'JetBrains Mono',monospace;
+  font-weight:700; font-size:14px;
+}
+.case-formula-row input{
+  flex:1; font-family:'JetBrains Mono',monospace;
+  font-size:15px; padding:10px 14px;
+  border:2px solid var(--line); border-radius:8px;
+  background:#fff; outline:none;
+}
+.case-formula-row input:focus{border-color:var(--blue)}
+.case-clue{
+  background:#fff8e1; border-left:3px solid var(--gold);
+  padding:10px 14px; border-radius:6px; font-size:13px;
+  margin-top:10px; font-style:italic; color:var(--ink);
+}
+
+/* ====================================================================
+   ESPACE PÉDAGOGIQUE — overlay prof (cover + objectifs)
+==================================================================== */
+.prof-toggle{
+  background:transparent; border:1px solid var(--line);
+  color:var(--ink-soft); padding:7px 14px;
+  border-radius:8px; font-family:'Outfit',sans-serif;
+  font-size:13px; font-weight:500; cursor:pointer;
+  display:inline-flex; align-items:center; gap:6px;
+  transition:all .15s;
+}
+.prof-toggle:hover{
+  background:var(--accent-soft); color:var(--accent-deep);
+  border-color:var(--accent);
+}
+.prof-toggle .ico{font-size:14px}
+
+.prof-overlay{
+  position:fixed; inset:0; z-index:200;
+  background:rgba(20, 23, 30, 0.5);
+  backdrop-filter:blur(4px);
+  display:none; align-items:flex-start; justify-content:center;
+  padding:30px 20px; overflow-y:auto;
+}
+.prof-overlay.show{display:flex; animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.prof-overlay-inner{
+  background:var(--bg);
+  width:100%; max-width:1000px;
+  border-radius:18px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  position:relative;
+  overflow:hidden;
+}
+
+.prof-overlay-header{
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+  padding:16px 24px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:5;
+}
+.prof-overlay-title{
+  font-family:'Fraunces',serif; font-weight:500;
+  font-size:18px; color:var(--ink);
+  display:flex; align-items:center; gap:10px;
+}
+.prof-overlay-title .badge{
+  background:var(--accent); color:#fff;
+  font-family:'Outfit',sans-serif; font-size:10px;
+  text-transform:uppercase; letter-spacing:0.1em; font-weight:700;
+  padding:3px 8px; border-radius:4px;
+}
+
+.prof-close{
+  background:transparent; border:1px solid var(--line);
+  width:36px; height:36px; border-radius:8px;
+  color:var(--ink-soft); font-size:18px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:all .15s;
+}
+.prof-close:hover{background:var(--warn-soft); color:var(--warn); border-color:var(--warn)}
+
+.prof-tabs{
+  display:flex; gap:4px;
+  background:var(--paper); padding:0 24px;
+  border-bottom:1px solid var(--line);
+}
+.prof-tab{
+  background:transparent; border:none;
+  padding:14px 20px;
+  font-family:'Outfit',sans-serif; font-size:14px; font-weight:500;
+  color:var(--ink-soft); cursor:pointer;
+  border-bottom:3px solid transparent;
+  margin-bottom:-1px;
+  transition:all .15s;
+}
+.prof-tab:hover{color:var(--ink)}
+.prof-tab.active{
+  color:var(--accent); border-bottom-color:var(--accent);
+  font-weight:600;
+}
+
+.prof-panel{
+  padding:30px 36px 50px;
+  display:none;
+  max-height:calc(100vh - 200px);
+  overflow-y:auto;
+}
+.prof-panel.show{display:block}
+
+/* Adapter cover dans overlay : retire min-height plein-écran */
+.prof-panel .cover{
+  min-height:auto; padding:0; margin-bottom:20px;
+}
+.prof-panel .cover-grid{display:none}
+.prof-panel .cover-content{padding:0; max-width:none}
+.prof-panel section{padding:0; border:none}
+
+/* Print : on n'imprime pas l'overlay */
+@media print{
+  .prof-overlay, .prof-toggle{display:none !important}
+}
+
+/* ====================================================================
+   SECTION OBJECTIFS & COMPÉTENCES (institutionnel)
+==================================================================== */
+.officiel-banner{
+  background:linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+  color:#fff; padding:24px 28px; border-radius:14px;
+  margin-bottom:24px; position:relative; overflow:hidden;
+}
+.officiel-banner::before{
+  content:""; position:absolute; top:-30px; right:-30px;
+  width:160px; height:160px; border-radius:50%;
+  background:rgba(255,255,255,0.08);
+}
+.officiel-banner .ribbon{
+  font-size:11px; text-transform:uppercase; letter-spacing:0.14em;
+  opacity:0.9; font-weight:600;
+}
+.officiel-banner h3{
+  font-family:'Fraunces',serif; font-weight:500;
+  font-size:28px; margin:6px 0 4px;
+}
+.officiel-banner p{font-size:14px; opacity:0.95; line-height:1.55}
+
+.obj-grid{
+  display:grid; grid-template-columns:repeat(2, 1fr);
+  gap:16px; margin:18px 0;
+}
+.obj-block{
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:10px; padding:18px 20px;
+  position:relative;
+}
+.obj-block .obj-label{
+  font-size:11px; text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--accent); font-weight:700; margin-bottom:8px;
+}
+.obj-block h4{
+  font-family:'Fraunces',serif; font-weight:500;
+  font-size:18px; margin-bottom:10px; color:var(--ink);
+}
+.obj-list{list-style:none; padding:0; margin:0}
+.obj-list li{
+  position:relative; padding:6px 0 6px 28px;
+  font-size:14px; line-height:1.5; color:var(--ink);
+  border-bottom:1px dashed var(--line-soft);
+}
+.obj-list li:last-child{border-bottom:none}
+.obj-list li::before{
+  content:""; position:absolute; left:6px; top:13px;
+  width:14px; height:14px; border-radius:50%;
+  background:var(--accent-soft);
+  border:2px solid var(--accent);
+}
+.obj-list.numbered{counter-reset:obj}
+.obj-list.numbered li{counter-increment:obj; padding-left:36px}
+.obj-list.numbered li::before{
+  content:counter(obj); width:22px; height:22px;
+  background:var(--accent); color:#fff;
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  top:9px; left:2px; border:none;
+}
+
+.comp-table{
+  width:100%; border-collapse:collapse;
+  font-size:14px; margin:14px 0;
+  background:var(--paper); border-radius:10px; overflow:hidden;
+  border:1px solid var(--line);
+}
+.comp-table th{
+  background:var(--accent); color:#fff;
+  padding:12px 14px; text-align:left;
+  font-weight:600; font-size:13px; letter-spacing:0.04em;
+}
+.comp-table td{
+  padding:12px 14px; border-top:1px solid var(--line-soft);
+  vertical-align:top;
+}
+.comp-table tr:nth-child(even) td{background:#fbfaf7}
+.comp-table .code{
+  font-family:'JetBrains Mono',monospace;
+  background:var(--accent-soft); color:var(--accent-deep);
+  padding:2px 8px; border-radius:4px;
+  font-weight:600; font-size:12px;
+  display:inline-block;
+}
+
+.modalites-grid{
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:14px; margin:16px 0;
+}
+.modalite{
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:10px; padding:16px;
+  text-align:center;
+}
+.modalite .ico{
+  font-size:32px; line-height:1;
+}
+.modalite .lab{
+  font-size:11px; text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--ink-soft); margin:8px 0 4px;
+}
+.modalite .val{
+  font-family:'Fraunces',serif; font-size:22px; font-weight:600;
+  color:var(--accent-deep);
+}
+.modalite .sub{font-size:12px; color:var(--ink-soft); margin-top:4px}
+
+.fil-rouge{
+  background:#fff8e1; border-left:4px solid var(--gold);
+  padding:14px 18px; border-radius:8px; margin:14px 0;
+  font-size:14px; line-height:1.55;
+}
+.fil-rouge strong{color:var(--gold-deep, #8a6300)}
+
+@media (max-width:780px){
+  .obj-grid, .modalites-grid{grid-template-columns:1fr}
+}
+
+/* ====================================================================
+   MACRO EDITOR — éditeur VBA + tableur côte à côte
+==================================================================== */
+.macro-wrap{
+  display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  margin:14px 0; min-height:280px;
+}
+@media (max-width:920px){.macro-wrap{grid-template-columns:1fr}}
+.macro-pane{
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:10px; overflow:hidden;
+  display:flex; flex-direction:column;
+}
+.macro-pane-header{
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--bg); padding:8px 14px;
+  border-bottom:1px solid var(--line);
+  font-size:12px; color:var(--ink-soft);
+}
+.macro-pane-label{
+  font-weight:600; text-transform:uppercase; letter-spacing:0.06em;
+}
+.macro-textarea{
+  flex:1; min-height:200px;
+  background:#1d2330; color:#e8eaf0;
+  border:none; outline:none;
+  padding:12px 14px;
+  font-family:'JetBrains Mono', 'Courier New', monospace;
+  font-size:13px; line-height:1.55;
+  resize:vertical;
+  tab-size:4;
+}
+.macro-textarea:read-only{
+  background:#252b38; color:#b8bccc;
+}
+.macro-actions{
+  display:flex; gap:8px; padding:10px 12px;
+  background:var(--bg); border-top:1px solid var(--line);
+}
+.macro-run{
+  background:var(--accent); color:#fff; border:none;
+  padding:8px 18px; border-radius:6px;
+  font-family:'Outfit',sans-serif; font-weight:600;
+  font-size:13px; cursor:pointer;
+}
+.macro-run:hover{background:var(--accent-deep)}
+.macro-clear{
+  background:transparent; color:var(--ink-soft);
+  border:1px solid var(--line);
+  padding:7px 14px; border-radius:6px;
+  font-family:'Outfit',sans-serif; font-weight:500;
+  font-size:12px; cursor:pointer;
+}
+.macro-clear:hover{background:var(--line-soft)}
+.macro-output{
+  padding:10px 14px;
+  background:#fff8e1; border-top:1px solid var(--gold);
+  max-height:140px; overflow-y:auto;
+}
+.macro-msg{
+  padding:4px 0; font-size:13px; color:#8a6300;
+  font-family:'Outfit',sans-serif;
+}
+.macro-grid-wrap{
+  flex:1; overflow:auto; max-height:380px;
+  padding:6px;
+}
+.macro-grid{
+  border-collapse:collapse;
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+  width:100%;
+}
+.macro-grid th, .macro-grid td{
+  border:1px solid var(--grid); padding:0;
+  height:26px; min-width:64px;
+}
+.macro-grid th{
+  background:#f0eee2; color:var(--ink-soft);
+  font-weight:600; text-align:center;
+  font-size:11px; padding:3px 6px;
+  position:sticky; top:0; z-index:2;
+}
+.macro-grid th.row-head{
+  position:sticky; left:0; z-index:3;
+  min-width:32px; width:32px;
+}
+.macro-grid th.corner{z-index:4; left:0; top:0}
+.macro-grid td{background:var(--paper); cursor:cell}
+.macro-grid td.num .cellview{text-align:right}
+.macro-grid td .cellview{
+  padding:3px 6px; width:100%; height:100%;
+  overflow:hidden; white-space:nowrap; text-overflow:ellipsis;
+}
+.macro-rec-controls{display:flex; gap:6px}
+.macro-rec-btn{
+  background:#fff; color:#c2410c;
+  border:1px solid #c2410c;
+  padding:4px 10px; border-radius:5px;
+  font-family:'Outfit',sans-serif; font-weight:600;
+  font-size:11px; cursor:pointer;
+}
+.macro-rec-btn:hover{background:#fff5ec}
+.macro-rec-btn.active{background:#c2410c; color:#fff; animation:pulseRec 1.2s infinite}
+.macro-rec-btn.stop{color:var(--ink-soft); border-color:var(--line)}
+.macro-rec-btn.stop:hover{background:var(--line-soft)}
+@keyframes pulseRec{0%,100%{box-shadow:0 0 0 0 rgba(194,65,12,0.5)} 50%{box-shadow:0 0 0 8px rgba(194,65,12,0)}}
+
+/* Bloc de code VBA inline (dans le cours) */
+.vba-snippet{
+  background:#1d2330; color:#e8eaf0;
+  padding:14px 18px; border-radius:8px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px; line-height:1.65;
+  overflow-x:auto; margin:10px 0;
+  border-left:3px solid var(--accent);
+  white-space:pre;
+}
+.vba-snippet code{
+  background:transparent; color:#9fdfb4; padding:0;
+}
+
+/* Ligne d'actions pour les exercices */
+.actions-line{
+  display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;
+}
+
+/* ====================================================================
+   ANIMATIONS PÉDAGOGIQUES ENRICHIES
+==================================================================== */
+.anim-frame{
+  background:var(--paper); border:1px solid var(--line);
+  border-radius:12px; padding:18px; margin:18px 0;
+  position:relative;
+}
+.anim-frame .anim-title{
+  font-family:'Fraunces',serif; font-size:18px; font-weight:500;
+  color:var(--accent-deep); margin-bottom:6px;
+}
+.anim-frame canvas{
+  display:block; width:100%; max-width:760px; margin:0 auto;
+  border-radius:8px; background:#fafaf6;
+}
+.anim-frame .anim-caption{
+  background:var(--ink); color:#e8f7ee;
+  padding:12px 16px; border-radius:8px;
+  font-family:'Outfit',sans-serif; font-size:14px; line-height:1.55;
+  margin-top:12px; text-align:center;
+  min-height:56px; display:flex; align-items:center; justify-content:center;
+  transition:background .3s;
+}
+.anim-frame .anim-caption strong{color:#9fdfb4}
+.anim-frame .anim-nav{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:12px; gap:10px;
+}
+.anim-frame .anim-nav button{
+  background:var(--accent); color:#fff; border:none;
+  padding:8px 16px; border-radius:6px;
+  font-family:'Outfit',sans-serif; font-size:13px; font-weight:600;
+  cursor:pointer;
+}
+.anim-frame .anim-nav button:hover{background:var(--accent-deep)}
+.anim-frame .scene-dots{
+  display:flex; gap:8px; align-items:center;
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+  color:var(--ink-soft);
+}
+.anim-frame .scene-dot{
+  width:10px; height:10px; border-radius:50%;
+  background:var(--line); transition:all .2s;
+}
+.anim-frame .scene-dot.active{background:var(--accent); transform:scale(1.3)}
+
+/* Print */
+@media print{
+  .game-card{display:none}
+}
+
+/* Inline tableur snippet */
+.formula-show{
+  font-family:'JetBrains Mono',monospace;
+  background:var(--ink); color:#9fdfb4;
+  padding:8px 14px; border-radius:6px;
+  display:inline-block; margin:4px 4px 4px 0;
+  font-size:14px;
+}
+
+/* Reference table */
+.ref-table{
+  width:100%; border-collapse:collapse; margin:14px 0;
+  font-size:14px;
+}
+.ref-table th, .ref-table td{
+  padding:10px 14px; text-align:left;
+  border-bottom:1px solid var(--line);
+}
+.ref-table th{
+  background:var(--grid-head); font-weight:600;
+  font-size:12px; text-transform:uppercase; letter-spacing:0.05em;
+  color:var(--ink-soft);
+}
+.ref-table tr:hover{background:var(--line-soft)}
+.ref-table code{font-size:13px}
+
+/* Welcome dialog */
+.welcome-dialog{
+  position:fixed; inset:0; background:rgba(20,25,30,0.7);
+  display:flex; align-items:center; justify-content:center;
+  z-index:200; backdrop-filter:blur(6px);
+}
+.welcome-dialog.hidden{display:none}
+.welcome-card{
+  background:var(--paper); border-radius:18px; padding:40px;
+  max-width:520px; width:90%; text-align:center;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,0.3);
+  border:1px solid var(--line);
+}
+.welcome-card h1{
+  font-family:'Fraunces',serif; font-size:32px; font-weight:600;
+  margin-bottom:6px; letter-spacing:-0.02em;
+}
+.welcome-card p{color:var(--ink-soft); margin-bottom:18px}
+.welcome-card label{
+  display:block; text-align:left; font-size:13px; font-weight:600;
+  color:var(--ink-soft); margin:14px 0 6px;
+}
+.welcome-card input{
+  width:100%; padding:12px 16px; border:1px solid var(--line);
+  border-radius:8px; font-family:'Outfit',sans-serif; font-size:15px;
+  outline:none; transition:border-color .15s;
+}
+.welcome-card input:focus{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft)}
+.welcome-card button{
+  width:100%; margin-top:18px; padding:14px;
+  background:var(--accent); color:#fff; border:none;
+  border-radius:8px; font-size:15px; font-weight:600;
+  cursor:pointer; transition:background .15s;
+}
+.welcome-card button:hover{background:var(--accent-deep)}
+
+/* Print rule */
+@media print{
+  .sidebar, .topbar, .score-display, .welcome-dialog{display:none !important}
+  main{padding:20px; max-width:100%}
+  section{page-break-inside:avoid}
+}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  main{padding:24px}
+  .cover h1{font-size:48px}
+  .eval-task-list{grid-template-columns:1fr}
+}
+</style>
+
+<!-- ===== FIREBASE SDK ===== -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div class="welcome-dialog" id="welcomeDialog">
+  <div class="welcome-card">
+    <div style="width:72px; height:72px; margin:0 auto 14px; border-radius:12px; overflow:hidden; box-shadow:0 6px 20px -4px rgba(30,109,74,0.4)">
+      <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%; display:block">
+        <defs>
+          <linearGradient id="lgEsticW" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1e6d4a"/>
+            <stop offset="100%" stop-color="#155738"/>
+          </linearGradient>
+        </defs>
+        <rect width="48" height="48" rx="6" fill="url(#lgEsticW)"/>
+        <path d="M24 6 L40 12 L40 26 C40 34 33 41 24 44 C15 41 8 34 8 26 L8 12 Z" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.4"/>
+        <text x="24" y="22" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="11" fill="#fff" letter-spacing="0.5">ESTIC</text>
+        <line x1="14" y1="26" x2="34" y2="26" stroke="#b8830a" stroke-width="1"/>
+        <text x="24" y="36" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="6" fill="#fff" opacity="0.85">Don Bosco</text>
+      </svg>
+    </div>
+    <h1>TP Macros — 3h</h1>
+    <p style="font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.1em; margin-top:-4px; margin-bottom:14px">Technologie · Cycle 4 · M. Agostini</p>
+    <p>Bienvenue ! Avant de commencer, indique ton nom et ton prénom : ils seront affichés sur ta note finale.</p>
+    <label for="welcomeName">Nom et prénom</label>
+    <input type="text" id="welcomeName" placeholder="Ex : Dupont Léa" autocomplete="off">
+    <button onclick="startTP()">Commencer le TP →</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="brand">
+    <!-- ════════════════════════════════════════════════════════════════════
+         LOGO ESTIC — placeholder SVG. Pour mettre le VRAI logo ESTIC :
+         remplace tout le <svg>...</svg> ci-dessous par :
+         <img src="data:image/jpeg;base64,LE_BASE64_DU_LOGO" alt="Logo ESTIC">
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="brand-mark" title="Collège ESTIC Don Bosco — Saint-Dizier">
+      <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="Logo ESTIC">
+        <defs>
+          <linearGradient id="lgEstic" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1e6d4a"/>
+            <stop offset="100%" stop-color="#155738"/>
+          </linearGradient>
+        </defs>
+        <rect width="48" height="48" rx="6" fill="url(#lgEstic)"/>
+        <path d="M24 6 L40 12 L40 26 C40 34 33 41 24 44 C15 41 8 34 8 26 L8 12 Z"
+              fill="none" stroke="#fff" stroke-width="1.5" opacity="0.4"/>
+        <text x="24" y="22" text-anchor="middle"
+              font-family="Georgia,serif" font-weight="700"
+              font-size="11" fill="#fff" letter-spacing="0.5">ESTIC</text>
+        <line x1="14" y1="26" x2="34" y2="26" stroke="#b8830a" stroke-width="1"/>
+        <text x="24" y="36" text-anchor="middle"
+              font-family="Georgia,serif" font-style="italic"
+              font-size="6" fill="#fff" opacity="0.85">Don Bosco</text>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <h1>TP Macros — Automatiser Excel avec VBA</h1>
+      <p>Cycle 4 • Collège ESTIC Don Bosco</p>
+      <p class="brand-teacher">M. Agostini · Professeur de technologie</p>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="prof-toggle" onclick="openProfPanel()" title="Documentation pédagogique : objectifs, compétences, programme">
+      <span class="ico">📖</span> Espace pédagogique
+    </button>
+    <div class="duration-pill">⏱ 3 heures</div>
+  </div>
+</header>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- SCORE FLOAT -->
+<div class="score-display" id="scoreDisplay">
+  <div class="lbl">Exercices validés</div>
+  <div><span class="val" id="scoreVal">0</span><span class="total">/8</span></div>
+  <div class="details" id="scoreDetails"></div>
+</div>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-title">Progression</div>
+  <nav>
+    <ul>
+      <li class="group-label">Cours</li>
+      <li><a href="#m1" class="active"><span class="num">01</span>Qu'est-ce qu'une macro ?</a></li>
+      <li><a href="#m2"><span class="num">02</span>Enregistrer une macro</a></li>
+      <li><a href="#m3"><span class="num">03</span>Le code VBA</a></li>
+      <li><a href="#m4"><span class="num">04</span>Les boucles</a></li>
+      <li><a href="#m5"><span class="num">05</span>Conditions &amp; interactions</a></li>
+      <li class="group-label">Pratique</li>
+      <li><a href="#ex1"><span class="num">E1</span>Écrire dans une cellule</a></li>
+      <li><a href="#ex2"><span class="num">E2</span>Mettre en forme</a></li>
+      <li><a href="#ex3"><span class="num">E3</span>Numéroter une colonne</a></li>
+      <li><a href="#ex4"><span class="num">E4</span>Table de multiplication</a></li>
+      <li><a href="#ex5"><span class="num">E5</span>Coloriage conditionnel</a></li>
+      <li><a href="#ex6"><span class="num">E6</span>Diagonale</a></li>
+      <li><a href="#ex7"><span class="num">E7</span>Damier coloré</a></li>
+      <li class="group-label">Arcade</li>
+      <li><a href="#game1"><span class="num">🎯</span>Cible-Code</a></li>
+      <li><a href="#game2"><span class="num">⚡</span>Sprint Code</a></li>
+      <li><a href="#game3"><span class="num">🔍</span>Détective Bug</a></li>
+      <li class="group-label">Évaluation</li>
+      <li><a href="#eval"><span class="num">★</span>Entraînement noté</a></li>
+      <li><a href="#evalfinal"><span class="num">🔒</span>Évaluation officielle</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<!-- ====================================================================
+     ESPACE PÉDAGOGIQUE — overlay (cover + objectifs)
+==================================================================== -->
+<div class="prof-overlay" id="profOverlay" onclick="if(event.target===this) closeProfPanel()">
+  <div class="prof-overlay-inner">
+    <div class="prof-overlay-header">
+      <div class="prof-overlay-title">
+        <span class="badge">Espace pédagogique</span>
+        <span>Présentation &amp; programme</span>
+      </div>
+      <button class="prof-close" onclick="closeProfPanel()" aria-label="Fermer">✕</button>
+    </div>
+    <div class="prof-tabs">
+      <button class="prof-tab active" data-tab="presentation" onclick="switchProfTab('presentation')">📖 Présentation</button>
+      <button class="prof-tab" data-tab="objectifs" onclick="switchProfTab('objectifs')">🎯 Objectifs &amp; compétences</button>
+      <button class="prof-tab" data-tab="dashboard" onclick="switchProfTab('dashboard')">📊 Tableau de bord</button>
+    </div>
+
+    <div class="prof-panel show" id="profPanel-presentation">
+
+<!-- COVER -->
+<section id="cover" class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-content">
+    <div class="section-tag">▶ TP · 3 heures · Cycle 4</div>
+    <h1>Apprenons à<br><em>automatiser</em><br>le tableur.</h1>
+    <p class="cover-lead">
+      Tu vas découvrir les <strong>macros</strong> : des petits programmes qui exécutent
+      des séries d'actions à ta place dans un tableur. Tu vas enregistrer ta première
+      macro, lire le code VBA qui apparaît, et apprendre à l'écrire toi-même pour
+      automatiser des tâches répétitives.
+    </p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><span class="label">Durée</span><span class="value">3 h</span></div>
+      <div class="cover-meta-item"><span class="label">Niveau</span><span class="value">4ᵉ / 3ᵉ</span></div>
+      <div class="cover-meta-item"><span class="label">Exercices</span><span class="value">7 ateliers</span></div>
+      <div class="cover-meta-item"><span class="label">Évaluation</span><span class="value">Notée /20</span></div>
+      <div class="cover-meta-item"><span class="label">Matériel</span><span class="value">Cette page seulement</span></div>
+    </div>
+  </div>
+</section>
+
+    </div><!-- /profPanel-presentation -->
+
+    <div class="prof-panel" id="profPanel-objectifs">
+
+<!-- ====================================================================
+     SECTION OBJECTIFS, COMPÉTENCES, PROGRAMME (institutionnel)
+==================================================================== -->
+<section id="objectifs">
+  <div class="section-tag">▶ Programmation pédagogique</div>
+  <h2>Objectifs et compétences de la séquence</h2>
+
+  <div class="officiel-banner">
+    <div class="ribbon">Technologie · Cycle 4 · Niveau 3ᵉ</div>
+    <h3>Les macros : automatiser des tâches avec VBA</h3>
+    <p>
+      Séquence ancrée dans le programme officiel de technologie, principalement dans la
+      thématique <strong>« L'informatique et la programmation »</strong>, avec un lien
+      avec <strong>« Les objets techniques, les services et les changements induits dans
+      la société »</strong>. Durée totale : <strong>3 heures</strong> (1 séance dédoublée
+      ou 2 séances de 1 h 30).
+    </p>
+  </div>
+
+  <div class="card info">
+    <div class="card-title"><span class="icon">▸</span>Place dans la progression annuelle</div>
+    <p style="font-size:14px; line-height:1.6">
+      Cette séquence intervient en seconde partie d'année de 3ᵉ, <strong>après la
+      séquence sur le tableur</strong> (formules, fonctions, plages) et après les
+      premières expériences de programmation par blocs (Scratch, App Inventor). Elle
+      prolonge la réflexion sur l'automatisation des tâches et constitue une transition
+      vers les langages de programmation textuels (Python en lycée). Elle illustre
+      concrètement le concept d'algorithme appliqué à un outil que les élèves connaissent
+      déjà.
+    </p>
+  </div>
+
+  <div class="obj-grid">
+
+    <div class="obj-block">
+      <div class="obj-label">🎯 Objectifs opérationnels</div>
+      <h4>Ce que l'élève saura faire à la fin</h4>
+      <ol class="obj-list numbered">
+        <li>Définir ce qu'est une <strong>macro</strong> et en donner des exemples concrets d'usage.</li>
+        <li>Enregistrer une macro à partir d'une suite d'actions et la rejouer.</li>
+        <li>Lire et interpréter le code <strong>VBA</strong> généré par une macro enregistrée.</li>
+        <li>Écrire des instructions élémentaires (affectation d'une valeur, mise en forme).</li>
+        <li>Utiliser une <strong>boucle <code>For</code></strong> pour automatiser une tâche répétitive.</li>
+        <li>Utiliser une <strong>structure conditionnelle <code>If / Then / Else</code></strong>.</li>
+        <li>Repérer et corriger une erreur dans une macro existante.</li>
+      </ol>
+    </div>
+
+    <div class="obj-block">
+      <div class="obj-label">🧠 Connaissances visées</div>
+      <h4>Notions et vocabulaire à acquérir</h4>
+      <ul class="obj-list">
+        <li><strong>Lexique des macros :</strong> macro, VBA, éditeur, enregistrement, instruction, exécution.</li>
+        <li><strong>Structure d'une procédure :</strong> <code>Sub nom() ... End Sub</code>.</li>
+        <li><strong>Manipulation des cellules :</strong> <code>Range("A1").Value</code>, <code>Cells(r, c).Value</code>.</li>
+        <li><strong>Mise en forme :</strong> <code>.Font.Bold</code>, <code>.Interior.Color</code>.</li>
+        <li><strong>Variables et types :</strong> <code>Dim x As Integer</code>, affectation.</li>
+        <li><strong>Boucles :</strong> <code>For i = 1 To N ... Next i</code>.</li>
+        <li><strong>Conditions :</strong> <code>If ... Then ... Else ... End If</code>.</li>
+        <li><strong>Dialogues :</strong> <code>MsgBox</code>, <code>InputBox</code>.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <h3 style="font-family:'Fraunces',serif; font-weight:500; font-size:24px; margin:30px 0 10px; color:var(--ink)">
+    📋 Compétences du programme officiel travaillées
+  </h3>
+
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th style="width:30%">Thématique du programme</th>
+        <th>Compétence travaillée</th>
+        <th style="width:18%">Module(s)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Informatique et programmation</strong></td>
+        <td>Écrire, mettre au point et exécuter un programme commandant un système ou une simulation.</td>
+        <td><span class="code">M3 · M4 · M5</span></td>
+      </tr>
+      <tr>
+        <td><strong>Informatique et programmation</strong></td>
+        <td>Analyser le comportement attendu d'un système et décomposer le problème posé.</td>
+        <td><span class="code">M2 · E1 · E2</span></td>
+      </tr>
+      <tr>
+        <td><strong>Informatique et programmation</strong></td>
+        <td>Identifier les principes algorithmiques élémentaires : boucles, conditions.</td>
+        <td><span class="code">M4 · M5 · E5 → E7</span></td>
+      </tr>
+      <tr>
+        <td><strong>Modélisation et simulation</strong></td>
+        <td>Utiliser une simulation pour analyser ou prévoir un fonctionnement.</td>
+        <td><span class="code">M3 · M4</span></td>
+      </tr>
+      <tr>
+        <td><strong>Objets techniques et société</strong></td>
+        <td>Comprendre l'impact de l'automatisation sur l'organisation et l'efficacité d'un travail.</td>
+        <td><span class="code">M1 · M2</span></td>
+      </tr>
+      <tr>
+        <td><strong>Objets techniques et société</strong></td>
+        <td>Repérer une tâche répétitive et identifier le bénéfice d'une automatisation.</td>
+        <td><span class="code">M1 · Éval</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-family:'Fraunces',serif; font-weight:500; font-size:24px; margin:30px 0 10px; color:var(--ink)">
+    📐 Domaines du socle commun mobilisés
+  </h3>
+
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th style="width:22%">Domaine</th>
+        <th>Composante mobilisée</th>
+        <th style="width:34%">Mobilisation concrète dans la séquence</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="code">D1.3</span><br><strong>Langages mathématiques, scientifiques et informatiques</strong></td>
+        <td>Comprendre, s'exprimer en utilisant les langages mathématiques, scientifiques et informatiques.</td>
+        <td>Écrire des formules respectant une syntaxe stricte (rôle du <code>=</code>, références, plages). Manipuler le langage formel d'un outil applicatif.</td>
+      </tr>
+      <tr>
+        <td><span class="code">D2</span><br><strong>Méthodes et outils pour apprendre</strong></td>
+        <td>Coopération et réalisation de projets · médias, démarches de recherche et de traitement de l'information.</td>
+        <td>Utiliser un outil numérique pour organiser, traiter et présenter des données. Repérer ses erreurs et les corriger en autonomie.</td>
+      </tr>
+      <tr>
+        <td><span class="code">D4</span><br><strong>Systèmes naturels et systèmes techniques</strong></td>
+        <td>Démarches scientifiques · conception, création, réalisation · responsabilités individuelles et collectives.</td>
+        <td>Comprendre le fonctionnement d'un logiciel applicatif. Analyser un comportement (recalcul automatique). Réaliser un livrable technique (la feuille de l'atelier).</td>
+      </tr>
+      <tr>
+        <td><span class="code">D5</span><br><strong>Représentations du monde et activité humaine</strong></td>
+        <td>Raisonnement et imagination pour appréhender et représenter le monde · invention, élaboration, production.</td>
+        <td>Représenter et interpréter des données quantitatives sous différentes formes (tableau, graphique).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 style="font-family:'Fraunces',serif; font-weight:500; font-size:24px; margin:30px 0 10px; color:var(--ink)">
+    🛠 Organisation et matériel
+  </h3>
+
+  <div class="modalites-grid">
+    <div class="modalite">
+      <div class="ico">⏱</div>
+      <div class="lab">Durée</div>
+      <div class="val">3 h</div>
+      <div class="sub">en 1 séance dédoublée ou 2 × 1 h 30</div>
+    </div>
+    <div class="modalite">
+      <div class="ico">💻</div>
+      <div class="lab">Matériel</div>
+      <div class="val">1 à 4 / poste</div>
+      <div class="sub">de 1 à 4 élèves par ordinateur ou tablette, navigateur récent</div>
+    </div>
+    <div class="modalite">
+      <div class="ico">📦</div>
+      <div class="lab">Logiciel</div>
+      <div class="val">Aucun</div>
+      <div class="sub">tableur intégré, fonctionne hors ligne</div>
+    </div>
+    <div class="modalite">
+      <div class="ico">🧭</div>
+      <div class="lab">Pré-requis</div>
+      <div class="val">Les 4 opérations</div>
+      <div class="sub">manipulation souris / clavier</div>
+    </div>
+    <div class="modalite">
+      <div class="ico">👥</div>
+      <div class="lab">Modalité</div>
+      <div class="val">Autonomie</div>
+      <div class="sub">aide ponctuelle du professeur</div>
+    </div>
+    <div class="modalite">
+      <div class="ico">📝</div>
+      <div class="lab">Trace écrite</div>
+      <div class="val">Copie /20</div>
+      <div class="sub">imprimable en fin de séance</div>
+    </div>
+  </div>
+
+  <h3 style="font-family:'Fraunces',serif; font-weight:500; font-size:24px; margin:30px 0 10px; color:var(--ink)">
+    📊 Modalités d'évaluation
+  </h3>
+
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th style="width:18%">Type</th>
+        <th style="width:22%">Moment</th>
+        <th>Support</th>
+        <th style="width:18%">Pondération</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Diagnostique</strong></td>
+        <td>Début de séance</td>
+        <td>Échange oral : « Que connaissez-vous du tableur ? À quoi peut-il servir ? »</td>
+        <td>Indicative</td>
+      </tr>
+      <tr>
+        <td><strong>Formative</strong></td>
+        <td>Pendant les 7 exercices (E1 → E7)</td>
+        <td>Validation automatique au fil de l'eau avec retours pédagogiques individualisés.</td>
+        <td>Indicative</td>
+      </tr>
+      <tr>
+        <td><strong>Sommative</strong></td>
+        <td>Fin de séance</td>
+        <td>Projet « Gestion du stock de l'atelier » : 7 tâches notées sur 20 points.</td>
+        <td><strong>Note /20</strong></td>
+      </tr>
+      <tr>
+        <td><strong>Ludique</strong></td>
+        <td>En autonomie</td>
+        <td>3 jeux d'entraînement (🎯 Cible-Formule, ⚡ Sprint, 🔍 Détective).</td>
+        <td>Bonus engagement</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="fil-rouge">
+    <strong>🔗 Prolongements possibles &nbsp;·&nbsp;</strong>
+    Réinvestissement en <strong>mathématiques</strong> (statistiques descriptives, traitement de séries),
+    en <strong>SVT / physique-chimie</strong> (exploitation de mesures expérimentales), en
+    <strong>EPS</strong> (suivi de performances) ou dans un <strong>projet EPI</strong> centré sur une
+    enquête quantitative. La séquence prépare aussi les usages du tableur lors de l'épreuve orale du
+    DNB pour les élèves qui présentent un projet technologique.
+  </div>
+
+  <div class="card tip">
+    <div class="card-title"><span class="icon">▸</span>Pour le professeur — différenciation</div>
+    <p style="font-size:14px; line-height:1.6">
+      Les exercices E1 → E4 servent aux élèves les plus en difficulté (saisie + premières
+      formules). E5 → E7 permettent le réinvestissement avec des fonctions combinées.
+      Les trois jeux de l'Arcade autorisent une montée en complexité <em>libre</em> pour
+      les élèves rapides, sans interférer avec la progression standard. L'évaluation
+      finale peut être passée en version réduite (tâches 1 à 4 uniquement, sur 11 pts)
+      pour les élèves ULIS ou en grande difficulté.
+    </p>
+  </div>
+</section>
+
+    </div><!-- /profPanel-objectifs -->
+
+    <div class="prof-panel" id="profPanel-dashboard">
+
+<!-- ====================================================================
+     TABLEAU DE BORD PROF — protégé par mot de passe
+==================================================================== -->
+<section id="dashboard-section">
+  <!-- Écran de mot de passe -->
+  <div id="dashLock" class="dash-lock">
+    <div class="dash-lock-icon">🔐</div>
+    <h2 style="font-family:'Fraunces',serif; font-weight:500; font-size:26px; margin-bottom:8px">Accès enseignant</h2>
+    <p style="color:var(--ink-soft); font-size:14px; margin-bottom:20px">
+      Saisis le mot de passe enseignant pour accéder aux résultats des élèves.
+    </p>
+    <div style="max-width:340px; margin:0 auto; display:flex; flex-direction:column; gap:10px">
+      <input type="password" id="dashPwd" placeholder="Mot de passe enseignant" style="padding:12px 16px; border:1px solid var(--line); border-radius:8px; font-family:Outfit,sans-serif; font-size:14px; outline:none; text-align:center" autocomplete="off">
+      <button onclick="unlockDashboard()" style="padding:12px 18px; background:var(--accent); color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-family:Outfit,sans-serif; font-size:14px">Accéder</button>
+      <div id="dashErr" style="display:none; color:var(--warn); font-size:13px; background:var(--warn-soft); padding:8px; border-radius:6px">✗ Mot de passe incorrect.</div>
+    </div>
+  </div>
+
+  <!-- Contenu du dashboard -->
+  <div id="dashContent" style="display:none">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px">
+      <div>
+        <h2 style="font-family:'Fraunces',serif; font-weight:500; font-size:24px; margin:0">📊 Résultats des élèves</h2>
+        <p style="font-size:13px; color:var(--ink-soft); margin-top:4px"><span id="dashCount">0</span> copie(s) · <span id="dashSource">—</span></p>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <button onclick="refreshDashboard()" style="padding:9px 14px; background:var(--accent-soft); color:var(--accent-deep); border:1px solid var(--accent); border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; font-family:Outfit,sans-serif">↻ Actualiser</button>
+        <button onclick="exportDashboardCSV()" style="padding:9px 14px; background:var(--gold); color:#fff; border:none; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; font-family:Outfit,sans-serif">⬇ Export CSV</button>
+        <button onclick="clearAllResults()" style="padding:9px 14px; background:transparent; color:var(--warn); border:1px solid var(--warn); border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; font-family:Outfit,sans-serif">🗑 Tout effacer</button>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap">
+      <input type="text" id="dashFilterName" placeholder="🔍 Filtrer par nom" oninput="renderDashboard()" style="flex:1; min-width:200px; padding:9px 12px; border:1px solid var(--line); border-radius:7px; font-size:13px; outline:none; font-family:Outfit,sans-serif">
+      <select id="dashFilterClass" onchange="renderDashboard()" style="padding:9px 12px; border:1px solid var(--line); border-radius:7px; font-size:13px; outline:none; background:#fff; font-family:Outfit,sans-serif">
+        <option value="">Toutes les classes</option>
+      </select>
+      <select id="dashSort" onchange="renderDashboard()" style="padding:9px 12px; border:1px solid var(--line); border-radius:7px; font-size:13px; outline:none; background:#fff; font-family:Outfit,sans-serif">
+        <option value="date-desc">Date ↓ (récent)</option>
+        <option value="date-asc">Date ↑ (ancien)</option>
+        <option value="name-asc">Nom A→Z</option>
+        <option value="grade-desc">Note ↓</option>
+        <option value="grade-asc">Note ↑</option>
+      </select>
+    </div>
+
+    <div id="dashStats" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; margin-bottom:16px"></div>
+
+    <div style="border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--paper)">
+      <table id="dashTable" style="width:100%; border-collapse:collapse; font-size:13px">
+        <thead>
+          <tr style="background:var(--bg); border-bottom:1px solid var(--line)">
+            <th style="padding:10px 12px; text-align:left; font-weight:600; color:var(--ink-soft); font-size:12px; text-transform:uppercase; letter-spacing:0.05em">Élève</th>
+            <th style="padding:10px 12px; text-align:left; font-weight:600; color:var(--ink-soft); font-size:12px; text-transform:uppercase; letter-spacing:0.05em">Classe</th>
+            <th style="padding:10px 12px; text-align:center; font-weight:600; color:var(--ink-soft); font-size:12px; text-transform:uppercase; letter-spacing:0.05em">Note /20</th>
+            <th style="padding:10px 12px; text-align:left; font-weight:600; color:var(--ink-soft); font-size:12px; text-transform:uppercase; letter-spacing:0.05em">Détail des tâches</th>
+            <th style="padding:10px 12px; text-align:left; font-weight:600; color:var(--ink-soft); font-size:12px; text-transform:uppercase; letter-spacing:0.05em">Date</th>
+            <th style="padding:10px 12px; text-align:center; font-weight:600; color:var(--ink-soft); font-size:12px; text-transform:uppercase; letter-spacing:0.05em">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="dashTbody"></tbody>
+      </table>
+      <div id="dashEmpty" style="padding:40px; text-align:center; color:var(--ink-soft); display:none">
+        Aucune copie reçue pour le moment.<br>
+        <span style="font-size:12px">Les notes apparaîtront automatiquement quand les élèves termineront leur évaluation.</span>
+      </div>
+    </div>
+
+    <div style="margin-top:16px; padding:14px; background:var(--bg); border-radius:8px; font-size:12px; color:var(--ink-soft); line-height:1.6">
+      💡 <strong>Source des données :</strong> les copies remontent depuis ta base <strong>Firebase Realtime Database</strong> si elle est configurée, sinon depuis le <code>localStorage</code> du navigateur courant uniquement. Pour activer Firebase, remplis la constante <code>FIREBASE_CONFIG</code> en haut du script.
+    </div>
+  </div>
+</section>
+
+    </div><!-- /profPanel-dashboard -->
+  </div><!-- /prof-overlay-inner -->
+</div><!-- /prof-overlay -->
+
+
+<!-- ====================================================================
+     MODULE 1 — QU'EST-CE QU'UNE MACRO ?
+==================================================================== -->
+<main>
+
+<section id="m1">
+  <div class="section-tag">▶ Module 1 · 15 min</div>
+  <h2 class="section-title">Qu'est-ce qu'une macro ?</h2>
+  <p class="section-subtitle">
+    Une <strong>macro</strong>, c'est un petit <strong>programme</strong> qui exécute
+    automatiquement une suite d'actions à la place de l'utilisateur. Une fois écrite,
+    elle se lance d'un seul clic.
+  </p>
+
+  <h3>Le problème : les tâches répétitives</h3>
+  <p>
+    Imagine que tu doives mettre en gras + remplir en jaune + centrer le contenu de
+    <strong>50 cellules</strong>. À la main, ça prend des minutes. Avec une macro,
+    c'est <strong>instantané</strong>. La macro fait à ta place ce que tu lui as
+    appris à faire.
+  </p>
+
+  <div class="card info">
+    <div class="card-title"><span class="icon">▸</span>Vocabulaire à retenir</div>
+    <table class="ref-table" style="margin:6px 0">
+      <tr><th>Mot</th><th>Définition</th></tr>
+      <tr><td><strong>Macro</strong></td><td>Une suite d'actions enregistrée qu'on peut rejouer à volonté</td></tr>
+      <tr><td><strong>VBA</strong></td><td><em>Visual Basic for Applications</em> — le langage de programmation des macros Excel</td></tr>
+      <tr><td><strong>Instruction</strong></td><td>Une ligne de code qui dit au tableur quoi faire</td></tr>
+      <tr><td><strong>Exécuter</strong></td><td>Lancer la macro pour qu'elle effectue ses actions</td></tr>
+      <tr><td><strong>Éditeur VBA</strong></td><td>La fenêtre où on écrit/modifie le code des macros</td></tr>
+    </table>
+  </div>
+
+  <h3 style="margin-top:24px">Démo : ta première macro</h3>
+  <p>
+    Voici un mini-tableur et un éditeur de code. La macro ci-dessous remplit trois
+    cellules quand on l'exécute. Clique sur <strong>▶ Exécuter</strong> et observe.
+  </p>
+  <div id="me_intro"></div>
+
+  <div class="card tip">
+    <div class="card-title"><span class="icon">★</span>Ce qu'il faut comprendre</div>
+    <ul style="margin-left:18px">
+      <li>La macro contient une suite d'<strong>instructions</strong> (les lignes de code).</li>
+      <li>Chaque instruction dit <strong>une action précise</strong> au tableur.</li>
+      <li>Quand on l'exécute, les instructions sont jouées <strong>de haut en bas</strong>, dans l'ordre.</li>
+      <li>On peut la relancer autant de fois qu'on veut.</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     MODULE 2 — ENREGISTRER UNE MACRO
+==================================================================== -->
+<section id="m2">
+  <div class="section-tag">▶ Module 2 · 15 min</div>
+  <h2 class="section-title">Enregistrer une macro</h2>
+  <p class="section-subtitle">
+    Bonne nouvelle : <strong>tu n'as pas besoin de tout coder à la main</strong>.
+    Excel possède un <strong>enregistreur de macros</strong> qui transforme tes
+    clics en code VBA automatiquement.
+  </p>
+
+  <h3>Le principe</h3>
+  <ol style="margin-left:20px; line-height:1.8">
+    <li>Tu cliques sur <strong>« Enregistrer une macro »</strong> dans l'onglet <em>Développeur</em>.</li>
+    <li>Tu fais les actions que tu veux automatiser (saisir, mettre en forme, etc.).</li>
+    <li>Tu cliques sur <strong>« Arrêter l'enregistrement »</strong>.</li>
+    <li>Excel a écrit le <strong>code VBA</strong> correspondant à tes actions. Tu peux le lire, le modifier, le rejouer.</li>
+  </ol>
+
+  <div class="card warn">
+    <div class="card-title"><span class="icon">⚠</span>Important</div>
+    <p style="font-size:14px; line-height:1.6">
+      L'enregistreur est utile pour <strong>débuter</strong>, mais il produit souvent
+      du code <em>verbeux</em> (long et un peu maladroit). Apprendre à lire et à
+      écrire toi-même le code VBA permet d'avoir des macros bien plus <strong>courtes</strong>
+      et <strong>puissantes</strong>.
+    </p>
+  </div>
+
+  <h3 style="margin-top:24px">Simulation : enregistre tes actions</h3>
+  <p>
+    Dans ce mini-environnement, clique sur <strong>● Enregistrer</strong>, fais quelques
+    actions (saisir une valeur dans une cellule, par exemple), puis clique sur
+    <strong>■ Arrêter</strong>. Le code VBA correspondant apparaît dans la zone de droite.
+  </p>
+  <div id="me_record"></div>
+</section>
+
+
+<!-- ====================================================================
+     MODULE 3 — LE CODE VBA
+==================================================================== -->
+<section id="m3">
+  <div class="section-tag">▶ Module 3 · 40 min</div>
+  <h2 class="section-title">Lire et écrire du code VBA</h2>
+  <p class="section-subtitle">
+    Une fois enregistrée, ta macro existe sous forme de <strong>code VBA</strong>.
+    Apprenons à le lire et à l'écrire toi-même.
+  </p>
+
+  <h3>La structure d'une macro</h3>
+  <p>Toute macro commence par <code>Sub</code> et se termine par <code>End Sub</code> :</p>
+  <pre class="vba-snippet">Sub MaPremiereMacro()
+    ' Ici, les instructions de la macro
+    Range("A1").Value = "Bonjour"
+End Sub</pre>
+  <ul style="margin-left:20px; line-height:1.7; margin-top:10px">
+    <li><code>Sub MaPremiereMacro()</code> : déclare une macro qui s'appelle « MaPremiereMacro ».</li>
+    <li><code>End Sub</code> : marque la fin de la macro.</li>
+    <li>Tout ce qui est <strong>entre</strong> les deux est exécuté quand on lance la macro.</li>
+    <li>Une ligne qui commence par <code>'</code> (apostrophe) est un <strong>commentaire</strong> — ignoré par l'ordinateur, juste une note pour toi.</li>
+  </ul>
+
+  <h3 style="margin-top:24px">Écrire dans une cellule</h3>
+  <p>Pour écrire dans la cellule <strong>A1</strong>, on utilise :</p>
+  <pre class="vba-snippet">Range("A1").Value = "Bonjour"
+Range("B2").Value = 42
+Cells(3, 1).Value = "Ligne 3, colonne 1"</pre>
+  <ul style="margin-left:20px; line-height:1.7; margin-top:10px">
+    <li><code>Range("A1")</code> : on désigne la cellule par sa référence (lettre + chiffre).</li>
+    <li><code>.Value</code> : on accède à la <em>valeur</em> de la cellule.</li>
+    <li><code>=</code> : on lui donne une nouvelle valeur.</li>
+    <li><code>Cells(3, 1)</code> : autre façon — la cellule à la <strong>ligne 3</strong>, <strong>colonne 1</strong> (= A3). Utile avec des variables.</li>
+  </ul>
+
+  <h3 style="margin-top:24px">Mettre en forme</h3>
+  <pre class="vba-snippet">Range("A1").Font.Bold = True
+Range("A1").Interior.Color = RGB(255, 255, 0)</pre>
+  <ul style="margin-left:20px; line-height:1.7; margin-top:10px">
+    <li><code>.Font.Bold = True</code> : met le texte en gras.</li>
+    <li><code>.Interior.Color = RGB(R, G, B)</code> : change la couleur de fond. <code>RGB(255,255,0)</code> = jaune.</li>
+  </ul>
+
+  <h3 style="margin-top:24px">Démo : écris ta macro</h3>
+  <p>
+    Essaie d'écrire toi-même une macro qui remplit quelques cellules. Tu peux modifier
+    le code ci-dessous et cliquer sur <strong>▶ Exécuter</strong> pour voir le résultat
+    dans le tableur :
+  </p>
+  <div id="me_demo3"></div>
+
+  <!-- EXERCICE 1 -->
+  <div class="exercise" id="ex1">
+    <div class="exercise-badge">Exercice 1 · 5 min</div>
+    <h4>Écrire dans une cellule</h4>
+    <div class="task">
+      <strong>À faire :</strong>
+      <ol style="margin-left:18px; margin-top:6px">
+        <li>Écris une macro qui place le mot <code>Bonjour</code> dans la cellule <strong>A1</strong>.</li>
+        <li>Et le nombre <code>2026</code> dans la cellule <strong>B1</strong>.</li>
+        <li>Clique sur <strong>▶ Exécuter</strong>.</li>
+      </ol>
+    </div>
+    <div id="me_ex1"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx1()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex1"></div>
+  </div>
+
+  <!-- EXERCICE 2 -->
+  <div class="exercise" id="ex2">
+    <div class="exercise-badge">Exercice 2 · 7 min</div>
+    <h4>Mettre en forme</h4>
+    <div class="task">
+      <strong>À faire :</strong> Écris une macro qui :
+      <ol style="margin-left:18px; margin-top:6px">
+        <li>Écrit <code>TITRE</code> dans la cellule <strong>A1</strong>.</li>
+        <li>Met cette cellule <strong>en gras</strong>.</li>
+        <li>Met cette cellule en <strong>jaune</strong> (<code>RGB(255,255,0)</code>).</li>
+      </ol>
+    </div>
+    <div id="me_ex2"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx2()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex2"></div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     MODULE 4 — LES BOUCLES
+==================================================================== -->
+<section id="m4">
+  <div class="section-tag">▶ Module 4 · 40 min</div>
+  <h2 class="section-title">Les boucles — répéter sans s'épuiser</h2>
+  <p class="section-subtitle">
+    Pour remplir <strong>10, 100 ou 1000 cellules</strong>, on ne va pas écrire 1000
+    lignes de code. On utilise une <strong>boucle</strong>.
+  </p>
+
+  <h3>La boucle <code>For ... Next</code></h3>
+  <p>
+    Cette boucle répète un bloc de code plusieurs fois en faisant varier un compteur :
+  </p>
+  <pre class="vba-snippet">For i = 1 To 10
+    Cells(i, 1).Value = i
+Next i</pre>
+
+  <div class="card info">
+    <div class="card-title"><span class="icon">▸</span>Décodage de cette boucle</div>
+    <ul style="margin-left:18px; line-height:1.7; margin-top:4px">
+      <li><code>For i = 1 To 10</code> : démarre une boucle où <code>i</code> va prendre les valeurs 1, 2, 3, …, 10.</li>
+      <li><code>Cells(i, 1).Value = i</code> : à chaque tour, écrit la valeur de <code>i</code> dans la cellule de la ligne <code>i</code>, colonne 1.</li>
+      <li><code>Next i</code> : ferme la boucle, on revient en haut avec la valeur suivante.</li>
+    </ul>
+    <p style="font-size:13px; margin-top:8px"><strong>Résultat :</strong> les cellules A1 à A10 contiennent 1, 2, 3, … 10.</p>
+  </div>
+
+  <h3 style="margin-top:24px">Démo : la boucle au travail</h3>
+  <p>Modifie le nombre 10 par 20, 50 ou 100. Exécute et observe :</p>
+  <div id="me_demo4"></div>
+
+  <h3 style="margin-top:24px">Variables</h3>
+  <p>
+    Tu peux utiliser des <strong>variables</strong> pour stocker des valeurs et les
+    réutiliser. On les déclare avec <code>Dim</code> :
+  </p>
+  <pre class="vba-snippet">Dim n As Integer
+n = 5
+For i = 1 To n
+    Cells(i, 1).Value = i * 2
+Next i</pre>
+  <p style="font-size:13px; color:var(--ink-soft); margin-top:6px">
+    Cette macro remplit A1 à A5 avec 2, 4, 6, 8, 10.
+  </p>
+
+  <!-- EXERCICE 3 -->
+  <div class="exercise" id="ex3">
+    <div class="exercise-badge">Exercice 3 · 8 min</div>
+    <h4>Numéroter une colonne</h4>
+    <div class="task">
+      <strong>À faire :</strong> Écris une macro qui remplit les cellules
+      <strong>A1 à A15</strong> avec les nombres <strong>1, 2, 3, …, 15</strong>.
+      Utilise une boucle <code>For</code>.
+    </div>
+    <div id="me_ex3"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx3()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex3"></div>
+  </div>
+
+  <!-- EXERCICE 4 -->
+  <div class="exercise" id="ex4">
+    <div class="exercise-badge">Exercice 4 · 10 min</div>
+    <h4>Table de multiplication</h4>
+    <div class="task">
+      <strong>À faire :</strong> Écris une macro qui affiche la <strong>table de
+      multiplication par 7</strong> dans la colonne A. Plus précisément :
+      <ul style="margin-left:18px; margin-top:6px">
+        <li>A1 = 7 × 1 = 7</li>
+        <li>A2 = 7 × 2 = 14</li>
+        <li>A3 = 7 × 3 = 21</li>
+        <li>… jusqu'à A10 = 7 × 10 = 70</li>
+      </ul>
+      <p style="margin-top:6px">Indice : utilise <code>Cells(i, 1).Value = i * 7</code>.</p>
+    </div>
+    <div id="me_ex4"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx4()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex4"></div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     MODULE 5 — CONDITIONS ET INTERACTIONS
+==================================================================== -->
+<section id="m5">
+  <div class="section-tag">▶ Module 5 · 30 min</div>
+  <h2 class="section-title">Conditions et interactions</h2>
+  <p class="section-subtitle">
+    Une vraie macro doit pouvoir <strong>réagir</strong> selon les situations.
+    Le mot-clé <code>If</code> permet de faire un choix.
+  </p>
+
+  <h3>La structure <code>If ... Then ... Else ... End If</code></h3>
+  <pre class="vba-snippet">If x > 10 Then
+    Cells(1, 1).Value = "Grand"
+Else
+    Cells(1, 1).Value = "Petit"
+End If</pre>
+  <ul style="margin-left:20px; line-height:1.7; margin-top:10px">
+    <li><code>If x > 10 Then</code> : <em>si</em> la valeur de x est plus grande que 10…</li>
+    <li>… on exécute la première instruction.</li>
+    <li><code>Else</code> : <em>sinon</em>, on exécute la seconde.</li>
+    <li><code>End If</code> : ferme la condition.</li>
+  </ul>
+
+  <h3 style="margin-top:24px">Comparateurs disponibles</h3>
+  <table class="ref-table">
+    <tr><th>Symbole</th><th>Signification</th><th>Exemple</th></tr>
+    <tr><td><code>=</code></td><td>égal à</td><td><code>x = 5</code></td></tr>
+    <tr><td><code>&lt;&gt;</code></td><td>différent de</td><td><code>x &lt;&gt; 0</code></td></tr>
+    <tr><td><code>&lt;</code> &nbsp; <code>&gt;</code></td><td>inférieur, supérieur</td><td><code>x &lt; 10</code></td></tr>
+    <tr><td><code>&lt;=</code> &nbsp; <code>&gt;=</code></td><td>inférieur ou égal, supérieur ou égal</td><td><code>x &gt;= 0</code></td></tr>
+  </table>
+
+  <h3 style="margin-top:24px"><code>MsgBox</code> : afficher un message</h3>
+  <pre class="vba-snippet">MsgBox "Bonjour !"</pre>
+  <p style="font-size:13px; color:var(--ink-soft); margin-top:6px">
+    Ouvre une petite fenêtre qui affiche le texte indiqué.
+  </p>
+
+  <h3 style="margin-top:24px">Démo : pair ou impair ?</h3>
+  <p>
+    Modifie la valeur de <code>n</code> dans cette macro et observe le résultat
+    selon que <code>n</code> est pair ou impair. (Un nombre est pair quand
+    <code>n Mod 2 = 0</code> — Mod donne le reste de la division.)
+  </p>
+  <div id="me_demo5"></div>
+
+  <!-- EXERCICE 5 -->
+  <div class="exercise" id="ex5">
+    <div class="exercise-badge">Exercice 5 · 10 min</div>
+    <h4>Coloriage selon condition</h4>
+    <div class="task">
+      <strong>À faire :</strong> Écris une macro qui parcourt les cellules <strong>A1 à A10</strong> :
+      <ul style="margin-left:18px; margin-top:6px">
+        <li>Si la ligne est <strong>paire</strong> (i Mod 2 = 0), colore en <code>RGB(200,230,200)</code>.</li>
+        <li>Sinon, colore en <code>RGB(255,240,200)</code>.</li>
+        <li>Et écris le numéro de ligne dans la cellule (<code>Cells(i, 1).Value = i</code>).</li>
+      </ul>
+    </div>
+    <div id="me_ex5"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx5()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex5"></div>
+  </div>
+
+  <!-- EXERCICE 6 -->
+  <div class="exercise" id="ex6">
+    <div class="exercise-badge">Exercice 6 · 10 min</div>
+    <h4>Diagonale</h4>
+    <div class="task">
+      <strong>À faire :</strong> Écris une macro qui place le caractère <code>★</code>
+      sur la <strong>diagonale</strong> d'une grille 5×5 : A1, B2, C3, D4, E5.
+      Utilise <code>Cells(i, i)</code> dans une boucle.
+    </div>
+    <div id="me_ex6"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx6()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex6"></div>
+  </div>
+
+  <!-- EXERCICE 7 -->
+  <div class="exercise" id="ex7">
+    <div class="exercise-badge">Exercice 7 · 12 min</div>
+    <h4>Damier coloré</h4>
+    <div class="task">
+      <strong>À faire :</strong> Écris une macro qui colore une grille <strong>5×5</strong>
+      en damier (alternance de deux couleurs). Indice :
+      <ul style="margin-left:18px; margin-top:6px">
+        <li>Tu auras besoin de <strong>deux boucles</strong> imbriquées (une pour les lignes, une pour les colonnes).</li>
+        <li>Une case est claire si <code>(i + j) Mod 2 = 0</code>.</li>
+      </ul>
+    </div>
+    <div id="me_ex7"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx7()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex7"></div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ARCADE — JEU 1 : CIBLE-CODE
+==================================================================== -->
+<section id="game1">
+  <div class="section-tag">▶ Arcade · Jeu 1</div>
+  <h2>🎯 Cible-Code</h2>
+
+  <div class="game-card">
+    <div class="game-head">
+      <div class="icon">🎯</div>
+      <div>
+        <h3>Atteins la cellule cible !</h3>
+        <div class="sub">Écris une macro qui place la bonne valeur au bon endroit</div>
+      </div>
+    </div>
+
+    <div class="game-rules">
+      <strong>Mission :</strong> une <strong>cible</strong> apparaît (cellule + valeur attendue).
+      Écris une macro qui place cette valeur dans cette cellule. Tu gagnes
+      <strong>10 points</strong> par cible atteinte, +<strong>5</strong> de combo bonus.
+    </div>
+
+    <div class="game-hud">
+      <div class="hud-pill score"><span class="lbl">Score</span><span class="val" id="g1Score">0</span></div>
+      <div class="hud-pill combo"><span class="lbl">Combo</span><span class="val" id="g1Combo">×0</span></div>
+      <div class="hud-pill"><span class="lbl">Cibles</span><span class="val" id="g1Round">0</span>/8</div>
+    </div>
+
+    <div class="target-board">
+      <div class="target-display">
+        <div class="lbl">Cible à atteindre</div>
+        <div class="num" id="g1Target">—</div>
+      </div>
+      <div id="me_game1"></div>
+      <div class="target-buttons" style="margin-top:14px">
+        <button class="btn-fire" onclick="g1Fire()">🚀 Tester</button>
+        <button class="btn-next" onclick="g1NewTarget()" id="g1NextBtn" style="display:none">▶ Cible suivante</button>
+        <button class="btn-ghost" onclick="g1Skip()">⤳ Passer</button>
+        <button class="btn-ghost" onclick="g1Reset()">↺ Recommencer</button>
+      </div>
+      <div class="target-result" id="g1Result" style="margin-top:14px">En attente de ta macro…</div>
+    </div>
+
+    <div class="feedback" id="fb_g1"></div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ARCADE — JEU 2 : SPRINT CODE
+==================================================================== -->
+<section id="game2">
+  <div class="section-tag">▶ Arcade · Jeu 2</div>
+  <h2>⚡ Sprint Code</h2>
+
+  <div class="game-card">
+    <div class="game-head">
+      <div class="icon" style="background:#fff5d6">⚡</div>
+      <div>
+        <h3>Reconnaître le bon code, vite !</h3>
+        <div class="sub">60 secondes · 4 propositions par question</div>
+      </div>
+    </div>
+
+    <div class="game-rules">
+      <strong>Règle :</strong> une description s'affiche (ex : « remplir A1 à A5 avec
+      les nombres 1 à 5 »). Tu dois cliquer sur la macro qui produit ce résultat.
+      Tu as <strong>60 secondes</strong>. Chaque bonne réponse vaut
+      <strong>10 points</strong>, +<strong>3</strong> de bonus par combo.
+    </div>
+
+    <div class="game-hud">
+      <div class="hud-pill timer"><span class="lbl">Temps</span><span class="val" id="g2Time">60s</span></div>
+      <div class="hud-pill score"><span class="lbl">Score</span><span class="val" id="g2Score">0</span></div>
+      <div class="hud-pill combo"><span class="lbl">Combo</span><span class="val" id="g2Combo">×0</span></div>
+      <div class="hud-pill"><span class="lbl">Question</span><span class="val" id="g2QNum">—</span></div>
+    </div>
+
+    <div class="sprint-arena">
+      <div class="sprint-start" id="g2Start">
+        <p style="font-size:16px; color:var(--ink-soft); margin-bottom:16px">
+          Prêt·e ? Clique pour lancer le sprint.
+        </p>
+        <button class="btn-fire" style="padding:14px 28px; font-size:16px; border:none; border-radius:10px; color:#fff; background:var(--accent); font-weight:600; cursor:pointer" onclick="g2Start()">▶ Démarrer le sprint</button>
+      </div>
+      <div id="g2Play" style="display:none">
+        <div class="timer-bar"><div class="fill" id="g2TimerFill"></div></div>
+        <div class="sprint-question" id="g2Question"></div>
+        <div class="sprint-options" id="g2Options"></div>
+      </div>
+      <div class="sprint-over" id="g2Over" style="display:none">
+        <div style="font-size:14px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.1em">Sprint terminé</div>
+        <div class="final-score" id="g2Final">0</div>
+        <div class="rank-msg" id="g2Rank"></div>
+        <p style="font-size:14px; color:var(--ink-soft); margin:14px 0">
+          Bonnes réponses : <strong id="g2Good">0</strong> · Combo max : <strong id="g2MaxCombo">0</strong>
+        </p>
+        <button class="btn-fire" style="padding:12px 24px; font-size:15px; border:none; border-radius:8px; color:#fff; background:var(--accent); font-weight:600; cursor:pointer" onclick="g2Start()">↺ Rejouer</button>
+      </div>
+    </div>
+
+    <div class="feedback" id="fb_g2"></div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ARCADE — JEU 3 : DÉTECTIVE BUG
+==================================================================== -->
+<section id="game3">
+  <div class="section-tag">▶ Arcade · Jeu 3</div>
+  <h2>🔍 Détective Bug</h2>
+
+  <div class="game-card">
+    <div class="game-head">
+      <div class="icon" style="background:#e6efff">🔍</div>
+      <div>
+        <h3>Trouve l'erreur dans la macro !</h3>
+        <div class="sub">5 enquêtes · une ligne de code à corriger</div>
+      </div>
+    </div>
+
+    <div class="game-rules">
+      <strong>Enquête :</strong> chaque macro contient <strong>une erreur</strong>.
+      Lis le code, comprends l'intention, repère la ligne fautive et écris la
+      <strong>correction</strong>. Tu gagnes <strong>20 points</strong> par bug
+      résolu, −5 si tu utilises l'indice.
+    </div>
+
+    <div class="game-hud">
+      <div class="hud-pill score"><span class="lbl">Score</span><span class="val" id="g3Score">0</span></div>
+      <div class="hud-pill"><span class="lbl">Enquête</span><span class="val" id="g3Case">1</span>/5</div>
+      <div class="hud-pill"><span class="lbl">Résolues</span><span class="val" id="g3Solved">0</span></div>
+    </div>
+
+    <div class="detective-board" id="g3Board">
+      <div class="case-file" id="g3CaseFile"></div>
+      <pre class="vba-snippet" id="g3Code" style="margin:14px 0"></pre>
+      <div class="case-formula-row">
+        <span style="font-size:13px; color:var(--ink-soft); font-weight:600">Correction de la ligne</span>
+        <span class="ref-tag" id="g3LineNum">?</span>
+        <input type="text" id="g3Input" placeholder="Écris la ligne corrigée" autocomplete="off">
+      </div>
+      <div class="target-buttons">
+        <button class="btn-fire" onclick="g3Submit()">🔎 Soumettre</button>
+        <button class="btn-ghost" onclick="g3Hint()" id="g3HintBtn">💡 Indice (−5 pts)</button>
+        <button class="btn-ghost" onclick="g3Next()" id="g3NextBtn" style="display:none">▶ Enquête suivante</button>
+      </div>
+      <div class="case-clue" id="g3Clue" style="display:none"></div>
+      <div class="feedback" id="fb_g3"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ENTRAÎNEMENT NOTÉ
+==================================================================== -->
+<section id="eval">
+  <div class="eval-section">
+    <div class="eval-stamp">Entraînement · /20</div>
+    <h2>Entraînement noté : générer un calendrier de jours</h2>
+    <p style="font-size:14px; color:var(--ink-soft); margin-bottom:6px; font-style:italic">
+      Cette première copie te permet de t'entraîner librement. Tu peux la refaire autant
+      de fois que tu veux. L'évaluation officielle se trouve juste après et nécessite
+      un mot de passe communiqué par le professeur.
+    </p>
+    <p>
+      <strong>Ton défi :</strong> écris une macro qui produit le résultat suivant :
+    </p>
+    <ul style="margin-left:20px; line-height:1.7">
+      <li>En A1 : le titre <code>Jours</code>, en <strong>gras</strong>, en <strong>jaune</strong> (<code>RGB(255,255,0)</code>).</li>
+      <li>De A2 à A8 : les sept jours « Lundi », « Mardi », … « Dimanche ».</li>
+      <li>Tu peux utiliser une boucle ou écrire ligne à ligne (les deux comptent).</li>
+    </ul>
+
+    <div id="me_eval_train"></div>
+
+    <div class="actions-row" style="margin-top:14px">
+      <button class="check-btn" onclick="checkEvalTrain()">📋 Évaluer ma copie</button>
+      <button class="check-btn reset" onclick="resetEvalTrain()">↺ Tout effacer</button>
+    </div>
+    <div class="feedback" id="fb_eval"></div>
+
+    <div class="eval-final" id="evalFinal">
+      <div style="font-size:13px; opacity:0.9; text-transform:uppercase; letter-spacing:0.1em">Note d'entraînement</div>
+      <div class="grade"><span id="evalGrade">0</span><span style="font-size:36px; opacity:0.7">/20</span></div>
+      <div class="msg" id="evalMsg"></div>
+      <div style="margin-top:14px; font-size:13px; opacity:0.9">Élève : <strong id="evalName">—</strong></div>
+      <button onclick="window.print()" style="margin-top:16px; background:#fff; color:var(--accent); border:none; padding:10px 22px; border-radius:8px; font-weight:600; cursor:pointer">🖨 Imprimer ma copie</button>
+      <div style="margin-top:18px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.15); font-size:11px; opacity:0.7; letter-spacing:0.05em">
+        Collège ESTIC Don Bosco · Saint-Dizier — M. Agostini · Technologie Cycle 4
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ÉVALUATION OFFICIELLE VERROUILLÉE
+==================================================================== -->
+<section id="evalfinal">
+  <div class="lock-section">
+    <div class="lock-stamp">🔒 Officielle · /20</div>
+
+    <div class="lock-screen" id="lockScreen">
+      <div class="lock-icon">🔒</div>
+      <h2>Évaluation officielle verrouillée</h2>
+      <p class="lock-sub">
+        Cette évaluation est <strong>notée et différente</strong> de l'entraînement.
+        Elle se débloque uniquement avec le <strong>mot de passe</strong> communiqué
+        par ton professeur. Une fois déverrouillée, tu seras redirigé·e vers une
+        <strong>page d'examen dédiée</strong>.
+      </p>
+      <div class="lock-form">
+        <input type="text" id="evalStudentName" placeholder="Nom et prénom" autocomplete="off" style="width:100%; padding:14px 18px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#fff; font-family:Outfit,sans-serif; font-size:15px; border-radius:10px; outline:none; text-align:center">
+        <input type="text" id="evalStudentClass" placeholder="Classe (ex : 3ᵉA)" autocomplete="off" style="width:100%; padding:14px 18px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); color:#fff; font-family:Outfit,sans-serif; font-size:15px; border-radius:10px; outline:none; text-align:center">
+        <input type="password" id="evalPwd" placeholder="Mot de passe" autocomplete="off">
+        <button class="unlock-btn" onclick="unlockEvalFinal()">🔓 Démarrer l'évaluation</button>
+        <div class="unlock-err" id="lockErr">Mot de passe incorrect. Demande-le à ton professeur.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================
+     FOOTER · Copyright
+==================================================================== -->
+<footer class="tp-footer">
+  <div class="tp-footer-inner">
+    <div class="tp-footer-brand">
+      <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+        <defs>
+          <linearGradient id="lgEsticF" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1e6d4a"/>
+            <stop offset="100%" stop-color="#155738"/>
+          </linearGradient>
+        </defs>
+        <rect width="48" height="48" rx="6" fill="url(#lgEsticF)"/>
+        <text x="24" y="22" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="11" fill="#fff">ESTIC</text>
+        <line x1="14" y1="26" x2="34" y2="26" stroke="#b8830a" stroke-width="1"/>
+        <text x="24" y="36" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="6" fill="#fff" opacity="0.85">Don Bosco</text>
+      </svg>
+      <div class="tp-footer-text">
+        <strong>Collège ESTIC Don Bosco</strong> · Saint-Dizier (52)<br>
+        TP réalisé par <strong>M. Agostini</strong>, professeur de technologie
+      </div>
+    </div>
+    <div class="tp-footer-copy">
+      © 2026 Mathieu Agostini · Collège ESTIC Don Bosco<br>
+      Tous droits réservés · Usage pédagogique interne
+    </div>
+  </div>
+</footer>
+
+</main>
+</div>
+
+<script>
+/* ====================================================================
+   ESPACE PÉDAGOGIQUE — panneau prof
+==================================================================== */
+function openProfPanel(){
+  document.getElementById('profOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeProfPanel(){
+  document.getElementById('profOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function switchProfTab(tab){
+  document.querySelectorAll('.prof-tab').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.querySelectorAll('.prof-panel').forEach(p=>{
+    p.classList.toggle('show', p.id === 'profPanel-' + tab);
+  });
+  // remettre le scroll en haut quand on change d'onglet
+  const active = document.getElementById('profPanel-' + tab);
+  if(active) active.scrollTop = 0;
+}
+// Échap ferme l'overlay
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape' && document.getElementById('profOverlay').classList.contains('show')){
+    closeProfPanel();
+  }
+});
+
+/* ====================================================================
+   WELCOME · PROGRESS · NAVIGATION
+==================================================================== */
+function startTP(){
+  const n = document.getElementById('welcomeName').value.trim();
+  if(!n){ alert('Indique ton nom et prénom.'); return; }
+  localStorage.setItem('tp_macros_name', n);
+  document.getElementById('welcomeDialog').classList.add('hidden');
+  document.getElementById('scoreDisplay').classList.add('show');
+}
+const savedName = localStorage.getItem('tp_macros_name');
+if(savedName){
+  document.getElementById('welcomeDialog').classList.add('hidden');
+  document.getElementById('scoreDisplay').classList.add('show');
+  document.getElementById('welcomeName').value = savedName;
+}
+
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+});
+
+const navLinks = document.querySelectorAll('.sidebar nav a');
+const sections = [...document.querySelectorAll('main section')];
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      navLinks.forEach(a=>a.classList.toggle('active', a.getAttribute('href') === '#'+id));
+    }
+  });
+}, {rootMargin:'-30% 0px -60% 0px'});
+sections.forEach(s=>io.observe(s));
+
+document.addEventListener('keydown', e=>{
+  if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if(e.altKey && (e.key === 'ArrowDown' || e.key === 'ArrowUp')){
+    const ids = sections.map(s=>s.id);
+    const active = document.querySelector('.sidebar nav a.active');
+    const cur = active ? ids.indexOf(active.getAttribute('href').slice(1)) : 0;
+    const next = e.key === 'ArrowDown' ? Math.min(cur+1, ids.length-1) : Math.max(cur-1, 0);
+    const target = document.getElementById(ids[next]);
+    if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); }
+  }
+});
+
+/* ====================================================================
+   MINI-TABLEUR : moteur complet
+==================================================================== */
+const COLS = ['A','B','C','D','E','F','G','H','I','J'];
+
+class MiniSpreadsheet {
+  constructor(container, opts={}){
+    this.el = container;
+    this.cols = opts.cols || 6;
+    this.rows = opts.rows || 10;
+    this.data = {};
+    this.locked = new Set(opts.locked || []);
+    this.targets = new Set(opts.targets || []);
+    this.id = opts.id || ('ss_'+Math.random().toString(36).slice(2,8));
+    this.selected = 'A1';
+    this.editing = null;
+    if(opts.initial){
+      for(const k in opts.initial) this.data[k] = String(opts.initial[k]);
+    }
+    this.render();
+    this.attach();
+  }
+
+  render(){
+    const cols = COLS.slice(0, this.cols);
+    let html = '<div class="spreadsheet-wrap">';
+    html += `<div class="ss-toolbar">
+      <div class="ss-cellref" id="${this.id}_ref">A1</div>
+      <span class="ss-fx">ƒx</span>
+      <input class="ss-formula" id="${this.id}_formula" placeholder="Saisis une valeur ou une formule (=A1+B1)" spellcheck="false">
+    </div>`;
+    html += '<div class="ss-grid"><table>';
+    html += '<tr><th class="corner row-head"></th>';
+    cols.forEach(c=> html += `<th>${c}</th>`);
+    html += '</tr>';
+    for(let r=1; r<=this.rows; r++){
+      html += `<tr><th class="row-head">${r}</th>`;
+      cols.forEach(c=>{
+        const ref = c+r;
+        const isLocked = this.locked.has(ref);
+        const isTarget = this.targets.has(ref);
+        html += `<td data-ref="${ref}" class="${isLocked?'locked ':''}${isTarget?'target-cell ':''}"><div class="cellview"></div></td>`;
+      });
+      html += '</tr>';
+    }
+    html += '</table></div>';
+    html += `<div class="ss-statusbar"><span>Cellule : <strong id="${this.id}_status">A1</strong></span><span>Double-clique pour saisir • Entrée valide • Échap annule • Suppr efface</span></div>`;
+    html += '</div>';
+    this.el.innerHTML = html;
+    this.refreshAll();
+  }
+
+  attach(){
+    const wrap = this.el.querySelector('.spreadsheet-wrap');
+    const grid = this.el.querySelector('.ss-grid');
+    const formulaInput = this.el.querySelector('.ss-formula');
+
+    grid.addEventListener('click', e=>{
+      const td = e.target.closest('td[data-ref]');
+      if(!td) return;
+      this.select(td.dataset.ref);
+      wrap.focus({preventScroll: true});
+    });
+    grid.addEventListener('dblclick', e=>{
+      const td = e.target.closest('td[data-ref]');
+      if(!td) return;
+      this.startEdit(td.dataset.ref);
+    });
+
+    formulaInput.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        const v = formulaInput.value;
+        if(!this.locked.has(this.selected)) this.setValue(this.selected, v);
+        formulaInput.blur();
+      } else if(e.key === 'Escape'){
+        formulaInput.value = this.data[this.selected] || '';
+        formulaInput.blur();
+      }
+    });
+
+    // Make the wrap focusable for keyboard
+    wrap.setAttribute('tabindex', '0');
+    wrap.addEventListener('keydown', e=>{
+      if(this.editing) return;
+      if(e.target === formulaInput) return;
+      const m = this.selected.match(/^([A-Z])(\d+)$/);
+      if(!m) return;
+      let ci = COLS.indexOf(m[1]);
+      let ri = parseInt(m[2]);
+      if(e.key === 'ArrowRight' && ci < this.cols-1){ this.select(COLS[ci+1]+ri); e.preventDefault(); }
+      else if(e.key === 'ArrowLeft' && ci > 0){ this.select(COLS[ci-1]+ri); e.preventDefault(); }
+      else if(e.key === 'ArrowDown' && ri < this.rows){ this.select(COLS[ci]+(ri+1)); e.preventDefault(); }
+      else if(e.key === 'ArrowUp' && ri > 1){ this.select(COLS[ci]+(ri-1)); e.preventDefault(); }
+      else if(e.key === 'Delete' || e.key === 'Backspace'){
+        if(!this.locked.has(this.selected)){ this.setValue(this.selected, ''); e.preventDefault(); }
+      } else if(e.key === 'Enter' || e.key === 'F2'){
+        this.startEdit(this.selected);
+        e.preventDefault();
+      } else if(e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey){
+        if(this.locked.has(this.selected)) return;
+        this.startEdit(this.selected, e.key);
+        e.preventDefault();
+      }
+    });
+  }
+
+  select(ref){
+    this.el.querySelectorAll('td.selected').forEach(t=>t.classList.remove('selected'));
+    const td = this.el.querySelector(`td[data-ref="${ref}"]`);
+    if(!td) return;
+    td.classList.add('selected');
+    this.selected = ref;
+    this.el.querySelector('.ss-cellref').textContent = ref;
+    this.el.querySelector('.ss-formula').value = this.data[ref] || '';
+    const st = this.el.querySelector(`#${this.id}_status`);
+    if(st) st.textContent = ref;
+  }
+
+  startEdit(ref, initialChar){
+    if(this.locked.has(ref)) return;
+    const td = this.el.querySelector(`td[data-ref="${ref}"]`);
+    if(!td) return;
+    this.select(ref);
+    this.editing = ref;
+    const cur = initialChar !== undefined ? initialChar : (this.data[ref] || '');
+    td.innerHTML = `<input class="cellinput" value="${this._esc(cur)}">`;
+    const input = td.querySelector('input');
+    input.focus();
+    if(initialChar === undefined) input.select();
+    else input.setSelectionRange(input.value.length, input.value.length);
+
+    const commit = (move) => {
+      if(this.editing !== ref) return;
+      const v = input.value;
+      this.editing = null;
+      this.setValue(ref, v);
+      if(move){
+        const m = ref.match(/^([A-Z])(\d+)$/);
+        const ci = COLS.indexOf(m[1]);
+        let ri = parseInt(m[2]);
+        let next;
+        if(move === 'down' && ri < this.rows) next = COLS[ci]+(ri+1);
+        else if(move === 'right' && ci < this.cols-1) next = COLS[ci+1]+ri;
+        if(next) this.select(next);
+      }
+    };
+    const cancel = () => { this.editing = null; this.renderCell(ref); };
+    input.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){ e.preventDefault(); commit('down'); }
+      else if(e.key === 'Tab'){ e.preventDefault(); commit('right'); }
+      else if(e.key === 'Escape'){ e.preventDefault(); cancel(); }
+    });
+    input.addEventListener('blur', ()=>{ if(this.editing === ref) commit(); });
+  }
+
+  setValue(ref, val){
+    val = (val == null) ? '' : String(val);
+    if(val === '') delete this.data[ref];
+    else this.data[ref] = val;
+    this.refreshAll();
+    this.select(ref);
+  }
+
+  renderCell(ref){
+    const td = this.el.querySelector(`td[data-ref="${ref}"]`);
+    if(!td) return;
+    const raw = this.data[ref];
+    td.classList.remove('num','txt','formula-cell','error');
+    if(raw === undefined || raw === ''){
+      td.innerHTML = '<div class="cellview"></div>';
+      if(this.targets.has(ref)) td.classList.add('target-cell');
+      if(this.locked.has(ref)) td.classList.add('locked');
+      return;
+    }
+    let display = raw;
+    if(raw.startsWith('=')){
+      const val = this.evalFormula(raw, new Set([ref]));
+      display = val.error ? '#ERREUR' : this._fmt(val.value);
+      td.classList.add('formula-cell');
+      if(val.error) td.classList.add('error');
+      if(typeof val.value === 'number') td.classList.add('num');
+      else td.classList.add('txt');
+    } else if(this._isNumber(raw)){
+      display = this._fmt(parseFloat(raw));
+      td.classList.add('num');
+    } else {
+      td.classList.add('txt');
+    }
+    td.innerHTML = `<div class="cellview">${this._esc(display)}</div>`;
+    if(this.targets.has(ref)) td.classList.add('target-cell');
+    if(this.locked.has(ref)) td.classList.add('locked');
+  }
+
+  refreshAll(){
+    for(let r=1; r<=this.rows; r++){
+      for(let c=0; c<this.cols; c++){
+        this.renderCell(COLS[c]+r);
+      }
+    }
+  }
+
+  getCellValue(ref, visited){
+    const raw = this.data[ref];
+    if(raw === undefined || raw === '') return 0;
+    if(raw.startsWith('=')){
+      if(visited.has(ref)) return {error:'cycle'};
+      const next = new Set(visited); next.add(ref);
+      const r = this.evalFormula(raw, next);
+      return r.error ? {error:r.error} : r.value;
+    }
+    if(this._isNumber(raw)) return parseFloat(raw.replace(',','.'));
+    return raw;
+  }
+
+  evalFormula(f, visited){
+    try{
+      let expr = f.slice(1).trim().toUpperCase();
+      const funcs = ['SOMME','SUM','MOYENNE','AVERAGE','MIN','MAX','NB','COUNT','SI','IF'];
+      let safety = 0;
+      while(safety < 50){
+        safety++;
+        let replaced = false;
+        for(const fn of funcs){
+          const re = new RegExp('\\b'+fn+'\\(([^()]*?)\\)');
+          const m = expr.match(re);
+          if(m){
+            const args = this._splitArgs(m[1]);
+            const r = this._callFunc(fn, args, visited);
+            if(r.error) return {error:r.error};
+            expr = expr.slice(0,m.index) + this._num(r.value) + expr.slice(m.index + m[0].length);
+            replaced = true;
+            break;
+          }
+        }
+        if(!replaced) break;
+      }
+      expr = expr.replace(/\b([A-J])(\d+)\b/g, (mm, c, r)=>{
+        const v = this.getCellValue(c+r, visited);
+        if(v && typeof v === 'object' && v.error) return 'NaN';
+        if(typeof v === 'string') return this._isNumber(v) ? parseFloat(v.replace(',','.')) : 0;
+        return v;
+      });
+      if(!/^[\d\s+\-*/().,]+$/.test(expr)) return {error:'syntax'};
+      expr = expr.replace(/,/g, '.');
+      const val = Function('"use strict"; return (' + expr + ')')();
+      if(typeof val !== 'number' || isNaN(val) || !isFinite(val)) return {error:'calc'};
+      return {value:val};
+    } catch(err){
+      return {error:'syntax'};
+    }
+  }
+
+  _splitArgs(s){
+    const out = []; let cur = ''; let depth = 0;
+    for(const ch of s){
+      if(ch === '(') depth++;
+      else if(ch === ')') depth--;
+      if(ch === ';' && depth === 0){ out.push(cur.trim()); cur=''; continue; }
+      cur += ch;
+    }
+    if(cur.trim()) out.push(cur.trim());
+    return out;
+  }
+
+  _expandArg(a, visited){
+    const rng = a.match(/^([A-J])(\d+):([A-J])(\d+)$/);
+    if(rng){
+      const c1 = COLS.indexOf(rng[1]), c2 = COLS.indexOf(rng[3]);
+      const r1 = parseInt(rng[2]), r2 = parseInt(rng[4]);
+      const out = [];
+      for(let c=Math.min(c1,c2); c<=Math.max(c1,c2); c++){
+        for(let r=Math.min(r1,r2); r<=Math.max(r1,r2); r++){
+          const v = this.getCellValue(COLS[c]+r, visited);
+          if(v && typeof v === 'object' && v.error) return {error:v.error};
+          out.push(v);
+        }
+      }
+      return {values:out};
+    }
+    const single = a.match(/^([A-J])(\d+)$/);
+    if(single){
+      const v = this.getCellValue(a, visited);
+      if(v && typeof v === 'object' && v.error) return {error:v.error};
+      return {values:[v]};
+    }
+    if(this._isNumber(a)) return {values:[parseFloat(a.replace(',','.'))]};
+    try{
+      const cleaned = a.replace(/\b([A-J])(\d+)\b/g, (mm,c,r)=>{
+        const v = this.getCellValue(c+r, visited);
+        return (typeof v === 'number') ? v : 0;
+      });
+      if(/^[\d\s+\-*/().,]+$/.test(cleaned)){
+        return {values:[Function('return ('+cleaned.replace(/,/g,'.')+')')()]};
+      }
+    }catch(e){}
+    return {values:[0]};
+  }
+
+  _callFunc(fn, args, visited){
+    let nums = [];
+    for(const a of args){
+      const r = this._expandArg(a, visited);
+      if(r.error) return {error:r.error};
+      r.values.forEach(v=>{ if(typeof v === 'number') nums.push(v); });
+    }
+    switch(fn){
+      case 'SOMME': case 'SUM':
+        return {value: nums.reduce((a,b)=>a+b,0)};
+      case 'MOYENNE': case 'AVERAGE':
+        if(!nums.length) return {error:'div0'};
+        return {value: nums.reduce((a,b)=>a+b,0)/nums.length};
+      case 'MIN':
+        if(!nums.length) return {value:0};
+        return {value: Math.min(...nums)};
+      case 'MAX':
+        if(!nums.length) return {value:0};
+        return {value: Math.max(...nums)};
+      case 'NB': case 'COUNT':
+        return {value: nums.length};
+    }
+    return {error:'unknown'};
+  }
+
+  _isNumber(s){ return /^-?\d+([.,]\d+)?$/.test(String(s).trim()); }
+  _num(v){ return (typeof v === 'number') ? v : 0; }
+  _fmt(v){
+    if(typeof v !== 'number') return v;
+    if(Number.isInteger(v)) return v.toString();
+    return (Math.round(v*100)/100).toString().replace('.',',');
+  }
+  _esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // helpers for validation
+  getRaw(ref){ return this.data[ref] || ''; }
+  getCalc(ref){
+    const raw = this.data[ref];
+    if(!raw) return null;
+    if(raw.startsWith('=')){
+      const r = this.evalFormula(raw, new Set([ref]));
+      return r.error ? null : r.value;
+    }
+    return this._isNumber(raw) ? parseFloat(raw.replace(',','.')) : raw;
+  }
+  hasFormulaUsing(ref, fname){
+    const raw = (this.data[ref]||'').toUpperCase();
+    return raw.startsWith('=') && new RegExp('\\b'+fname+'\\(').test(raw);
+  }
+  isFormula(ref){
+    return (this.data[ref]||'').startsWith('=');
+  }
+}
+
+/* ---------- Score system ---------- */
+const TPScore = {
+  exercises: new Set(),
+  add(id){
+    if(this.exercises.has(id)) return;
+    this.exercises.add(id);
+    this.update();
+  },
+  update(){
+    document.getElementById('scoreVal').textContent = this.exercises.size;
+    const dets = [...this.exercises].sort().join(' · ');
+    document.getElementById('scoreDetails').textContent = dets;
+  }
+};
+
+function feedback(elId, msg, ok){
+  const el = document.getElementById(elId);
+  el.className = 'feedback show ' + (ok ? 'ok' : 'ko');
+  el.innerHTML = (ok ? '✓ ' : '✗ ') + msg;
+}
+function approxEq(a, b, tol=0.01){
+  if(typeof a !== 'number' || typeof b !== 'number') return false;
+  return Math.abs(a-b) < tol;
+}
+
+/* ====================================================================
+   MACRO EDITOR — éditeur VBA + mini-tableur + interpréteur intégrés
+==================================================================== */
+class MacroEditor {
+  constructor(host, opts = {}){
+    this.host = host;
+    this.cols = opts.cols || 6;
+    this.rows = opts.rows || 12;
+    this.code = opts.initialCode || '';
+    this.execLabel = opts.execLabel || '▶ Exécuter';
+    this.showRecord = opts.showRecord || false;
+    this.readOnlyCode = opts.readOnlyCode || false;
+    this.styles = {};   // {ref: {bold, italic, bg}}
+    this.vars = {};
+    this._recording = false;
+    this._recorded = [];
+    this._build();
+  }
+  _build(){
+    this.host.innerHTML = `
+      <div class="macro-wrap">
+        <div class="macro-pane macro-code">
+          <div class="macro-pane-header">
+            <span class="macro-pane-label">📝 Éditeur VBA</span>
+            ${this.showRecord ? `<span class="macro-rec-controls">
+              <button class="macro-rec-btn" data-act="rec">● Enregistrer</button>
+              <button class="macro-rec-btn stop" data-act="stop">■ Arrêter</button>
+            </span>` : ''}
+          </div>
+          <textarea class="macro-textarea" spellcheck="false" ${this.readOnlyCode ? 'readonly' : ''}>${this._esc(this.code)}</textarea>
+          <div class="macro-actions">
+            <button class="macro-run">${this.execLabel}</button>
+            <button class="macro-clear">↺ Réinitialiser</button>
+          </div>
+          <div class="macro-output" style="display:none"></div>
+        </div>
+        <div class="macro-pane macro-sheet">
+          <div class="macro-pane-header">
+            <span class="macro-pane-label">📊 Feuille de calcul</span>
+          </div>
+          <div class="macro-grid-wrap">${this._renderGrid()}</div>
+        </div>
+      </div>`;
+    this._bind();
+  }
+  _renderGrid(){
+    let html = '<table class="ss-grid macro-grid"><thead><tr><th class="row-head corner"></th>';
+    for(let c = 0; c < this.cols; c++) html += `<th>${String.fromCharCode(65+c)}</th>`;
+    html += '</tr></thead><tbody>';
+    for(let r = 1; r <= this.rows; r++){
+      html += `<tr><th class="row-head">${r}</th>`;
+      for(let c = 0; c < this.cols; c++){
+        const ref = String.fromCharCode(65+c) + r;
+        const v = this._cellValue(ref);
+        const s = this.styles[ref] || {};
+        let style = '';
+        if(s.bg) style += `background:${s.bg};`;
+        if(s.bold) style += 'font-weight:700;';
+        if(s.italic) style += 'font-style:italic;';
+        if(s.color) style += `color:${s.color};`;
+        const isNum = typeof v === 'number' || (!isNaN(parseFloat(v)) && isFinite(v));
+        html += `<td data-ref="${ref}" class="${isNum ? 'num' : 'txt'}" style="${style}"><div class="cellview">${this._esc(v)}</div></td>`;
+      }
+      html += '</tr>';
+    }
+    html += '</tbody></table>';
+    return html;
+  }
+  _esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  _cellValue(ref){ return this._cells && this._cells[ref] !== undefined ? this._cells[ref] : ''; }
+  _bind(){
+    const txt = this.host.querySelector('.macro-textarea');
+    txt.addEventListener('input', () => { this.code = txt.value; });
+    this.host.querySelector('.macro-run').addEventListener('click', () => this.execute());
+    this.host.querySelector('.macro-clear').addEventListener('click', () => this.reset());
+    if(this.showRecord){
+      this.host.querySelector('[data-act="rec"]').addEventListener('click', () => this._startRecord());
+      this.host.querySelector('[data-act="stop"]').addEventListener('click', () => this._stopRecord());
+      // permet de cliquer dans les cellules pour saisir
+      this.host.querySelectorAll('.macro-grid td').forEach(td => {
+        td.addEventListener('click', () => {
+          if(!this._recording) return;
+          const v = prompt('Valeur à mettre dans ' + td.dataset.ref);
+          if(v !== null){
+            this._setCell(td.dataset.ref, v);
+            this._recorded.push(`    Range("${td.dataset.ref}").Value = ${isNaN(parseFloat(v)) ? '"'+v.replace(/"/g,'""')+'"' : v}`);
+            this._updateCodeFromRecord();
+          }
+        });
+      });
+    }
+  }
+  _startRecord(){
+    this._recording = true;
+    this._recorded = [];
+    this._cells = {};
+    this.styles = {};
+    this._refresh();
+    this._updateCodeFromRecord();
+    const recBtn = this.host.querySelector('[data-act="rec"]');
+    if(recBtn) recBtn.classList.add('active');
+  }
+  _stopRecord(){
+    this._recording = false;
+    const recBtn = this.host.querySelector('[data-act="rec"]');
+    if(recBtn) recBtn.classList.remove('active');
+  }
+  _updateCodeFromRecord(){
+    this.code = `Sub MacroEnregistree()\n${this._recorded.join('\n')}\nEnd Sub`;
+    this.host.querySelector('.macro-textarea').value = this.code;
+  }
+  _setCell(ref, value){
+    if(!this._cells) this._cells = {};
+    this._cells[ref] = value;
+  }
+  _addStyle(ref, key, value){
+    if(!this.styles[ref]) this.styles[ref] = {};
+    this.styles[ref][key] = value;
+  }
+  _refresh(){
+    this.host.querySelector('.macro-grid-wrap').innerHTML = this._renderGrid();
+  }
+  reset(){
+    this._cells = {};
+    this.styles = {};
+    this.vars = {};
+    this._refresh();
+    const out = this.host.querySelector('.macro-output');
+    if(out){ out.style.display = 'none'; out.innerHTML = ''; }
+  }
+  // Lecture pour les checks d'exercices
+  getCellValue(ref){ return this._cells ? this._cells[ref] : undefined; }
+  getCellStyle(ref){ return this.styles[ref] || {}; }
+  hasRange(ref){ return /\bRange\s*\(\s*"[A-Z]\d+"\s*\)/i.test(this.code); }
+  codeContains(re){ return re.test(this.code); }
+  // Interpréteur VBA très basique
+  execute(){
+    this._cells = {};
+    this.styles = {};
+    this.vars = {};
+    this._output = [];
+    try {
+      const lines = this.code.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith("'"));
+      this._exec(lines, 0, lines.length);
+    } catch(e){
+      this._output.push('⚠ Erreur : ' + e.message);
+    }
+    this._refresh();
+    const out = this.host.querySelector('.macro-output');
+    if(this._output && this._output.length){
+      out.style.display = 'block';
+      out.innerHTML = this._output.map(o => `<div class="macro-msg">${this._esc(o)}</div>`).join('');
+    } else {
+      out.style.display = 'none';
+    }
+  }
+  _exec(lines, start, end){
+    let i = start;
+    while(i < end){
+      const line = lines[i];
+      if(/^Sub\b/i.test(line) || /^End Sub\b/i.test(line) || /^End If\b/i.test(line) || /^Else\b/i.test(line)){ i++; continue; }
+
+      // Dim
+      let m = line.match(/^Dim\s+(\w+)/i);
+      if(m){ this.vars[m[1]] = 0; i++; continue; }
+
+      // For ... Next
+      m = line.match(/^For\s+(\w+)\s*=\s*(.+?)\s+To\s+(.+?)(?:\s+Step\s+(.+))?$/i);
+      if(m){
+        const v = m[1], s = this._evalExpr(m[2]), e = this._evalExpr(m[3]), step = m[4] ? this._evalExpr(m[4]) : 1;
+        let depth = 1, nx = i + 1;
+        while(nx < end && depth > 0){
+          if(/^For\s+/i.test(lines[nx])) depth++;
+          if(/^Next\b/i.test(lines[nx])){ depth--; if(depth === 0) break; }
+          nx++;
+        }
+        if(nx >= end) throw new Error('Boucle For sans Next');
+        let n = 0;
+        for(let val = s; (step > 0 ? val <= e : val >= e); val += step){
+          if(++n > 5000) throw new Error('Trop de tours de boucle (> 5000)');
+          this.vars[v] = val;
+          this._exec(lines, i + 1, nx);
+        }
+        i = nx + 1; continue;
+      }
+
+      // If ... Then [inline | block]
+      m = line.match(/^If\s+(.+?)\s+Then\s*(.*)$/i);
+      if(m){
+        const cond = this._evalCondition(m[1]);
+        const inline = m[2].trim();
+        if(inline){
+          if(cond) this._exec([inline], 0, 1);
+          i++; continue;
+        }
+        let elseIdx = -1, endIdx = -1, depth = 1;
+        for(let j = i + 1; j < end; j++){
+          if(/^If\s+.+\s+Then\s*$/i.test(lines[j])) depth++;
+          if(/^Else\s*$/i.test(lines[j]) && depth === 1) elseIdx = j;
+          if(/^End If\b/i.test(lines[j])){ depth--; if(depth === 0){ endIdx = j; break; } }
+        }
+        if(endIdx === -1) throw new Error('If sans End If');
+        if(cond) this._exec(lines, i + 1, elseIdx > -1 ? elseIdx : endIdx);
+        else if(elseIdx > -1) this._exec(lines, elseIdx + 1, endIdx);
+        i = endIdx + 1; continue;
+      }
+
+      // Range("XX").Property = value
+      m = line.match(/^Range\s*\(\s*"([A-Z]+\d+)"\s*\)\s*\.(\w+(?:\.\w+)?)\s*=\s*(.+)$/i);
+      if(m){
+        this._setProp(m[1], m[2].toLowerCase(), this._evalExpr(m[3]));
+        i++; continue;
+      }
+
+      // Cells(r, c).Property = value
+      m = line.match(/^Cells\s*\(\s*(.+?)\s*,\s*(.+?)\s*\)\s*\.(\w+(?:\.\w+)?)\s*=\s*(.+)$/i);
+      if(m){
+        const r = this._evalExpr(m[1]);
+        const c = this._evalExpr(m[2]);
+        if(typeof r !== 'number' || typeof c !== 'number' || r < 1 || c < 1) throw new Error('Cells(r,c) invalide');
+        const ref = String.fromCharCode(64 + Math.floor(c)) + Math.floor(r);
+        this._setProp(ref, m[3].toLowerCase(), this._evalExpr(m[4]));
+        i++; continue;
+      }
+
+      // MsgBox
+      m = line.match(/^MsgBox\s+(.+)$/i);
+      if(m){
+        this._output.push('💬 ' + this._evalExpr(m[1]));
+        i++; continue;
+      }
+
+      // Affectation variable
+      m = line.match(/^(\w+)\s*=\s*(.+)$/);
+      if(m){ this.vars[m[1]] = this._evalExpr(m[2]); i++; continue; }
+
+      i++;
+    }
+  }
+  _evalExpr(expr){
+    expr = expr.trim();
+    if(/^".*"$/.test(expr)) return expr.slice(1, -1).replace(/""/g, '"');
+    if(/^-?\d+(\.\d+)?$/.test(expr)) return parseFloat(expr);
+    if(/^True$/i.test(expr)) return true;
+    if(/^False$/i.test(expr)) return false;
+    const rgbMatch = expr.match(/^RGB\s*\(\s*(.+?)\s*,\s*(.+?)\s*,\s*(.+?)\s*\)$/i);
+    if(rgbMatch){
+      const r = this._evalExpr(rgbMatch[1]);
+      const g = this._evalExpr(rgbMatch[2]);
+      const b = this._evalExpr(rgbMatch[3]);
+      return `rgb(${Math.max(0,Math.min(255,r))},${Math.max(0,Math.min(255,g))},${Math.max(0,Math.min(255,b))})`;
+    }
+    // Concat avec & ou +
+    // Substituer les variables par leur valeur sérialisée
+    const safe = expr.replace(/\b(\w+)\b/g, (m) => {
+      if(/^(Mod|And|Or|True|False)$/i.test(m)) return m;
+      if(this.vars[m] !== undefined){
+        return JSON.stringify(this.vars[m]);
+      }
+      return m;
+    }).replace(/\bMod\b/gi, '%').replace(/&/g, '+');
+    try {
+      const result = Function('return (' + safe + ');')();
+      return result;
+    } catch(e){
+      return expr;
+    }
+  }
+  _evalCondition(expr){
+    expr = expr.replace(/<>/g, '!==').replace(/(?<![<>!=])=(?!=)/g, '===').replace(/\bAnd\b/gi, '&&').replace(/\bOr\b/gi, '||').replace(/\bMod\b/gi, '%');
+    const safe = expr.replace(/\b(\w+)\b/g, (m) => {
+      if(/^(true|false)$/i.test(m)) return m.toLowerCase();
+      if(this.vars[m] !== undefined) return JSON.stringify(this.vars[m]);
+      return m;
+    });
+    try { return Function('return (' + safe + ');')(); } catch(e){ return false; }
+  }
+  _setProp(ref, prop, value){
+    if(prop === 'value'){ this._setCell(ref, value); }
+    else if(prop === 'font.bold'){ this._addStyle(ref, 'bold', value === true); }
+    else if(prop === 'font.italic'){ this._addStyle(ref, 'italic', value === true); }
+    else if(prop === 'font.color'){ this._addStyle(ref, 'color', value); }
+    else if(prop === 'interior.color' || prop === 'fill.color'){ this._addStyle(ref, 'bg', value); }
+  }
+}
+
+/* ====================================================================
+   INITIALISATION DES MINI-ENVIRONNEMENTS DU COURS
+==================================================================== */
+
+// Module 1 — démo intro
+const meIntro = new MacroEditor(document.getElementById('me_intro'), {
+  cols:5, rows:6,
+  initialCode: `Sub Bienvenue()
+    Range("A1").Value = "Bonjour"
+    Range("B1").Value = "les"
+    Range("C1").Value = "macros !"
+End Sub`
+});
+
+// Module 2 — démo enregistrement
+const meRecord = new MacroEditor(document.getElementById('me_record'), {
+  cols:5, rows:6,
+  showRecord: true,
+  initialCode: `Sub MacroEnregistree()
+    ' Clique sur "● Enregistrer" puis sur les cellules
+End Sub`
+});
+
+// Module 3 — démo écriture
+const meDemo3 = new MacroEditor(document.getElementById('me_demo3'), {
+  cols:5, rows:6,
+  initialCode: `Sub MiseEnForme()
+    Range("A1").Value = "Mon titre"
+    Range("A1").Font.Bold = True
+    Range("A1").Interior.Color = RGB(255, 220, 100)
+End Sub`
+});
+
+// Module 4 — démo boucle
+const meDemo4 = new MacroEditor(document.getElementById('me_demo4'), {
+  cols:5, rows:15,
+  initialCode: `Sub Remplir()
+    For i = 1 To 10
+        Cells(i, 1).Value = i
+    Next i
+End Sub`
+});
+
+// Module 5 — démo conditions
+const meDemo5 = new MacroEditor(document.getElementById('me_demo5'), {
+  cols:5, rows:6,
+  initialCode: `Sub PairOuImpair()
+    Dim n As Integer
+    n = 7
+    If n Mod 2 = 0 Then
+        Range("A1").Value = "pair"
+        Range("A1").Interior.Color = RGB(200, 230, 200)
+    Else
+        Range("A1").Value = "impair"
+        Range("A1").Interior.Color = RGB(255, 220, 200)
+    End If
+End Sub`
+});
+
+// EXERCICES
+const meEx1 = new MacroEditor(document.getElementById('me_ex1'), { cols:5, rows:6,
+  initialCode: `Sub Exercice1()
+    ' Écris tes deux instructions ici
+    
+End Sub` });
+
+const meEx2 = new MacroEditor(document.getElementById('me_ex2'), { cols:5, rows:6,
+  initialCode: `Sub Exercice2()
+    ' Trois instructions : valeur, gras, couleur
+    
+End Sub` });
+
+const meEx3 = new MacroEditor(document.getElementById('me_ex3'), { cols:5, rows:18,
+  initialCode: `Sub Exercice3()
+    For i = 1 To ?
+        Cells(?, ?).Value = ?
+    Next i
+End Sub` });
+
+const meEx4 = new MacroEditor(document.getElementById('me_ex4'), { cols:5, rows:12,
+  initialCode: `Sub TableDe7()
+    For i = 1 To 10
+        Cells(i, 1).Value = ?
+    Next i
+End Sub` });
+
+const meEx5 = new MacroEditor(document.getElementById('me_ex5'), { cols:5, rows:12,
+  initialCode: `Sub Coloriage()
+    For i = 1 To 10
+        Cells(i, 1).Value = i
+        If ? Then
+            Cells(i, 1).Interior.Color = RGB(200, 230, 200)
+        Else
+            Cells(i, 1).Interior.Color = RGB(255, 240, 200)
+        End If
+    Next i
+End Sub` });
+
+const meEx6 = new MacroEditor(document.getElementById('me_ex6'), { cols:5, rows:6,
+  initialCode: `Sub Diagonale()
+    For i = 1 To 5
+        Cells(?, ?).Value = "★"
+    Next i
+End Sub` });
+
+const meEx7 = new MacroEditor(document.getElementById('me_ex7'), { cols:5, rows:6,
+  initialCode: `Sub Damier()
+    For i = 1 To 5
+        For j = 1 To 5
+            If ? Then
+                Cells(i, j).Interior.Color = RGB(40, 100, 60)
+            Else
+                Cells(i, j).Interior.Color = RGB(220, 220, 200)
+            End If
+        Next j
+    Next i
+End Sub` });
+
+const meEvalTrain = new MacroEditor(document.getElementById('me_eval_train'), { cols:4, rows:10,
+  initialCode: `Sub Calendrier()
+    ' Écris ta macro ici
+    
+End Sub` });
+
+/* ====================================================================
+   FONCTIONS UTILITAIRES (TPScore, feedback, approxEq sont définis plus haut)
+==================================================================== */
+
+/* ====================================================================
+   VALIDATIONS DES EXERCICES
+==================================================================== */
+
+function _execAndCheck(editor, checks){
+  editor.execute();
+  for(const c of checks){ if(!c.test()) return c.msg; }
+  return null;
+}
+
+function checkEx1(){
+  const err = _execAndCheck(meEx1, [
+    {test: ()=> String(meEx1.getCellValue('A1')||'').toLowerCase() === 'bonjour', msg: 'A1 doit contenir "Bonjour".'},
+    {test: ()=> approxEq(meEx1.getCellValue('B1'), 2026), msg: 'B1 doit contenir le nombre 2026.'}
+  ]);
+  if(err){ feedback('fb_ex1', err, false); }
+  else { feedback('fb_ex1', 'Bravo ! A1 = "Bonjour", B1 = 2026.', true); TPScore.add('E1'); }
+}
+
+function checkEx2(){
+  const err = _execAndCheck(meEx2, [
+    {test: ()=> String(meEx2.getCellValue('A1')||'').toLowerCase() === 'titre', msg: 'A1 doit contenir "TITRE".'},
+    {test: ()=> meEx2.getCellStyle('A1').bold === true, msg: 'A1 doit être en gras (.Font.Bold = True).'},
+    {test: ()=> /rgb\(255,\s*255,\s*0\)/i.test(meEx2.getCellStyle('A1').bg || ''), msg: 'A1 doit être en jaune RGB(255,255,0).'}
+  ]);
+  if(err){ feedback('fb_ex2', err, false); }
+  else { feedback('fb_ex2', 'Bien joué : titre, gras, jaune — tout y est !', true); TPScore.add('E2'); }
+}
+
+function checkEx3(){
+  meEx3.execute();
+  let allOk = true;
+  for(let i = 1; i <= 15; i++){
+    if(!approxEq(meEx3.getCellValue('A'+i), i)) { allOk = false; break; }
+  }
+  if(!allOk){ feedback('fb_ex3', 'Les cellules A1 à A15 doivent contenir 1, 2, 3, … 15.', false); }
+  else { feedback('fb_ex3', 'Parfait : A1 à A15 sont bien numérotées.', true); TPScore.add('E3'); }
+}
+
+function checkEx4(){
+  meEx4.execute();
+  let allOk = true;
+  for(let i = 1; i <= 10; i++){
+    if(!approxEq(meEx4.getCellValue('A'+i), i*7)) { allOk = false; break; }
+  }
+  if(!allOk){ feedback('fb_ex4', 'Cellule A'+1+' doit valoir 7, A2 doit valoir 14, … A10 doit valoir 70.', false); }
+  else { feedback('fb_ex4', 'Excellente table de 7 ! De 7 à 70 sans erreur.', true); TPScore.add('E4'); }
+}
+
+function checkEx5(){
+  meEx5.execute();
+  let allOk = true;
+  for(let i = 1; i <= 10; i++){
+    if(!approxEq(meEx5.getCellValue('A'+i), i)) { allOk = false; break; }
+    const bg = meEx5.getCellStyle('A'+i).bg || '';
+    const isPair = i % 2 === 0;
+    const want = isPair ? /200,\s*230,\s*200/ : /255,\s*240,\s*200/;
+    if(!want.test(bg)) { allOk = false; break; }
+  }
+  if(!allOk){ feedback('fb_ex5', 'Chaque cellule doit contenir son numéro, et alterner les deux couleurs (paire/impaire).', false); }
+  else { feedback('fb_ex5', 'Bravo : numéros + alternance de couleurs OK !', true); TPScore.add('E5'); }
+}
+
+function checkEx6(){
+  meEx6.execute();
+  const refs = ['A1','B2','C3','D4','E5'];
+  let allOk = true;
+  for(const r of refs){
+    if(String(meEx6.getCellValue(r)||'').trim() !== '★'){ allOk = false; break; }
+  }
+  if(!allOk){ feedback('fb_ex6', 'Les cellules A1, B2, C3, D4, E5 doivent contenir "★".', false); }
+  else { feedback('fb_ex6', 'Parfait : diagonale en place !', true); TPScore.add('E6'); }
+}
+
+function checkEx7(){
+  meEx7.execute();
+  let allOk = true;
+  for(let i = 1; i <= 5; i++){
+    for(let j = 1; j <= 5; j++){
+      const ref = String.fromCharCode(64+j) + i;
+      const bg = meEx7.getCellStyle(ref).bg || '';
+      const isDark = (i+j) % 2 === 0;
+      const want = isDark ? /40,\s*100,\s*60/ : /220,\s*220,\s*200/;
+      if(!want.test(bg)){ allOk = false; }
+    }
+  }
+  if(!allOk){ feedback('fb_ex7', 'La grille 5×5 doit alterner les deux couleurs en damier.', false); }
+  else { feedback('fb_ex7', 'Magnifique damier !', true); TPScore.add('E7'); }
+}
+
+/* ====================================================================
+   ÉVALUATION D'ENTRAÎNEMENT : CALENDRIER (notée /20)
+==================================================================== */
+const JOURS_EXPECTED = ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+
+function checkEvalTrain(){
+  meEvalTrain.execute();
+  let pts = 0;
+  const details = [];
+
+  // 4 pts : A1 = "Jours"
+  if(String(meEvalTrain.getCellValue('A1')||'').toLowerCase() === 'jours'){ pts += 4; details.push('Titre A1 ✓'); }
+  else details.push('Titre A1 ✗');
+
+  // 3 pts : A1 en gras
+  if(meEvalTrain.getCellStyle('A1').bold === true){ pts += 3; details.push('A1 gras ✓'); }
+  else details.push('A1 gras ✗');
+
+  // 3 pts : A1 en jaune
+  if(/255,\s*255,\s*0/.test(meEvalTrain.getCellStyle('A1').bg || '')){ pts += 3; details.push('A1 jaune ✓'); }
+  else details.push('A1 jaune ✗');
+
+  // 7 pts : 1 pt par jour correctement placé
+  for(let k = 0; k < 7; k++){
+    const ref = 'A' + (k+2);
+    if(String(meEvalTrain.getCellValue(ref)||'').toLowerCase() === JOURS_EXPECTED[k].toLowerCase()){
+      pts += 1;
+    }
+  }
+  details.push('Jours : ' + (pts - (pts>=10?10:pts>=7?7:0)) + '/7');
+
+  // 3 pts : utilisation d'une boucle For
+  if(/\bFor\s+\w+\s*=\s*\d+\s+To\s+\d+/i.test(meEvalTrain.code)){
+    pts += 3;
+    details.push('Boucle For utilisée ✓');
+  } else details.push('Boucle For (bonus pas utilisé)');
+
+  const note = Math.min(20, pts);
+  feedback('fb_eval', 'Détail : ' + details.join(' · '), note >= 10);
+  document.getElementById('evalGrade').textContent = note;
+  let msg = '';
+  if(note >= 18) msg = '🌟 Maîtrise complète !';
+  else if(note >= 14) msg = '👍 Très bien.';
+  else if(note >= 10) msg = '✓ Bases acquises.';
+  else if(note >= 5) msg = '⚠ À revoir.';
+  else msg = '⏳ Reprendre depuis le début.';
+  document.getElementById('evalMsg').textContent = msg;
+  document.getElementById('evalName').textContent = localStorage.getItem('tp_macros_name') || '—';
+  document.getElementById('evalFinal').classList.add('show');
+  if(note >= 14) TPScore.add('★');
+  document.getElementById('evalFinal').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function resetEvalTrain(){
+  meEvalTrain.reset();
+  document.getElementById('evalFinal').classList.remove('show');
+  const fb = document.getElementById('fb_eval');
+  if(fb) fb.classList.remove('show');
+}
+
+
+/* ====================================================================
+   ÉVALUATION OFFICIELLE — redirection vers page séparée
+   ⚠ MOT DE PASSE — modifiable ci-dessous par le professeur
+==================================================================== */
+const EVAL_PASSWORD = "tableur4e";  // ⬅ change ici le mot de passe communiqué aux élèves
+const EVAL_PAGE_URL = "tp_macros_eval.html";  // ⬅ chemin vers la page d'évaluation
+
+/* ====================================================================
+   ╔══════════════════════════════════════════════════════════════════╗
+   ║  FIREBASE — config Mat Agostini (projet "evaluation-bloc")      ║
+   ║                                                                  ║
+   ║  Si tu changes de projet, mets à jour databaseURL + projectId    ║
+   ║  ICI **ET** dans tp_macros_eval.html (mêmes valeurs).           ║
+   ╚══════════════════════════════════════════════════════════════════╝
+==================================================================== */
+const FIREBASE_CONFIG = {
+  databaseURL: "https://evaluation-bloc-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:   "evaluation-bloc"
+};
+const FIREBASE_NODE = 'resultats_macros';   // nom du noeud où sont stockés les résultats
+const TEACHER_PASSWORD = "Agostini2025";        // ⬅ mot de passe d'accès au tableau de bord
+
+let _firebaseDB = null;
+let _firebaseEnabled = false;
+try {
+  if (FIREBASE_CONFIG.databaseURL && FIREBASE_CONFIG.databaseURL.includes('firebasedatabase') && typeof firebase !== 'undefined') {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    _firebaseDB = firebase.database();
+    _firebaseEnabled = true;
+    console.log('✅ Firebase initialisé sur', FIREBASE_CONFIG.databaseURL);
+  } else {
+    console.warn('⚠ Firebase non configuré — résultats stockés en localStorage uniquement');
+  }
+} catch(e) {
+  console.error('Erreur init Firebase, fallback localStorage:', e);
+  _firebaseEnabled = false;
+}
+
+/* ====================================================================
+   TABLEAU DE BORD — accès, chargement, rendu, export
+==================================================================== */
+let _dashUnlocked = false;
+let _dashResults = [];
+
+function unlockDashboard(){
+  const pwd = document.getElementById('dashPwd').value;
+  if(pwd === TEACHER_PASSWORD){
+    _dashUnlocked = true;
+    document.getElementById('dashLock').style.display = 'none';
+    document.getElementById('dashContent').style.display = 'block';
+    document.getElementById('dashErr').style.display = 'none';
+    refreshDashboard();
+  } else {
+    document.getElementById('dashErr').style.display = 'block';
+    document.getElementById('dashPwd').value = '';
+    document.getElementById('dashPwd').focus();
+  }
+}
+
+function refreshDashboard(){
+  if(_firebaseEnabled){
+    document.getElementById('dashSource').textContent = 'Firebase (cloud, temps réel)';
+    _firebaseDB.ref(FIREBASE_NODE).once('value', snap => {
+      const data = snap.val() || {};
+      _dashResults = Object.entries(data).map(([key, rec]) => ({ ...rec, _key:key }));
+      renderDashboard();
+    }, err => {
+      console.error('Erreur Firebase:', err);
+      _loadFromLocalStorage();
+    });
+    // Live updates
+    if(!_firebaseDB._tpListenAttached){
+      _firebaseDB.ref(FIREBASE_NODE).on('child_added', () => {
+        if(_dashUnlocked) refreshDashboard();
+      });
+      _firebaseDB._tpListenAttached = true;
+    }
+  } else {
+    document.getElementById('dashSource').textContent = 'localStorage (navigateur courant uniquement)';
+    _loadFromLocalStorage();
+  }
+}
+
+function _loadFromLocalStorage(){
+  try {
+    const raw = localStorage.getItem('tp_macros_results');
+    _dashResults = raw ? JSON.parse(raw) : [];
+  } catch(e) { _dashResults = []; }
+  renderDashboard();
+}
+
+function renderDashboard(){
+  // Populate class filter
+  const classes = [...new Set(_dashResults.map(r => r.classe).filter(Boolean))].sort();
+  const filterClass = document.getElementById('dashFilterClass');
+  const currentVal = filterClass.value;
+  filterClass.innerHTML = '<option value="">Toutes les classes</option>' +
+    classes.map(c => `<option value="${c}" ${c===currentVal?'selected':''}>${c}</option>`).join('');
+
+  // Filter
+  const fname = document.getElementById('dashFilterName').value.trim().toLowerCase();
+  const fclass = filterClass.value;
+  let rows = _dashResults.filter(r =>
+    (!fname || (r.nom||'').toLowerCase().includes(fname)) &&
+    (!fclass || r.classe === fclass)
+  );
+
+  // Sort
+  const sort = document.getElementById('dashSort').value;
+  rows.sort((a, b) => {
+    switch(sort){
+      case 'date-asc': return (a.timestamp||0) - (b.timestamp||0);
+      case 'date-desc': return (b.timestamp||0) - (a.timestamp||0);
+      case 'name-asc': return (a.nom||'').localeCompare(b.nom||'');
+      case 'grade-asc': return (a.note||0) - (b.note||0);
+      case 'grade-desc': return (b.note||0) - (a.note||0);
+    }
+    return 0;
+  });
+
+  // Update count
+  document.getElementById('dashCount').textContent = rows.length;
+
+  // Stats
+  if(rows.length > 0){
+    const grades = rows.map(r => r.note || 0);
+    const moy = grades.reduce((s,x)=>s+x,0) / grades.length;
+    const max = Math.max(...grades);
+    const min = Math.min(...grades);
+    const nbValide = grades.filter(g => g >= 10).length;
+    document.getElementById('dashStats').innerHTML = `
+      <div class="dash-stat"><div class="lbl">Moyenne</div><div class="val">${moy.toFixed(1).replace('.',',')}</div></div>
+      <div class="dash-stat gold"><div class="lbl">Note max</div><div class="val">${max.toFixed(1).replace('.',',')}</div></div>
+      <div class="dash-stat warn"><div class="lbl">Note min</div><div class="val">${min.toFixed(1).replace('.',',')}</div></div>
+      <div class="dash-stat"><div class="lbl">≥ 10 / 20</div><div class="val">${nbValide}/${rows.length}</div></div>
+    `;
+  } else {
+    document.getElementById('dashStats').innerHTML = '';
+  }
+
+  // Table
+  const tbody = document.getElementById('dashTbody');
+  if(rows.length === 0){
+    tbody.innerHTML = '';
+    document.getElementById('dashEmpty').style.display = 'block';
+    return;
+  }
+  document.getElementById('dashEmpty').style.display = 'none';
+  tbody.innerHTML = rows.map((r, idx) => {
+    const note = r.note || 0;
+    const badgeClass = note >= 14 ? 'ok' : (note >= 10 ? 'warn' : 'fail');
+    const tasks = r.taches || [];
+    const dots = tasks.map(t => {
+      const pct = t.max > 0 ? t.pts / t.max : 0;
+      const cls = pct >= 1 ? 'full' : (pct > 0 ? 'partial' : 'zero');
+      return `<div class="dash-task-dot ${cls}" title="${t.nom||''}: ${t.pts}/${t.max}">${t.pts||0}</div>`;
+    }).join('');
+    const dateStr = r.timestamp ? new Date(r.timestamp).toLocaleString('fr-FR', {dateStyle:'short', timeStyle:'short'}) : '—';
+    const keyAttr = r._key ? `data-key="${r._key}"` : `data-localidx="${idx}"`;
+    return `<tr ${keyAttr}>
+      <td><strong>${escapeHtml(r.nom||'—')}</strong></td>
+      <td>${escapeHtml(r.classe||'—')}</td>
+      <td style="text-align:center"><span class="dash-grade-badge ${badgeClass}">${note.toFixed(1).replace('.',',')}</span></td>
+      <td><div class="dash-task-dots">${dots}</div></td>
+      <td style="font-size:12px; color:var(--ink-soft)">${dateStr}</td>
+      <td style="text-align:center"><button onclick="deleteResult(this)" style="background:transparent; border:1px solid var(--line); color:var(--ink-soft); border-radius:5px; padding:5px 10px; cursor:pointer; font-size:12px">🗑</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function deleteResult(btn){
+  if(!confirm('Supprimer cette copie ?')) return;
+  const tr = btn.closest('tr');
+  const fbKey = tr.dataset.key;
+  const localIdx = tr.dataset.localidx;
+  if(fbKey && _firebaseEnabled){
+    _firebaseDB.ref(FIREBASE_NODE + '/' + fbKey).remove().then(refreshDashboard);
+  } else if(localIdx !== undefined){
+    _dashResults.splice(parseInt(localIdx), 1);
+    localStorage.setItem('tp_macros_results', JSON.stringify(_dashResults));
+    renderDashboard();
+  }
+}
+
+function clearAllResults(){
+  if(!confirm('Supprimer TOUTES les copies ? Action irréversible.')) return;
+  if(!confirm('Vraiment tout effacer ?')) return;
+  if(_firebaseEnabled){
+    _firebaseDB.ref(FIREBASE_NODE).remove().then(refreshDashboard);
+  } else {
+    localStorage.removeItem('tp_macros_results');
+    _dashResults = [];
+    renderDashboard();
+  }
+}
+
+function exportDashboardCSV(){
+  if(_dashResults.length === 0){ alert('Aucune copie à exporter.'); return; }
+  const headers = ['Nom', 'Classe', 'Note /20', 'Date', 'T1 (Moyennes)', 'T2 (Moy classe)', 'T3 (Max)', 'T4 (Min)', 'T5 (NB)', 'T6 (Ecart)'];
+  const rows = _dashResults.map(r => {
+    const t = r.taches || [];
+    return [
+      r.nom||'',
+      r.classe||'',
+      (r.note||0).toString().replace('.', ','),
+      r.timestamp ? new Date(r.timestamp).toLocaleString('fr-FR') : '',
+      ...t.map(x => `${x.pts}/${x.max}`)
+    ];
+  });
+  const csv = '\uFEFF' + [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'resultats_tp_tableur_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function unlockEvalFinal(){
+  const input = document.getElementById('evalPwd').value;
+  const name = document.getElementById('evalStudentName').value.trim();
+  const klass = document.getElementById('evalStudentClass').value.trim();
+
+  if(!name){
+    alert('Saisis ton nom et prénom avant de démarrer l\'évaluation.');
+    document.getElementById('evalStudentName').focus();
+    return;
+  }
+  if(!klass){
+    alert('Saisis ta classe (ex : 4ᵉA) avant de démarrer l\'évaluation.');
+    document.getElementById('evalStudentClass').focus();
+    return;
+  }
+  if(input.trim().toLowerCase() !== EVAL_PASSWORD.toLowerCase()){
+    document.getElementById('lockErr').classList.add('show');
+    document.getElementById('evalPwd').value = '';
+    document.getElementById('evalPwd').focus();
+    return;
+  }
+  // Stocker le nom et la classe dans sessionStorage pour le retrouver dans la page éval
+  sessionStorage.setItem('eval_student_name', name);
+  sessionStorage.setItem('eval_student_class', klass);
+  // Redirection vers la page d'éval isolée (avec nom et classe en paramètres URL aussi)
+  const params = new URLSearchParams({ name, klass });
+  window.location.href = EVAL_PAGE_URL + '?' + params.toString();
+}
+
+// Entrée déclenche le déverrouillage + dashboard
+window.addEventListener('load', ()=>{
+  const pwdInput = document.getElementById('evalPwd');
+  if(pwdInput){
+    pwdInput.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){ e.preventDefault(); unlockEvalFinal(); }
+    });
+  }
+  const dashPwdInput = document.getElementById('dashPwd');
+  if(dashPwdInput){
+    dashPwdInput.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){ e.preventDefault(); unlockDashboard(); }
+    });
+  }
+  // Pré-remplir nom et classe si déjà stockés
+  const savedName = localStorage.getItem('tp_macros_name');
+  const savedClass = sessionStorage.getItem('eval_student_class');
+  if(savedName){ const el = document.getElementById('evalStudentName'); if(el) el.value = savedName; }
+  if(savedClass){ const el = document.getElementById('evalStudentClass'); if(el) el.value = savedClass; }
+});
+
+/* ====================================================================
+   ARCADE — JEU 1 : CIBLE-CODE
+==================================================================== */
+const meGame1 = new MacroEditor(document.getElementById('me_game1'), { cols:5, rows:6,
+  initialCode: `Sub Cible()
+    ' Écris l'instruction qui place la valeur attendue dans la bonne cellule
+    
+End Sub` });
+
+const G1 = { score:0, combo:0, round:0, max:8, target:null };
+
+function g1RandTarget(){
+  const cols = ['A','B','C','D','E'];
+  const refs = [];
+  for(const c of cols) for(let r = 1; r <= 6; r++) refs.push(c+r);
+  const ref = refs[Math.floor(Math.random()*refs.length)];
+  const types = [
+    () => ({type:'value', value: Math.floor(Math.random()*99)+1, desc:`mettre le nombre <strong>${Math.floor(Math.random()*99)+1}</strong> dans <strong>${ref}</strong>`}),
+    () => { const v = Math.floor(Math.random()*99)+1; return {type:'value', value: v, desc:`mettre le nombre <strong>${v}</strong> dans <strong>${ref}</strong>`}; },
+    () => { const w = ['OK','HELLO','TP','MACRO','VBA','BONJOUR','TITRE'][Math.floor(Math.random()*7)]; return {type:'value', value: w, desc:`mettre le texte <strong>"${w}"</strong> dans <strong>${ref}</strong>`}; },
+    () => ({type:'bold', desc:`mettre <strong>${ref}</strong> en gras`}),
+    () => { const cs = [[255,0,0,'rouge'],[0,200,0,'vert'],[100,150,255,'bleu clair'],[255,255,0,'jaune']]; const c = cs[Math.floor(Math.random()*cs.length)]; return {type:'color', color:`rgb(${c[0]},${c[1]},${c[2]})`, desc:`colorer <strong>${ref}</strong> en <strong>${c[3]}</strong> avec RGB(${c[0]}, ${c[1]}, ${c[2]})`}; }
+  ];
+  const target = types[Math.floor(Math.random()*types.length)]();
+  target.ref = ref;
+  return target;
+}
+
+function g1NewTarget(){
+  if(G1.round >= G1.max){ g1Reset(true); return; }
+  G1.round++;
+  G1.target = g1RandTarget();
+  document.getElementById('g1Round').textContent = G1.round;
+  document.getElementById('g1Target').innerHTML = G1.target.desc;
+  document.getElementById('g1Result').className = 'target-result';
+  document.getElementById('g1Result').textContent = 'En attente de ta macro…';
+  document.getElementById('g1NextBtn').style.display = 'none';
+  meGame1.reset();
+}
+
+function g1Fire(){
+  meGame1.execute();
+  const t = G1.target;
+  let ok = false;
+  if(t.type === 'value'){
+    const v = meGame1.getCellValue(t.ref);
+    ok = String(v||'').toLowerCase() === String(t.value).toLowerCase() || approxEq(v, t.value);
+  } else if(t.type === 'bold'){
+    ok = meGame1.getCellStyle(t.ref).bold === true;
+  } else if(t.type === 'color'){
+    const want = t.color.replace(/\s+/g, '');
+    const got = String(meGame1.getCellStyle(t.ref).bg || '').replace(/\s+/g, '');
+    ok = got === want;
+  }
+  const resEl = document.getElementById('g1Result');
+  if(ok){
+    G1.combo++;
+    const bonus = (G1.combo - 1) * 5;
+    G1.score += 10 + bonus;
+    resEl.className = 'target-result win';
+    resEl.textContent = '✓ Cible atteinte ! +'+(10+bonus)+' pts'+(bonus>0?' (combo ×'+G1.combo+')':'');
+    document.getElementById('g1Score').textContent = G1.score;
+    document.getElementById('g1Combo').textContent = '×'+G1.combo;
+    document.getElementById('g1NextBtn').style.display = '';
+    if(G1.round >= G1.max){
+      setTimeout(()=>{
+        feedback('fb_g1', '🏆 Arcade Cible-Code terminée ! Score : '+G1.score, true);
+        if(G1.score >= 80) TPScore.add('🎯');
+      }, 500);
+    }
+  } else {
+    resEl.className = 'target-result lose';
+    resEl.textContent = '✗ Pas tout à fait. Ta macro ne produit pas ce qui est demandé.';
+    G1.combo = 0;
+    document.getElementById('g1Combo').textContent = '×0';
+  }
+}
+
+function g1Skip(){ G1.combo = 0; document.getElementById('g1Combo').textContent = '×0'; g1NewTarget(); }
+function g1Reset(finished){
+  if(!finished){ G1.score = 0; G1.round = 0; document.getElementById('g1Score').textContent = '0'; }
+  else G1.round = 0;
+  G1.combo = 0;
+  document.getElementById('g1Combo').textContent = '×0';
+  g1NewTarget();
+}
+
+
+/* ====================================================================
+   JEU 2 — SPRINT CODE
+==================================================================== */
+const G2 = { score:0, combo:0, maxCombo:0, good:0, qNum:0, timeLeft:60, timerInt:null, current:null, running:false };
+
+const SPRINT_QUESTIONS = [
+  {q: 'Quelle macro met <strong>"Hello"</strong> dans la cellule <strong>B3</strong> ?',
+   options: ['Range("B3").Value = "Hello"', 'Cells(3, 3).Value = "Hello"', 'B3 = "Hello"', 'Range("B3") = Hello'],
+   correct: 0},
+  {q: 'Quelle macro met le nombre <strong>42</strong> dans la cellule <strong>A1</strong> ?',
+   options: ['Range("A1") = 42', 'Range("A1").Value = 42', 'A1.Value = 42', 'Set Range("A1") = 42'],
+   correct: 1},
+  {q: 'Quelle macro met <strong>A5</strong> en gras ?',
+   options: ['Range("A5").Bold = True', 'Range("A5").Style = "Bold"', 'Range("A5").Font.Bold = True', 'Bold(A5)'],
+   correct: 2},
+  {q: 'Quelle macro colore <strong>C2</strong> en rouge ?',
+   options: ['Range("C2").Color = "red"', 'Range("C2").Interior.Color = RGB(255, 0, 0)', 'Range("C2").BackColor = Red', 'C2.Color = 255'],
+   correct: 1},
+  {q: 'Quelle boucle remplit A1 à A5 avec les nombres 1, 2, 3, 4, 5 ?',
+   options: [
+     'For i = 1 To 5\\n    Cells(i, 1).Value = i\\nNext i',
+     'For i = 1 To 5\\n    Range(i).Value = i\\nNext',
+     'Loop 5 times\\n    Cells(i, 1) = i\\nEnd Loop',
+     'While i < 5\\n    Cells(i, 1).Value = i\\nWend'
+   ],
+   correct: 0},
+  {q: 'Que fait <code>Cells(3, 2).Value = "X"</code> ?',
+   options: ['Met "X" dans la cellule C2', 'Met "X" dans la cellule B3', 'Met "X" dans la cellule C3', 'Met "X" dans la cellule B2'],
+   correct: 1},
+  {q: 'Comment afficher un message « Bonjour » ?',
+   options: ['Print "Bonjour"', 'Alert("Bonjour")', 'MsgBox "Bonjour"', 'Write "Bonjour"'],
+   correct: 2},
+  {q: 'Comment déclare-t-on une variable n de type Integer ?',
+   options: ['Dim n As Integer', 'Var n: Integer', 'Integer n', 'Let n = Integer'],
+   correct: 0},
+  {q: 'Que renvoie <code>n Mod 2</code> ?',
+   options: ['Le double de n', 'Le carré de n', 'Le reste de la division de n par 2', 'n - 2'],
+   correct: 2},
+  {q: 'Comment teste-t-on si une variable n est paire ?',
+   options: ['If n / 2 = 0 Then', 'If n Mod 2 = 0 Then', 'If Even(n) Then', 'If n = pair Then'],
+   correct: 1},
+  {q: 'Quelle boucle parcourt les cellules d\'une diagonale ?',
+   options: [
+     'For i = 1 To 5\\n    Cells(i, 5).Value = "X"\\nNext i',
+     'For i = 1 To 5\\n    Cells(1, i).Value = "X"\\nNext i',
+     'For i = 1 To 5\\n    Cells(i, i).Value = "X"\\nNext i',
+     'For i = 1 To 5\\n    Range("A1:E5").Value = "X"\\nNext i'
+   ],
+   correct: 2},
+  {q: 'Comment fermer une boucle <code>For i = 1 To 10</code> ?',
+   options: ['End For', 'Next i', 'Loop', 'End i'],
+   correct: 1},
+  {q: 'Comment terminer une procédure ?',
+   options: ['End', 'Stop', 'End Sub', 'Return'],
+   correct: 2},
+  {q: 'Que signifie <code>RGB(0, 0, 255)</code> ?',
+   options: ['Du noir', 'Du blanc', 'Du bleu pur', 'Du rouge'],
+   correct: 2},
+  {q: 'Comment commenter une ligne en VBA ?',
+   options: ['// commentaire', '# commentaire', "' commentaire", '/* commentaire */'],
+   correct: 2}
+];
+
+function g2Render(){
+  const q = G2.current;
+  document.getElementById('g2Question').innerHTML = q.q;
+  const optsEl = document.getElementById('g2Options');
+  optsEl.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'sprint-opt';
+    b.style.fontFamily = "'JetBrains Mono',monospace";
+    b.style.whiteSpace = 'pre-line';
+    b.innerHTML = opt.replace(/\\n/g, '\n');
+    b.onclick = () => g2Answer(i, b);
+    optsEl.appendChild(b);
+  });
+}
+
+function g2NextQuestion(){
+  if(!G2.running) return;
+  G2.qNum++;
+  document.getElementById('g2QNum').textContent = G2.qNum;
+  G2.current = SPRINT_QUESTIONS[Math.floor(Math.random() * SPRINT_QUESTIONS.length)];
+  g2Render();
+}
+
+function g2Answer(idx, btn){
+  if(!G2.running) return;
+  const correct = idx === G2.current.correct;
+  document.querySelectorAll('#g2Options .sprint-opt').forEach(b => b.onclick = null);
+  if(correct){
+    btn.classList.add('correct');
+    G2.combo++;
+    G2.maxCombo = Math.max(G2.maxCombo, G2.combo);
+    G2.score += 10 + (G2.combo - 1) * 3;
+    G2.good++;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('#g2Options .sprint-opt').forEach((b, i) => { if(i === G2.current.correct) b.classList.add('correct'); });
+    G2.combo = 0;
+  }
+  document.getElementById('g2Score').textContent = G2.score;
+  document.getElementById('g2Combo').textContent = '×'+G2.combo;
+  setTimeout(()=>{ if(G2.running) g2NextQuestion(); }, correct ? 600 : 1200);
+}
+
+function g2Start(){
+  G2.score = 0; G2.combo = 0; G2.maxCombo = 0; G2.good = 0; G2.qNum = 0;
+  G2.timeLeft = 60; G2.running = true;
+  document.getElementById('g2Start').style.display = 'none';
+  document.getElementById('g2Over').style.display = 'none';
+  document.getElementById('g2Play').style.display = 'block';
+  document.getElementById('g2Score').textContent = '0';
+  document.getElementById('g2Combo').textContent = '×0';
+  document.getElementById('g2Time').textContent = '60s';
+  document.getElementById('g2TimerFill').style.width = '100%';
+  if(G2.timerInt) clearInterval(G2.timerInt);
+  G2.timerInt = setInterval(()=>{
+    G2.timeLeft -= 0.25;
+    document.getElementById('g2Time').textContent = Math.max(0, Math.ceil(G2.timeLeft))+'s';
+    document.getElementById('g2TimerFill').style.width = Math.max(0, G2.timeLeft/60*100)+'%';
+    if(G2.timeLeft <= 0){ clearInterval(G2.timerInt); g2End(); }
+  }, 250);
+  g2NextQuestion();
+}
+
+function g2End(){
+  G2.running = false;
+  document.getElementById('g2Play').style.display = 'none';
+  document.getElementById('g2Over').style.display = 'block';
+  document.getElementById('g2Final').textContent = G2.score;
+  document.getElementById('g2Good').textContent = G2.good;
+  document.getElementById('g2MaxCombo').textContent = '×'+G2.maxCombo;
+  let msg = '';
+  if(G2.score >= 200) msg = '🌟 Champion·ne du code !';
+  else if(G2.score >= 130) msg = '🔥 Excellent réflexe !';
+  else if(G2.score >= 80) msg = '👍 Bonne maîtrise.';
+  else if(G2.score >= 40) msg = '✓ À retravailler.';
+  else msg = '⚠ Reprends les modules sur VBA.';
+  document.getElementById('g2Rank').textContent = msg;
+  if(G2.score >= 100){
+    feedback('fb_g2', 'Sprint réussi ! '+G2.score+' pts.', true);
+    TPScore.add('⚡');
+  }
+}
+
+
+/* ====================================================================
+   JEU 3 — DÉTECTIVE BUG
+==================================================================== */
+const G3 = {
+  score:0, idx:0, solved:0, hintUsed:false, current:null,
+  cases:[
+    {
+      title:"Le titre absent",
+      story:"Cette macro devait écrire <strong>« Bilan »</strong> dans A1. Mais rien n'apparaît.",
+      code:[
+        '1  Sub EcrireTitre()',
+        '2      Range("A1").Value = Bilan',
+        '3  End Sub'
+      ],
+      buggedLine: 2,
+      acceptables:['Range("A1").Value = "Bilan"'],
+      hint: 'Le texte doit être entre guillemets, sinon Bilan est interprété comme une variable.'
+    },
+    {
+      title:"La cellule décalée",
+      story:"Cette macro devait écrire <strong>42</strong> dans <strong>B3</strong>. Mais le 42 apparaît dans C2.",
+      code:[
+        '1  Sub Ecrire42()',
+        '2      Cells(2, 3).Value = 42',
+        '3  End Sub'
+      ],
+      buggedLine: 2,
+      acceptables:['Cells(3, 2).Value = 42'],
+      hint: 'Cells(ligne, colonne). B3 = ligne 3, colonne 2. L\'ordre des nombres est inversé !'
+    },
+    {
+      title:"Boucle qui plante",
+      story:"Cette macro devait remplir A1 à A10 avec les nombres 1 à 10. Elle ne donne rien.",
+      code:[
+        '1  Sub Remplir()',
+        '2      For i = 1 To 10',
+        '3          Cells(i, 1).Value = i',
+        '4      End For',
+        '5  End Sub'
+      ],
+      buggedLine: 4,
+      acceptables:['Next i','Next'],
+      hint: 'Une boucle For ne se ferme pas par "End For" en VBA. Comment ferme-t-on un For en VBA ?'
+    },
+    {
+      title:"Couleur invisible",
+      story:"Cette macro devait colorer A1 en jaune. La cellule reste blanche.",
+      code:[
+        '1  Sub Jaune()',
+        '2      Range("A1").Interior.Color = (255, 255, 0)',
+        '3  End Sub'
+      ],
+      buggedLine: 2,
+      acceptables:['Range("A1").Interior.Color = RGB(255, 255, 0)','Range("A1").Interior.Color = RGB(255,255,0)'],
+      hint: 'Il manque la fonction <code>RGB</code> pour construire la couleur.'
+    },
+    {
+      title:"Le test inversé",
+      story:"Cette macro devait colorer en rouge les cellules de A1 à A10 contenant un nombre <strong>impair</strong>. Mais elle colore les nombres pairs.",
+      code:[
+        '1  Sub MarquerImpairs()',
+        '2      For i = 1 To 10',
+        '3          Cells(i, 1).Value = i',
+        '4          If i Mod 2 = 0 Then',
+        '5              Cells(i, 1).Interior.Color = RGB(255, 100, 100)',
+        '6          End If',
+        '7      Next i',
+        '8  End Sub'
+      ],
+      buggedLine: 4,
+      acceptables:['If i Mod 2 = 1 Then', 'If i Mod 2 <> 0 Then'],
+      hint: 'Pair signifie reste 0 quand divisé par 2. Impair signifie reste 1 (ou différent de 0).'
+    }
+  ]
+};
+
+function g3Render(){
+  const c = G3.cases[G3.idx];
+  G3.current = c;
+  G3.hintUsed = false;
+  document.getElementById('g3Case').textContent = G3.idx + 1;
+  document.getElementById('g3CaseFile').innerHTML =
+    '<span class="case-num">DOSSIER '+(G3.idx+1).toString().padStart(2,'0')+'</span><strong>'+c.title+'</strong><br>'+c.story;
+  document.getElementById('g3Code').innerHTML = c.code.map(l => {
+    const m = l.match(/^(\d+)(\s+)(.*)$/);
+    if(!m) return l;
+    const isBug = parseInt(m[1]) === c.buggedLine;
+    return `<span style="color:${isBug?'#c2410c':'#8a96a3'}; ${isBug?'background:rgba(194,65,12,0.15); padding:1px 4px; border-radius:3px;':''}">${m[1]}${m[2]}${m[3].replace(/[&<>]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]))}</span>`;
+  }).join('\n');
+  document.getElementById('g3LineNum').textContent = 'L' + c.buggedLine;
+  document.getElementById('g3Input').value = '';
+  document.getElementById('g3Clue').style.display = 'none';
+  document.getElementById('g3HintBtn').style.display = '';
+  document.getElementById('g3NextBtn').style.display = 'none';
+  const fb = document.getElementById('fb_g3');
+  fb.classList.remove('show');
+}
+
+function g3Hint(){
+  G3.hintUsed = true;
+  const clue = document.getElementById('g3Clue');
+  clue.innerHTML = '💡 ' + G3.current.hint;
+  clue.style.display = 'block';
+  document.getElementById('g3HintBtn').style.display = 'none';
+}
+
+function _normCode(s){ return s.trim().replace(/\s+/g, ' ').replace(/\s*,\s*/g, ', ').toLowerCase(); }
+
+function g3Submit(){
+  const raw = document.getElementById('g3Input').value;
+  const normInput = _normCode(raw);
+  const ok = G3.current.acceptables.some(a => _normCode(a) === normInput);
+  const fb = document.getElementById('fb_g3');
+  if(ok){
+    const gain = G3.hintUsed ? 15 : 20;
+    G3.score += gain;
+    G3.solved++;
+    document.getElementById('g3Score').textContent = G3.score;
+    document.getElementById('g3Solved').textContent = G3.solved;
+    fb.className = 'feedback show ok';
+    fb.innerHTML = '✓ Bien vu détective ! La correction est <code>'+G3.current.acceptables[0]+'</code> · +'+gain+' pts'+(G3.hintUsed?' (indice utilisé)':'');
+    document.getElementById('g3NextBtn').style.display = '';
+    document.getElementById('g3HintBtn').style.display = 'none';
+    if(G3.idx + 1 >= G3.cases.length){
+      setTimeout(()=>{
+        fb.innerHTML += '<br><br><strong>🏆 Toutes les enquêtes résolues ! Score : '+G3.score+'/100.</strong>';
+        if(G3.score >= 60) TPScore.add('🔍');
+      }, 500);
+    }
+  } else {
+    fb.className = 'feedback show err';
+    fb.innerHTML = '✗ Pas tout à fait. Relis bien la ligne fautive.';
+  }
+}
+
+function g3Next(){
+  if(G3.idx + 1 < G3.cases.length){ G3.idx++; g3Render(); }
+  else { G3.idx = 0; G3.score = 0; G3.solved = 0; document.getElementById('g3Score').textContent = '0'; document.getElementById('g3Solved').textContent = '0'; g3Render(); }
+}
+
+window.addEventListener('load', ()=>{
+  g1NewTarget();
+  g3Render();
+});
+document.getElementById('g3Input').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); g3Submit(); }
+});
+</script>
+
+</body>
+</html>
