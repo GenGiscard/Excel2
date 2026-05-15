@@ -360,6 +360,38 @@ code{
 .stuck-btn:hover{background:#fff5d6}
 .stuck-btn:disabled{opacity:0.4; cursor:not-allowed}
 
+/* Confirmation inline (remplace le confirm() natif) */
+.stuck-confirm{
+  display:none;
+  background:#fff8e1; border:2px solid var(--gold);
+  border-radius:10px; padding:14px 16px;
+  margin-top:6px; width:100%;
+  animation:fadeInSlide .25s ease-out;
+}
+@keyframes fadeInSlide{from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:translateY(0)}}
+.stuck-confirm-msg{
+  font-size:14px; color:#5a4500; line-height:1.5;
+  margin-bottom:12px;
+}
+.stuck-confirm-actions{
+  display:flex; gap:10px; flex-wrap:wrap;
+}
+.stuck-confirm-yes{
+  background:var(--gold); color:#fff; border:none;
+  padding:9px 18px; border-radius:7px;
+  font-family:'Outfit',sans-serif; font-weight:600; font-size:13px;
+  cursor:pointer;
+}
+.stuck-confirm-yes:hover{background:#8a6300}
+.stuck-confirm-no{
+  background:#fff; color:var(--ink-soft);
+  border:1px solid var(--line);
+  padding:9px 18px; border-radius:7px;
+  font-family:'Outfit',sans-serif; font-weight:500; font-size:13px;
+  cursor:pointer;
+}
+.stuck-confirm-no:hover{background:var(--bg)}
+
 /* Bloc de rattrapage */
 .replacement{
   margin-top:24px; padding:22px;
@@ -1624,6 +1656,11 @@ code{
       <li><a href="#ex5"><span class="num">E5</span>Coloriage conditionnel</a></li>
       <li><a href="#ex6"><span class="num">E6</span>Diagonale</a></li>
       <li><a href="#ex7"><span class="num">E7</span>Damier coloré</a></li>
+      <li class="group-label">Pour aller plus loin</li>
+      <li><a href="#ex8"><span class="num">E8</span>Les carrés</a></li>
+      <li><a href="#ex9"><span class="num">E9</span>Somme cumulée</a></li>
+      <li><a href="#ex10"><span class="num">E10</span>Le décompte</a></li>
+      <li><a href="#ex11"><span class="num">E11</span>Cadre coloré</a></li>
       <li class="group-label">Arcade</li>
       <li><a href="#game1"><span class="num">🎯</span>Cible-Code</a></li>
       <li><a href="#game2"><span class="num">⚡</span>Sprint Code</a></li>
@@ -2393,6 +2430,104 @@ End If</pre>
 
 
 <!-- ====================================================================
+     EXERCICES AVANCÉS — POUR ALLER PLUS LOIN
+==================================================================== -->
+<section id="exadv">
+  <div class="section-tag">▶ Exercices avancés · 40 min</div>
+  <h2 class="section-title">Pour aller plus loin</h2>
+  <p class="section-subtitle">
+    Quatre défis supplémentaires pour <strong>consolider</strong> tes compétences :
+    variables, accumulateurs, boucles décroissantes et conditions complexes.
+  </p>
+
+  <!-- EXERCICE 8 -->
+  <div class="exercise" id="ex8">
+    <div class="exercise-badge">Exercice 8 · 8 min</div>
+    <h4>Les carrés</h4>
+    <div class="task">
+      <strong>À faire :</strong> Remplis les cellules <strong>A1 à A10</strong> avec les
+      <strong>carrés</strong> des nombres de 1 à 10 :
+      <ul style="margin-left:18px; margin-top:6px">
+        <li>A1 = 1 × 1 = <strong>1</strong></li>
+        <li>A2 = 2 × 2 = <strong>4</strong></li>
+        <li>A3 = 3 × 3 = <strong>9</strong></li>
+        <li>… jusqu'à A10 = 10 × 10 = <strong>100</strong></li>
+      </ul>
+      <p style="margin-top:6px">Indice : utilise <code>i * i</code>.</p>
+    </div>
+    <div id="me_ex8"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx8()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex8"></div>
+  </div>
+
+  <!-- EXERCICE 9 -->
+  <div class="exercise" id="ex9">
+    <div class="exercise-badge">Exercice 9 · 10 min</div>
+    <h4>La somme cumulée</h4>
+    <div class="task">
+      <strong>À faire :</strong> Calcule la somme <strong>1 + 2 + 3 + … + 10 = 55</strong>
+      et affiche le résultat dans <strong>A1</strong>.
+      <p style="margin-top:6px">Indice : il te faut une <strong>variable accumulateur</strong> :</p>
+      <pre class="vba-snippet" style="margin:6px 0">Dim somme As Integer
+somme = 0
+For i = 1 To 10
+    somme = somme + i
+Next i
+Range("A1").Value = somme</pre>
+    </div>
+    <div id="me_ex9"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx9()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex9"></div>
+  </div>
+
+  <!-- EXERCICE 10 -->
+  <div class="exercise" id="ex10">
+    <div class="exercise-badge">Exercice 10 · 8 min</div>
+    <h4>Le décompte</h4>
+    <div class="task">
+      <strong>À faire :</strong> Remplis les cellules <strong>A1 à A10</strong> avec un
+      <strong>décompte</strong> : 10, 9, 8, 7, … 1.
+      <p style="margin-top:6px">Deux pistes possibles :</p>
+      <ul style="margin-left:18px">
+        <li>Utiliser <code>For i = 10 To 1 Step -1</code> avec un compteur de ligne séparé.</li>
+        <li>Ou utiliser une boucle classique <code>For i = 1 To 10</code> et écrire <code>Cells(i, 1).Value = 11 - i</code>.</li>
+      </ul>
+    </div>
+    <div id="me_ex10"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx10()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex10"></div>
+  </div>
+
+  <!-- EXERCICE 11 -->
+  <div class="exercise" id="ex11">
+    <div class="exercise-badge">Exercice 11 · 14 min</div>
+    <h4>Le cadre coloré</h4>
+    <div class="task">
+      <strong>À faire :</strong> Dans une grille <strong>6 × 6</strong>, colore en
+      <strong>bleu</strong> <code>RGB(100, 150, 255)</code> uniquement le <strong>contour</strong>
+      du rectangle (les cellules qui sont sur la première ligne, la dernière ligne, la
+      première colonne ou la dernière colonne). L'intérieur reste blanc.
+      <p style="margin-top:6px">Indice : utilise <code>Or</code> pour combiner plusieurs conditions :</p>
+      <pre class="vba-snippet" style="margin:6px 0">If i = 1 Or i = 6 Or j = 1 Or j = 6 Then
+    Cells(i, j).Interior.Color = RGB(100, 150, 255)
+End If</pre>
+    </div>
+    <div id="me_ex11"></div>
+    <div class="actions-line">
+      <button class="check-btn" onclick="checkEx11()">✓ Vérifier</button>
+    </div>
+    <div class="feedback" id="fb_ex11"></div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
      ARCADE — JEU 1 : CIBLE-CODE
 ==================================================================== -->
 <section id="game1">
@@ -3117,7 +3252,7 @@ const TPScore = {
       const arr = JSON.parse(localStorage.getItem('tp_macros_done') || '[]');
       arr.forEach(id => this.exercises.add(id));
     } catch(e){}
-    for(let i = 2; i <= 7; i++){
+    for(let i = 2; i <= 11; i++){
       if(this.exercises.has('E' + (i-1))){
         const el = document.getElementById('ex' + i);
         if(el) el.classList.remove('locked');
@@ -3547,6 +3682,41 @@ const meEx7 = new MacroEditor(document.getElementById('me_ex7'), { cols:5, rows:
     Next i
 End Sub` });
 
+const meEx8 = new MacroEditor(document.getElementById('me_ex8'), { cols:5, rows:12,
+  initialCode: `Sub Carres()
+    For i = 1 To 10
+        Cells(i, 1).Value = ?
+    Next i
+End Sub` });
+
+const meEx9 = new MacroEditor(document.getElementById('me_ex9'), { cols:5, rows:6,
+  initialCode: `Sub Somme()
+    Dim somme As Integer
+    somme = 0
+    For i = 1 To 10
+        
+    Next i
+    Range("A1").Value = somme
+End Sub` });
+
+const meEx10 = new MacroEditor(document.getElementById('me_ex10'), { cols:5, rows:12,
+  initialCode: `Sub Decompte()
+    For i = 1 To 10
+        Cells(i, 1).Value = ?
+    Next i
+End Sub` });
+
+const meEx11 = new MacroEditor(document.getElementById('me_ex11'), { cols:7, rows:7,
+  initialCode: `Sub Cadre()
+    For i = 1 To 6
+        For j = 1 To 6
+            If ? Then
+                Cells(i, j).Interior.Color = RGB(100, 150, 255)
+            End If
+        Next j
+    Next i
+End Sub` });
+
 const meEvalTrain = new MacroEditor(document.getElementById('me_eval_train'), { cols:4, rows:10,
   initialCode: `Sub Calendrier()
     ' Écris ta macro ici
@@ -3554,7 +3724,8 @@ const meEvalTrain = new MacroEditor(document.getElementById('me_eval_train'), { 
 End Sub` });
 
 // Registre des éditeurs par numéro d'exercice (pour le système "Je bloque")
-const EX_EDITORS = { 1:meEx1, 2:meEx2, 3:meEx3, 4:meEx4, 5:meEx5, 6:meEx6, 7:meEx7 };
+const EX_EDITORS = { 1:meEx1, 2:meEx2, 3:meEx3, 4:meEx4, 5:meEx5, 6:meEx6, 7:meEx7,
+                     8:meEx8, 9:meEx9, 10:meEx10, 11:meEx11 };
 const REPL_EDITORS = {};
 
 /* ====================================================================
@@ -3649,6 +3820,54 @@ function checkEx7(){
   }
   if(!allOk){ feedback('fb_ex7', 'La grille 5×5 doit alterner les deux couleurs en damier.', false); }
   else { feedback('fb_ex7', 'Magnifique damier !', true); TPScore.add('E7'); }
+}
+
+function checkEx8(){
+  meEx8.execute();
+  let allOk = true;
+  for(let i = 1; i <= 10; i++){
+    if(!approxEq(meEx8.getCellValue('A'+i), i*i)){ allOk = false; break; }
+  }
+  if(!allOk){ feedback('fb_ex8', 'A1 doit valoir 1, A2 doit valoir 4, A3 doit valoir 9, … A10 doit valoir 100.', false); }
+  else { feedback('fb_ex8', 'Bravo : les 10 carrés sont bons !', true); TPScore.add('E8'); }
+}
+
+function checkEx9(){
+  meEx9.execute();
+  if(!approxEq(meEx9.getCellValue('A1'), 55)){
+    feedback('fb_ex9', 'A1 doit contenir 55 (= 1+2+3+…+10). Vérifie que tu accumules bien <code>somme = somme + i</code>.', false);
+  } else {
+    feedback('fb_ex9', 'Parfait : 1+2+…+10 = 55. Tu maîtrises l\'accumulateur !', true);
+    TPScore.add('E9');
+  }
+}
+
+function checkEx10(){
+  meEx10.execute();
+  let allOk = true;
+  for(let i = 1; i <= 10; i++){
+    if(!approxEq(meEx10.getCellValue('A'+i), 11 - i)){ allOk = false; break; }
+  }
+  if(!allOk){ feedback('fb_ex10', 'A1 doit valoir 10, A2 doit valoir 9, … A10 doit valoir 1.', false); }
+  else { feedback('fb_ex10', 'Excellent décompte : 10, 9, 8, …, 1 !', true); TPScore.add('E10'); }
+}
+
+function checkEx11(){
+  meEx11.execute();
+  let allOk = true;
+  for(let i = 1; i <= 6; i++){
+    for(let j = 1; j <= 6; j++){
+      const ref = String.fromCharCode(64+j) + i;
+      const bg = meEx11.getCellStyle(ref).bg || '';
+      const isBorder = (i === 1 || i === 6 || j === 1 || j === 6);
+      const isBlue = /100,\s*150,\s*255/.test(bg);
+      if(isBorder && !isBlue){ allOk = false; break; }
+      if(!isBorder && isBlue){ allOk = false; break; }
+    }
+    if(!allOk) break;
+  }
+  if(!allOk){ feedback('fb_ex11', 'Seul le contour du rectangle 6×6 doit être bleu. L\'intérieur doit rester blanc.', false); }
+  else { feedback('fb_ex11', 'Magnifique cadre bleu : tu maîtrises Or !', true); TPScore.add('E11'); }
 }
 
 /* ====================================================================
@@ -3893,12 +4112,120 @@ End Sub`,
       },
       okMsg: 'Splendides rayures ! Tu maîtrises les boucles imbriquées et les conditions.'
     }
+  },
+  8: {
+    sheetCols:5, sheetRows:12,
+    solution: `Sub Carres()
+    For i = 1 To 10
+        Cells(i, 1).Value = i * i
+    Next i
+End Sub`,
+    explanation: 'Pour les carrés, on multiplie <code>i</code> par lui-même : <code>i * i</code>. À chaque tour de boucle, la valeur de i change donc le carré aussi.',
+    repl: {
+      title: 'Rattrapage : les cubes',
+      task: 'Remplis cette fois A1 à A10 avec les <strong>cubes</strong> : 1, 8, 27, 64, 125, … jusqu\'à 1000. Indice : <code>i * i * i</code>.',
+      starter: `Sub Rattrapage8()
+    For i = 1 To 10
+        Cells(i, 1).Value = ?
+    Next i
+End Sub`,
+      check: (ed)=> { for(let i = 1; i <= 10; i++){ if(!approxEq(ed.getCellValue('A'+i), i*i*i)) return false; } return true; },
+      okMsg: 'Bravo : 1, 8, 27, … 1000. Les cubes sont à toi !'
+    }
+  },
+  9: {
+    sheetCols:5, sheetRows:6,
+    solution: `Sub Somme()
+    Dim somme As Integer
+    somme = 0
+    For i = 1 To 10
+        somme = somme + i
+    Next i
+    Range("A1").Value = somme
+End Sub`,
+    explanation: 'L\'astuce : une <strong>variable accumulateur</strong>. <code>somme</code> garde la mémoire entre les tours. À chaque tour, on lui ajoute la valeur de i. À la fin, elle contient le total.',
+    repl: {
+      title: 'Rattrapage : somme des pairs',
+      task: 'Calcule la somme des <strong>nombres pairs</strong> de 1 à 20 : 2 + 4 + 6 + … + 20 = <strong>110</strong>. Affiche le résultat en <strong>A1</strong>.',
+      starter: `Sub Rattrapage9()
+    Dim somme As Integer
+    somme = 0
+    For i = 1 To 20
+        If ? Then
+            somme = somme + i
+        End If
+    Next i
+    Range("A1").Value = somme
+End Sub`,
+      check: (ed)=> approxEq(ed.getCellValue('A1'), 110),
+      okMsg: 'Excellent : 2+4+6+…+20 = 110 ! Tu sais accumuler ET filtrer.'
+    }
+  },
+  10: {
+    sheetCols:5, sheetRows:12,
+    solution: `Sub Decompte()
+    For i = 1 To 10
+        Cells(i, 1).Value = 11 - i
+    Next i
+End Sub`,
+    explanation: 'L\'astuce : la variable i monte normalement de 1 à 10, mais on écrit <code>11 - i</code>. Quand i = 1, on écrit 10. Quand i = 10, on écrit 1. C\'est le tour de magie.',
+    repl: {
+      title: 'Rattrapage : multiples de 5 décroissants',
+      task: 'Remplis A1 à A10 avec les multiples de 5 en ordre <strong>décroissant</strong> : 50, 45, 40, 35, 30, 25, 20, 15, 10, 5.',
+      starter: `Sub Rattrapage10()
+    For i = 1 To 10
+        Cells(i, 1).Value = ?
+    Next i
+End Sub`,
+      check: (ed)=> { for(let i = 1; i <= 10; i++){ if(!approxEq(ed.getCellValue('A'+i), 55 - i*5)) return false; } return true; },
+      okMsg: 'Parfait : tu sais combiner sens de la boucle et calcul.'
+    }
+  },
+  11: {
+    sheetCols:7, sheetRows:7,
+    solution: `Sub Cadre()
+    For i = 1 To 6
+        For j = 1 To 6
+            If i = 1 Or i = 6 Or j = 1 Or j = 6 Then
+                Cells(i, j).Interior.Color = RGB(100, 150, 255)
+            End If
+        Next j
+    Next i
+End Sub`,
+    explanation: 'Le mot-clé <code>Or</code> combine plusieurs conditions : une cellule est sur le contour si elle est sur la <strong>première ligne</strong>, <strong>OU la dernière ligne</strong>, <strong>OU la première colonne</strong>, <strong>OU la dernière colonne</strong>.',
+    repl: {
+      title: 'Rattrapage : la croix rouge',
+      task: 'Dans une grille <strong>5 × 5</strong>, colore en rouge <code>RGB(255, 100, 100)</code> les cellules de la <strong>ligne du milieu</strong> (ligne 3) ET de la <strong>colonne du milieu</strong> (colonne 3) — ça forme une croix.',
+      starter: `Sub Rattrapage11()
+    For i = 1 To 5
+        For j = 1 To 5
+            If ? Then
+                Cells(i, j).Interior.Color = RGB(255, 100, 100)
+            End If
+        Next j
+    Next i
+End Sub`,
+      check: (ed)=> {
+        for(let i = 1; i <= 5; i++){
+          for(let j = 1; j <= 5; j++){
+            const ref = String.fromCharCode(64+j) + i;
+            const bg = ed.getCellStyle(ref).bg || '';
+            const isCross = (i === 3 || j === 3);
+            const isRed = /255,\s*100,\s*100/.test(bg);
+            if(isCross && !isRed) return false;
+            if(!isCross && isRed) return false;
+          }
+        }
+        return true;
+      },
+      okMsg: 'Belle croix : tu sais combiner les conditions avec Or !'
+    }
   }
 };
 
-// Verrouille E2..E7 par défaut, ajoute les overlays
+// Verrouille E2..E11 par défaut, ajoute les overlays
 function initLocks(){
-  for(let i = 1; i <= 7; i++){
+  for(let i = 1; i <= 11; i++){
     const ex = document.getElementById('ex' + i);
     if(!ex) continue;
     if(!ex.querySelector('.lock-overlay')){
@@ -3916,7 +4243,7 @@ function initLocks(){
 
 // Ajoute le bouton "Je bloque" à chaque exercice
 function attachStuckButtons(){
-  for(let i = 1; i <= 7; i++){
+  for(let i = 1; i <= 11; i++){
     const ex = document.getElementById('ex' + i);
     if(!ex) continue;
     const actionsLine = ex.querySelector('.actions-line');
@@ -3930,13 +4257,60 @@ function attachStuckButtons(){
   }
 }
 
-// "Je bloque" : affiche la solution, l'exécute, ouvre l'exercice de rattrapage
+// "Je bloque" : demande confirmation en inline, puis affiche la solution + ouvre le rattrapage
 function stuckExercise(n){
-  if(!confirm("Tu vas voir la solution de l'exercice. Tu auras ensuite un autre exercice similaire à réussir pour valider et passer au suivant. D'accord ?")) return;
+  const exEl = document.getElementById('ex' + n);
+  if(!exEl) return;
   const data = EX_DATA[n];
   if(!data) return;
+
+  // Si déjà confirmé sur cet exercice, on lance directement
+  if(exEl.dataset.stuckConfirmed === '1'){
+    _performStuck(n);
+    return;
+  }
+
+  // Sinon, afficher la confirmation inline (remplace le bouton "Je bloque")
+  const stuckBtn = exEl.querySelector('.stuck-btn');
+  if(!stuckBtn) return;
+
+  // Créer la zone de confirmation à la place du bouton
+  let confirmBox = exEl.querySelector('.stuck-confirm');
+  if(!confirmBox){
+    confirmBox = document.createElement('div');
+    confirmBox.className = 'stuck-confirm';
+    confirmBox.innerHTML =
+      '<div class="stuck-confirm-msg">⚠ La solution va être révélée et exécutée. Tu devras réussir un <strong>autre exercice similaire</strong> juste après pour valider. Tu confirmes ?</div>' +
+      '<div class="stuck-confirm-actions">' +
+        '<button type="button" class="stuck-confirm-yes" onclick="_confirmStuck(' + n + ')">Oui, montre-moi</button>' +
+        '<button type="button" class="stuck-confirm-no" onclick="_cancelStuck(' + n + ')">Non, je cherche encore</button>' +
+      '</div>';
+    stuckBtn.parentElement.appendChild(confirmBox);
+  }
+  stuckBtn.style.display = 'none';
+  confirmBox.style.display = 'block';
+}
+
+function _cancelStuck(n){
+  const exEl = document.getElementById('ex' + n);
+  const stuckBtn = exEl.querySelector('.stuck-btn');
+  const confirmBox = exEl.querySelector('.stuck-confirm');
+  if(stuckBtn) stuckBtn.style.display = '';
+  if(confirmBox) confirmBox.style.display = 'none';
+}
+
+function _confirmStuck(n){
+  const exEl = document.getElementById('ex' + n);
+  exEl.dataset.stuckConfirmed = '1';
+  const confirmBox = exEl.querySelector('.stuck-confirm');
+  if(confirmBox) confirmBox.style.display = 'none';
+  _performStuck(n);
+}
+
+function _performStuck(n){
+  const data = EX_DATA[n];
   const editor = EX_EDITORS[n];
-  if(!editor) return;
+  if(!editor || !data) return;
   const exEl = document.getElementById('ex' + n);
 
   // Désactiver les boutons originaux
