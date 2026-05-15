@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Empêche le navigateur de restaurer la position de scroll précédente -->
+<script>if('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
 <title>TP Macros — Cycle 4 • ESTIC Don Bosco</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -324,6 +326,64 @@ code{
   border-radius:14px; padding:28px;
   margin:32px 0; position:relative;
   box-shadow:0 4px 12px -6px rgba(30,109,74,0.2);
+}
+
+/* Verrouillage progressif */
+.exercise.locked{
+  border-color:var(--line); box-shadow:none; overflow:hidden;
+}
+.exercise.locked > *:not(.lock-overlay){
+  filter:blur(2px) grayscale(0.5);
+  pointer-events:none; user-select:none;
+  opacity:0.55;
+}
+.exercise.locked .exercise-badge{background:var(--ink-mute); filter:none; opacity:1}
+.exercise .lock-overlay{display:none}
+.exercise.locked .lock-overlay{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  position:absolute; inset:0;
+  background:rgba(251,250,247,0.65);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  z-index:5; padding:30px; gap:10px; border-radius:12px;
+}
+.lock-overlay .lock-icon-big{font-size:42px; opacity:0.7}
+.lock-overlay .lock-title{font-family:'Fraunces',serif; font-weight:500; font-size:20px; color:var(--ink)}
+.lock-overlay .lock-sub-msg{font-size:13px; color:var(--ink-soft); text-align:center; max-width:380px; line-height:1.5}
+
+/* Bouton "Je bloque" */
+.stuck-btn{
+  background:transparent; border:1px solid var(--gold);
+  color:var(--gold); padding:9px 18px; border-radius:7px;
+  font-family:'Outfit',sans-serif; font-weight:600; font-size:13px;
+  cursor:pointer; transition:background .15s;
+}
+.stuck-btn:hover{background:#fff5d6}
+.stuck-btn:disabled{opacity:0.4; cursor:not-allowed}
+
+/* Bloc de rattrapage */
+.replacement{
+  margin-top:24px; padding:22px;
+  background:linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+  border:2px dashed var(--gold);
+  border-radius:12px;
+}
+.repl-badge{
+  display:inline-block; background:var(--gold); color:#fff;
+  padding:4px 12px; border-radius:20px;
+  font-size:11px; font-weight:700; letter-spacing:0.08em;
+  text-transform:uppercase; margin-bottom:10px;
+}
+.replacement h5{
+  font-family:'Fraunces',serif; font-size:18px; margin:6px 0 8px;
+  color:var(--ink); font-weight:600;
+}
+.replacement .task{
+  background:rgba(255,255,255,0.75); border-radius:8px;
+  padding:12px 16px; font-size:13px; margin-bottom:12px; line-height:1.55;
+}
+.replacement .task code{
+  background:var(--accent-soft); color:var(--accent-deep);
+  padding:1px 6px; border-radius:3px; font-family:'JetBrains Mono',monospace; font-size:12px;
 }
 .exercise-badge{
   position:absolute; top:-14px; left:24px;
@@ -3026,12 +3086,50 @@ const TPScore = {
   add(id){
     if(this.exercises.has(id)) return;
     this.exercises.add(id);
+    // Persister la progression
+    try {
+      const arr = JSON.parse(localStorage.getItem('tp_macros_done') || '[]');
+      if(!arr.includes(id)) arr.push(id);
+      localStorage.setItem('tp_macros_done', JSON.stringify(arr));
+    } catch(e){}
+    // Déverrouiller l'exercice suivant si c'est un EN
+    const m = String(id).match(/^E(\d+)$/);
+    if(m){
+      const next = parseInt(m[1]) + 1;
+      const nextEl = document.getElementById('ex' + next);
+      if(nextEl){
+        nextEl.classList.remove('locked');
+        nextEl.style.transition = 'box-shadow .4s';
+        nextEl.style.boxShadow = '0 0 0 6px rgba(30,109,74,0.25)';
+        setTimeout(()=>{ nextEl.style.boxShadow = ''; }, 1200);
+      }
+    }
     this.update();
   },
   update(){
     document.getElementById('scoreVal').textContent = this.exercises.size;
     const dets = [...this.exercises].sort().join(' · ');
-    document.getElementById('scoreDetails').textContent = dets;
+    const detEl = document.getElementById('scoreDetails');
+    if(detEl) detEl.textContent = dets;
+  },
+  restore(){
+    try {
+      const arr = JSON.parse(localStorage.getItem('tp_macros_done') || '[]');
+      arr.forEach(id => this.exercises.add(id));
+    } catch(e){}
+    for(let i = 2; i <= 7; i++){
+      if(this.exercises.has('E' + (i-1))){
+        const el = document.getElementById('ex' + i);
+        if(el) el.classList.remove('locked');
+      }
+    }
+    this.update();
+  },
+  reset(){
+    this.exercises.clear();
+    try { localStorage.removeItem('tp_macros_done'); } catch(e){}
+    initLocks();
+    this.update();
   }
 };
 
@@ -3455,6 +3553,10 @@ const meEvalTrain = new MacroEditor(document.getElementById('me_eval_train'), { 
     
 End Sub` });
 
+// Registre des éditeurs par numéro d'exercice (pour le système "Je bloque")
+const EX_EDITORS = { 1:meEx1, 2:meEx2, 3:meEx3, 4:meEx4, 5:meEx5, 6:meEx6, 7:meEx7 };
+const REPL_EDITORS = {};
+
 /* ====================================================================
    FONCTIONS UTILITAIRES (TPScore, feedback, approxEq sont définis plus haut)
 ==================================================================== */
@@ -3607,6 +3709,297 @@ function resetEvalTrain(){
   document.getElementById('evalFinal').classList.remove('show');
   const fb = document.getElementById('fb_eval');
   if(fb) fb.classList.remove('show');
+}
+
+/* ====================================================================
+   VERROUILLAGE PROGRESSIF + SYSTÈME "JE BLOQUE" → EXERCICE DE RATTRAPAGE
+==================================================================== */
+
+// Données pour chaque exercice : la solution officielle + un exercice de rattrapage différent
+const EX_DATA = {
+  1: {
+    sheetCols:5, sheetRows:6,
+    solution: `Sub Exercice1()
+    Range("A1").Value = "Bonjour"
+    Range("B1").Value = 2026
+End Sub`,
+    explanation: 'On utilise <code>Range("REF").Value = ...</code> pour écrire dans une cellule. Le texte entre guillemets, le nombre sans guillemets.',
+    repl: {
+      title: 'Rattrapage : autre saisie',
+      task: 'Écris une macro qui place le texte <code>Salut</code> dans <strong>A1</strong>, et le nombre <code>2030</code> dans <strong>B1</strong>.',
+      starter: `Sub Rattrapage1()
+    
+End Sub`,
+      check: (ed)=> String(ed.getCellValue('A1')||'').toLowerCase()==='salut' && approxEq(ed.getCellValue('B1'),2030),
+      okMsg: 'Bravo : tu maîtrises l\'instruction <code>Range("REF").Value = ...</code>'
+    }
+  },
+  2: {
+    sheetCols:5, sheetRows:6,
+    solution: `Sub Exercice2()
+    Range("A1").Value = "TITRE"
+    Range("A1").Font.Bold = True
+    Range("A1").Interior.Color = RGB(255, 255, 0)
+End Sub`,
+    explanation: '<code>.Font.Bold = True</code> pour le gras, <code>.Interior.Color = RGB(...)</code> pour la couleur de fond.',
+    repl: {
+      title: 'Rattrapage : autre mise en forme',
+      task: 'Écris une macro qui place <code>CHAPITRE</code> dans <strong>B2</strong>, en <strong>gras</strong>, sur fond <strong>orange</strong> <code>RGB(255, 180, 80)</code>.',
+      starter: `Sub Rattrapage2()
+    
+End Sub`,
+      check: (ed)=> String(ed.getCellValue('B2')||'').toLowerCase()==='chapitre' && ed.getCellStyle('B2').bold === true && /255,\s*180,\s*80/.test(ed.getCellStyle('B2').bg||''),
+      okMsg: 'Parfait : valeur, gras et couleur, le trio fonctionne !'
+    }
+  },
+  3: {
+    sheetCols:5, sheetRows:22,
+    solution: `Sub Exercice3()
+    For i = 1 To 15
+        Cells(i, 1).Value = i
+    Next i
+End Sub`,
+    explanation: 'La boucle <code>For i = 1 To 15</code> fait varier i de 1 à 15. À chaque tour, <code>Cells(i, 1)</code> désigne la cellule de la ligne i, colonne 1 (= A).',
+    repl: {
+      title: 'Rattrapage : autre numérotation',
+      task: 'Écris une macro qui remplit les cellules <strong>A1 à A20</strong> avec les nombres <strong>1, 2, 3, …, 20</strong>.',
+      starter: `Sub Rattrapage3()
+    For i = 1 To ?
+        Cells(?, ?).Value = ?
+    Next i
+End Sub`,
+      check: (ed)=> { for(let i = 1; i <= 20; i++){ if(!approxEq(ed.getCellValue('A'+i), i)) return false; } return true; },
+      okMsg: 'Bravo : la boucle For est ta nouvelle alliée !'
+    }
+  },
+  4: {
+    sheetCols:5, sheetRows:12,
+    solution: `Sub TableDe7()
+    For i = 1 To 10
+        Cells(i, 1).Value = i * 7
+    Next i
+End Sub`,
+    explanation: 'À chaque tour, on calcule <code>i * 7</code> (qui change à chaque tour) et on l\'écrit dans la cellule de la ligne i.',
+    repl: {
+      title: 'Rattrapage : table de 9',
+      task: 'Écris une macro qui affiche la <strong>table de multiplication par 9</strong> dans la colonne A (de A1 = 9 jusqu\'à A10 = 90).',
+      starter: `Sub Rattrapage4()
+    For i = 1 To 10
+        
+    Next i
+End Sub`,
+      check: (ed)=> { for(let i = 1; i <= 10; i++){ if(!approxEq(ed.getCellValue('A'+i), i*9)) return false; } return true; },
+      okMsg: 'Excellente table de 9 ! Tu sais maintenant utiliser i dans un calcul.'
+    }
+  },
+  5: {
+    sheetCols:5, sheetRows:12,
+    solution: `Sub Coloriage()
+    For i = 1 To 10
+        Cells(i, 1).Value = i
+        If i Mod 2 = 0 Then
+            Cells(i, 1).Interior.Color = RGB(200, 230, 200)
+        Else
+            Cells(i, 1).Interior.Color = RGB(255, 240, 200)
+        End If
+    Next i
+End Sub`,
+    explanation: '<code>i Mod 2</code> donne le reste de la division par 2. Si c\'est 0, i est pair. La structure <code>If ... Then ... Else ... End If</code> permet de choisir une action selon la condition.',
+    repl: {
+      title: 'Rattrapage : multiples de 3',
+      task: 'Numérote A1 à A10 avec leur ligne, puis colore en <code>RGB(200, 230, 200)</code> (vert clair) <strong>uniquement les cellules dont la ligne est un multiple de 3</strong>. Les autres restent blanches (sans couleur de fond appliquée).',
+      starter: `Sub Rattrapage5()
+    For i = 1 To 10
+        Cells(i, 1).Value = i
+        If ? Then
+            
+        End If
+    Next i
+End Sub`,
+      check: (ed)=> {
+        for(let i = 1; i <= 10; i++){
+          if(!approxEq(ed.getCellValue('A'+i), i)) return false;
+          const bg = ed.getCellStyle('A'+i).bg || '';
+          const isMult3 = i % 3 === 0;
+          if(isMult3 && !/200,\s*230,\s*200/.test(bg)) return false;
+          if(!isMult3 && /200,\s*230,\s*200/.test(bg)) return false;
+        }
+        return true;
+      },
+      okMsg: 'Parfait : tu sais combiner boucle et condition.'
+    }
+  },
+  6: {
+    sheetCols:5, sheetRows:6,
+    solution: `Sub Diagonale()
+    For i = 1 To 5
+        Cells(i, i).Value = "★"
+    Next i
+End Sub`,
+    explanation: 'L\'astuce : <code>Cells(i, i)</code> — la même variable pour la ligne ET la colonne, c\'est ce qui produit la diagonale (1,1), (2,2), (3,3)…',
+    repl: {
+      title: 'Rattrapage : anti-diagonale',
+      task: 'Trace cette fois l\'<strong>anti-diagonale</strong> : place le caractère <code>✦</code> dans <strong>A5, B4, C3, D2, E1</strong>. Indice : la colonne est <code>i</code>, mais la ligne est <code>6 - i</code>.',
+      starter: `Sub Rattrapage6()
+    For i = 1 To 5
+        Cells(?, i).Value = "✦"
+    Next i
+End Sub`,
+      check: (ed)=> {
+        const refs = ['A5','B4','C3','D2','E1'];
+        return refs.every(r => String(ed.getCellValue(r)||'').trim() === '✦');
+      },
+      okMsg: 'Magnifique anti-diagonale !'
+    }
+  },
+  7: {
+    sheetCols:5, sheetRows:6,
+    solution: `Sub Damier()
+    For i = 1 To 5
+        For j = 1 To 5
+            If (i + j) Mod 2 = 0 Then
+                Cells(i, j).Interior.Color = RGB(40, 100, 60)
+            Else
+                Cells(i, j).Interior.Color = RGB(220, 220, 200)
+            End If
+        Next j
+    Next i
+End Sub`,
+    explanation: 'Le secret : <strong>deux boucles imbriquées</strong>. La boucle externe parcourt les lignes, l\'interne les colonnes. <code>(i + j) Mod 2</code> alterne 0 et 1 sur les cases voisines, ce qui crée le damier.',
+    repl: {
+      title: 'Rattrapage : rayures horizontales',
+      task: 'Colorie une grille <strong>5 × 5</strong> en <strong>rayures horizontales</strong> : les lignes paires en <code>RGB(40, 100, 60)</code> (vert foncé), les lignes impaires en <code>RGB(220, 220, 200)</code> (beige). Cette fois la couleur dépend uniquement de la ligne, pas de la colonne.',
+      starter: `Sub Rattrapage7()
+    For i = 1 To 5
+        For j = 1 To 5
+            If ? Then
+                Cells(i, j).Interior.Color = RGB(40, 100, 60)
+            Else
+                Cells(i, j).Interior.Color = RGB(220, 220, 200)
+            End If
+        Next j
+    Next i
+End Sub`,
+      check: (ed)=> {
+        for(let i = 1; i <= 5; i++){
+          for(let j = 1; j <= 5; j++){
+            const ref = String.fromCharCode(64+j) + i;
+            const bg = ed.getCellStyle(ref).bg || '';
+            const want = (i % 2 === 0) ? /40,\s*100,\s*60/ : /220,\s*220,\s*200/;
+            if(!want.test(bg)) return false;
+          }
+        }
+        return true;
+      },
+      okMsg: 'Splendides rayures ! Tu maîtrises les boucles imbriquées et les conditions.'
+    }
+  }
+};
+
+// Verrouille E2..E7 par défaut, ajoute les overlays
+function initLocks(){
+  for(let i = 1; i <= 7; i++){
+    const ex = document.getElementById('ex' + i);
+    if(!ex) continue;
+    if(!ex.querySelector('.lock-overlay')){
+      const ov = document.createElement('div');
+      ov.className = 'lock-overlay';
+      ov.innerHTML = '<div class="lock-icon-big">🔒</div>' +
+        '<div class="lock-title">Exercice verrouillé</div>' +
+        '<div class="lock-sub-msg">Termine d\'abord l\'exercice <strong>E' + (i-1) + '</strong> pour débloquer celui-ci.</div>';
+      ex.appendChild(ov);
+    }
+    if(i > 1) ex.classList.add('locked');
+    else ex.classList.remove('locked');
+  }
+}
+
+// Ajoute le bouton "Je bloque" à chaque exercice
+function attachStuckButtons(){
+  for(let i = 1; i <= 7; i++){
+    const ex = document.getElementById('ex' + i);
+    if(!ex) continue;
+    const actionsLine = ex.querySelector('.actions-line');
+    if(!actionsLine || actionsLine.querySelector('.stuck-btn')) continue;
+    const btn = document.createElement('button');
+    btn.className = 'stuck-btn';
+    btn.type = 'button';
+    btn.innerHTML = '🤔 Je bloque, montre-moi';
+    btn.onclick = () => stuckExercise(i);
+    actionsLine.appendChild(btn);
+  }
+}
+
+// "Je bloque" : affiche la solution, l'exécute, ouvre l'exercice de rattrapage
+function stuckExercise(n){
+  if(!confirm("Tu vas voir la solution de l'exercice. Tu auras ensuite un autre exercice similaire à réussir pour valider et passer au suivant. D'accord ?")) return;
+  const data = EX_DATA[n];
+  if(!data) return;
+  const editor = EX_EDITORS[n];
+  if(!editor) return;
+  const exEl = document.getElementById('ex' + n);
+
+  // Désactiver les boutons originaux
+  exEl.querySelectorAll('.actions-line button').forEach(b => b.disabled = true);
+
+  // Charger la solution dans l'éditeur principal et l'exécuter
+  editor.code = data.solution;
+  const ta = editor.host.querySelector('.macro-textarea');
+  if(ta){ ta.value = data.solution; ta.readOnly = true; ta.style.opacity = '0.85'; }
+  editor.execute();
+
+  // Feedback "voici la solution"
+  const fb = document.getElementById('fb_ex' + n);
+  if(fb){
+    fb.className = 'feedback show ok';
+    fb.innerHTML = '💡 <strong>Voici la solution exécutée.</strong> ' + data.explanation +
+      ' Maintenant, fais le <strong>rattrapage</strong> ci-dessous pour valider l\'exercice.';
+  }
+
+  // Créer (ou montrer) le bloc rattrapage
+  let repl = document.getElementById('repl_ex' + n);
+  if(!repl){
+    repl = document.createElement('div');
+    repl.className = 'replacement';
+    repl.id = 'repl_ex' + n;
+    repl.innerHTML =
+      '<div class="repl-badge">🔄 Exercice de rattrapage</div>' +
+      '<h5>' + data.repl.title + '</h5>' +
+      '<div class="task">' + data.repl.task + '</div>' +
+      '<div id="me_repl_ex' + n + '"></div>' +
+      '<div class="actions-line" style="margin-top:10px">' +
+        '<button class="check-btn" type="button" onclick="checkReplacement(' + n + ')">✓ Vérifier le rattrapage</button>' +
+      '</div>' +
+      '<div class="feedback" id="fb_repl_ex' + n + '"></div>';
+    exEl.appendChild(repl);
+    // Initialiser le MacroEditor de rattrapage et l'enregistrer
+    REPL_EDITORS[n] = new MacroEditor(document.getElementById('me_repl_ex' + n), {
+      cols: data.sheetCols, rows: data.sheetRows,
+      initialCode: data.repl.starter
+    });
+  } else {
+    repl.style.display = 'block';
+  }
+
+  // Scroll fluide vers le rattrapage
+  setTimeout(()=> repl.scrollIntoView({behavior:'smooth', block:'center'}), 350);
+}
+
+// Vérification d'un exercice de rattrapage
+function checkReplacement(n){
+  const data = EX_DATA[n];
+  const editor = REPL_EDITORS[n];
+  if(!editor || !data) return;
+  editor.execute();
+  const fb = document.getElementById('fb_repl_ex' + n);
+  if(data.repl.check(editor)){
+    fb.className = 'feedback show ok';
+    fb.innerHTML = '✓ ' + data.repl.okMsg + ' L\'exercice <strong>E' + n + '</strong> est validé.';
+    TPScore.add('E' + n);  // ← déverrouille E(n+1) automatiquement
+  } else {
+    fb.className = 'feedback show ko';
+    fb.innerHTML = '✗ Pas encore. Relis l\'énoncé et inspire-toi de la solution montrée juste au-dessus.';
+  }
 }
 
 
@@ -3864,6 +4257,17 @@ function unlockEvalFinal(){
 
 // Entrée déclenche le déverrouillage + dashboard
 window.addEventListener('load', ()=>{
+  // Scroll en haut (3 passes pour couvrir le rendu différé des canvas)
+  const _forceTop = () => window.scrollTo(0, 0);
+  _forceTop();
+  setTimeout(_forceTop, 50);
+  setTimeout(_forceTop, 300);
+
+  // Verrouillage progressif des exercices + bouton "Je bloque"
+  initLocks();
+  attachStuckButtons();
+  TPScore.restore();
+
   const pwdInput = document.getElementById('evalPwd');
   if(pwdInput){
     pwdInput.addEventListener('keydown', e=>{
