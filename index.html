@@ -1013,6 +1013,76 @@ code{
   width:100%; transition:width .25s linear;
 }
 
+/* === Verrouillage de l'arcade === */
+.arcade-lock-card{
+  background:linear-gradient(135deg, #1a1d24 0%, #2a2f3a 100%);
+  color:#fff; border-radius:16px; padding:40px;
+  text-align:center; margin:30px 0;
+}
+.arcade-lock-icon{font-size:56px; margin-bottom:10px; filter:drop-shadow(0 0 20px rgba(184,131,10,0.3))}
+.arcade-lock-card h2{font-family:'Fraunces',serif; font-weight:500; font-size:28px; color:#fff; margin-bottom:10px}
+.arcade-lock-card p{color:#a0a8b4; font-size:15px; line-height:1.6; max-width:480px; margin:0 auto 20px}
+.arcade-lock-card strong{color:#ffba6e}
+.arcade-lock-progress{max-width:360px; margin:0 auto}
+.arcade-lock-bar{height:12px; background:rgba(255,255,255,0.1); border-radius:8px; overflow:hidden; margin-bottom:8px}
+.arcade-lock-fill{height:100%; background:linear-gradient(90deg, var(--accent), var(--gold)); width:0%; transition:width .5s ease}
+.arcade-lock-count{font-size:13px; color:#a0a8b4}
+.arcade-lock-count span{color:#fff; font-weight:700; font-size:16px}
+
+.arcade-section.locked-arcade{position:relative; overflow:hidden}
+.arcade-section.locked-arcade > *{filter:blur(5px) grayscale(0.6); pointer-events:none; user-select:none; opacity:0.5}
+.arcade-section.locked-arcade::after{
+  content:"🔒 Termine les 11 exercices pour débloquer ce jeu";
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  background:rgba(251,250,247,0.55); backdrop-filter:blur(2px);
+  font-family:'Fraunces',serif; font-size:18px; color:var(--ink); text-align:center; padding:20px;
+}
+
+/* === Jeu Vrai ou Faux === */
+.vf-statement{
+  font-size:20px; line-height:1.5; color:var(--ink); text-align:center;
+  padding:24px; background:var(--paper); border:1px solid var(--line);
+  border-radius:12px; margin:16px 0; min-height:100px;
+  display:flex; align-items:center; justify-content:center;
+}
+.vf-statement code{background:var(--accent-soft); color:var(--accent-deep); padding:2px 8px; border-radius:4px; font-size:0.8em; font-family:'JetBrains Mono',monospace}
+.vf-buttons{display:flex; gap:16px; justify-content:center}
+.vf-btn{
+  flex:1; max-width:200px; padding:18px; border:none; border-radius:12px;
+  font-family:'Outfit',sans-serif; font-weight:700; font-size:18px; cursor:pointer;
+  transition:transform .1s;
+}
+.vf-btn:active{transform:scale(0.97)}
+.vf-true{background:var(--accent-soft); color:var(--accent-deep)}
+.vf-true:hover{background:#c5e8d4}
+.vf-false{background:var(--warn-soft); color:var(--warn)}
+.vf-false:hover{background:#ffd9c0}
+.vf-btn.correct{outline:3px solid var(--accent)}
+.vf-btn.wrong{outline:3px solid var(--warn)}
+
+/* === Jeu Memory === */
+.memory-board{display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; max-width:640px; margin:16px auto}
+.mem-card{aspect-ratio:3/2.4; border-radius:10px; cursor:pointer; position:relative; perspective:600px; min-height:80px}
+.mem-card .mc-inner{position:absolute; inset:0; transition:transform .4s; transform-style:preserve-3d}
+.mem-card.flipped .mc-inner, .mem-card.matched .mc-inner{transform:rotateY(180deg)}
+.mc-face{position:absolute; inset:0; backface-visibility:hidden; border-radius:10px; display:flex; align-items:center; justify-content:center; padding:8px; text-align:center}
+.mc-back{background:linear-gradient(135deg, var(--accent), var(--accent-deep)); color:#fff; font-size:24px}
+.mc-front{background:var(--paper); border:2px solid var(--accent); transform:rotateY(180deg); font-size:12px; color:var(--ink); line-height:1.3}
+.mc-front.fn{font-family:'JetBrains Mono',monospace; font-weight:700; font-size:12px; color:var(--accent-deep)}
+.mem-card.matched .mc-front{background:var(--accent-soft); border-color:var(--accent)}
+.mem-card.matched{cursor:default}
+
+/* === Jeu Construis la macro === */
+.build-goal{text-align:center; font-size:16px; color:var(--ink); padding:14px; background:var(--accent-soft); border-radius:10px; margin:16px 0}
+.build-goal strong{color:var(--accent-deep)}
+.build-zone{min-height:60px; background:var(--paper); border:2px dashed var(--accent); border-radius:10px; padding:14px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center; margin-bottom:14px}
+.build-placeholder{color:var(--ink-mute); font-style:italic; font-size:14px}
+.build-token{background:var(--accent); color:#fff; padding:8px 14px; border-radius:8px; font-family:'JetBrains Mono',monospace; font-weight:600; font-size:15px; cursor:pointer}
+.build-bricks{display:flex; gap:10px; flex-wrap:wrap; justify-content:center}
+.build-brick{background:var(--paper); border:2px solid var(--accent); color:var(--accent-deep); padding:10px 16px; border-radius:8px; font-family:'JetBrains Mono',monospace; font-weight:600; font-size:15px; cursor:pointer; transition:all .12s}
+.build-brick:hover{background:var(--accent); color:#fff}
+.build-brick:disabled{opacity:0.35; cursor:not-allowed}
+
 /* === Détective === */
 .detective-board{
   background:linear-gradient(135deg, #f5f8ff 0%, #fff 60%);
@@ -2530,7 +2600,25 @@ End If</pre>
 <!-- ====================================================================
      ARCADE — JEU 1 : CIBLE-CODE
 ==================================================================== -->
-<section id="game1">
+<!-- ====================================================================
+     ARCADE — bannière de verrouillage
+==================================================================== -->
+<section id="arcadeLockBanner" style="display:none">
+  <div class="arcade-lock-card">
+    <div class="arcade-lock-icon">🔒</div>
+    <h2>Salle d'arcade verrouillée</h2>
+    <p>
+      Les <strong>8 jeux</strong> de l'arcade se débloquent une fois que tu as terminé
+      les <strong>11 exercices</strong> (Pratique + Pour aller plus loin).
+    </p>
+    <div class="arcade-lock-progress">
+      <div class="arcade-lock-bar"><div class="arcade-lock-fill" id="arcadeLockFill"></div></div>
+      <div class="arcade-lock-count"><span id="arcadeLockDone">0</span>/11 exercices terminés</div>
+    </div>
+  </div>
+</section>
+
+<section id="game1" class="arcade-section">
   <div class="section-tag">▶ Arcade · Jeu 1</div>
   <h2>🎯 Cible-Code</h2>
 
@@ -2578,7 +2666,7 @@ End If</pre>
 <!-- ====================================================================
      ARCADE — JEU 2 : SPRINT CODE
 ==================================================================== -->
-<section id="game2">
+<section id="game2" class="arcade-section">
   <div class="section-tag">▶ Arcade · Jeu 2</div>
   <h2>⚡ Sprint Code</h2>
 
@@ -2636,7 +2724,7 @@ End If</pre>
 <!-- ====================================================================
      ARCADE — JEU 3 : DÉTECTIVE BUG
 ==================================================================== -->
-<section id="game3">
+<section id="game3" class="arcade-section">
   <div class="section-tag">▶ Arcade · Jeu 3</div>
   <h2>🔍 Détective Bug</h2>
 
@@ -2677,6 +2765,250 @@ End If</pre>
       </div>
       <div class="case-clue" id="g3Clue" style="display:none"></div>
       <div class="feedback" id="fb_g3"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ARCADE — JEU 4 : PRÉDIS LA VALEUR
+==================================================================== -->
+<section id="game4" class="arcade-section">
+  <div class="section-tag">▶ Arcade · Jeu 4</div>
+  <h2>🔮 Prédis la valeur</h2>
+  <div class="game-card">
+    <div class="game-head">
+      <div class="icon" style="background:#f0e6ff">🔮</div>
+      <div>
+        <h3>Que contiendra la cellule ?</h3>
+        <div class="sub">60 secondes · lis le code, prédis le résultat</div>
+      </div>
+    </div>
+    <div class="game-rules">
+      <strong>Mission :</strong> une petite macro est affichée. Sans l'exécuter, devine
+      la <strong>valeur</strong> qui se retrouvera dans la cellule indiquée. Tape ta
+      réponse. <strong>10 points</strong> par bonne réponse, +<strong>3</strong> par combo.
+    </div>
+    <div class="game-hud">
+      <div class="hud-pill timer"><span class="lbl">Temps</span><span class="val" id="g4Time">60s</span></div>
+      <div class="hud-pill score"><span class="lbl">Score</span><span class="val" id="g4Score">0</span></div>
+      <div class="hud-pill combo"><span class="lbl">Combo</span><span class="val" id="g4Combo">×0</span></div>
+    </div>
+    <div class="sprint-arena">
+      <div class="sprint-start" id="g4Start">
+        <p style="font-size:16px; color:var(--ink-soft); margin-bottom:16px">Prêt·e à lire du code VBA dans ta tête ?</p>
+        <button class="btn-fire" style="padding:14px 28px; font-size:16px; border:none; border-radius:10px; color:#fff; font-weight:600; cursor:pointer" onclick="g4Start()">▶ Démarrer</button>
+      </div>
+      <div id="g4Play" style="display:none">
+        <div class="timer-bar"><div class="fill" id="g4TimerFill"></div></div>
+        <pre class="vba-snippet" id="g4Code" style="margin:14px 0"></pre>
+        <div class="case-formula-row" style="justify-content:center; margin-top:12px">
+          <span style="font-size:14px; color:var(--ink-soft); font-weight:600" id="g4Ask">Valeur de A1 :</span>
+          <input type="text" id="g4Input" placeholder="?" autocomplete="off" style="max-width:130px">
+          <button class="btn-fire" onclick="g4Submit()">✓</button>
+        </div>
+        <div class="feedback" id="fb_g4" style="margin-top:10px"></div>
+      </div>
+      <div class="sprint-over" id="g4Over" style="display:none">
+        <div style="font-size:14px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.1em">Terminé</div>
+        <div class="final-score" id="g4Final">0</div>
+        <div class="rank-msg" id="g4Rank"></div>
+        <button class="btn-fire" style="padding:12px 24px; font-size:15px; border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer; margin-top:12px" onclick="g4Start()">↺ Rejouer</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ARCADE — JEU 5 : VRAI OU FAUX VBA
+==================================================================== -->
+<section id="game5" class="arcade-section">
+  <div class="section-tag">▶ Arcade · Jeu 5</div>
+  <h2>⚖️ Vrai ou Faux VBA</h2>
+  <div class="game-card">
+    <div class="game-head">
+      <div class="icon" style="background:#e6efff">⚖️</div>
+      <div>
+        <h3>L'affirmation est-elle juste ?</h3>
+        <div class="sub">60 secondes · vrai ou faux sur les macros</div>
+      </div>
+    </div>
+    <div class="game-rules">
+      <strong>Mission :</strong> une affirmation sur le VBA s'affiche. Décide si elle est
+      <strong>vraie</strong> ou <strong>fausse</strong>. <strong>10 points</strong> par
+      bonne réponse, +<strong>3</strong> par combo. Gare aux pièges de syntaxe !
+    </div>
+    <div class="game-hud">
+      <div class="hud-pill timer"><span class="lbl">Temps</span><span class="val" id="g5Time">60s</span></div>
+      <div class="hud-pill score"><span class="lbl">Score</span><span class="val" id="g5Score">0</span></div>
+      <div class="hud-pill combo"><span class="lbl">Combo</span><span class="val" id="g5Combo">×0</span></div>
+    </div>
+    <div class="sprint-arena">
+      <div class="sprint-start" id="g5Start">
+        <p style="font-size:16px; color:var(--ink-soft); margin-bottom:16px">Prêt·e à démêler le vrai du faux ?</p>
+        <button class="btn-fire" style="padding:14px 28px; font-size:16px; border:none; border-radius:10px; color:#fff; font-weight:600; cursor:pointer" onclick="g5Start()">▶ Démarrer</button>
+      </div>
+      <div id="g5Play" style="display:none">
+        <div class="timer-bar"><div class="fill" id="g5TimerFill"></div></div>
+        <div class="vf-statement" id="g5Statement"></div>
+        <div class="vf-buttons">
+          <button class="vf-btn vf-true" onclick="g5Answer(true, this)">✓ VRAI</button>
+          <button class="vf-btn vf-false" onclick="g5Answer(false, this)">✗ FAUX</button>
+        </div>
+        <div class="feedback" id="fb_g5" style="margin-top:10px"></div>
+      </div>
+      <div class="sprint-over" id="g5Over" style="display:none">
+        <div style="font-size:14px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.1em">Terminé</div>
+        <div class="final-score" id="g5Final">0</div>
+        <div class="rank-msg" id="g5Rank"></div>
+        <button class="btn-fire" style="padding:12px 24px; font-size:15px; border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer; margin-top:12px" onclick="g5Start()">↺ Rejouer</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ARCADE — JEU 6 : TRACE LA BOUCLE
+==================================================================== -->
+<section id="game6" class="arcade-section">
+  <div class="section-tag">▶ Arcade · Jeu 6</div>
+  <h2>🔁 Trace la boucle</h2>
+  <div class="game-card">
+    <div class="game-head">
+      <div class="icon" style="background:#e6f4ec">🔁</div>
+      <div>
+        <h3>Suis la boucle dans ta tête !</h3>
+        <div class="sub">60 secondes · prédis le contenu d'une cellule après la boucle</div>
+      </div>
+    </div>
+    <div class="game-rules">
+      <strong>Mission :</strong> une boucle <code>For</code> remplit des cellules. Devine
+      ce que contiendra la <strong>cellule demandée</strong> une fois la boucle terminée.
+      <strong>10 points</strong> par bonne réponse, +<strong>3</strong> par combo.
+    </div>
+    <div class="game-hud">
+      <div class="hud-pill timer"><span class="lbl">Temps</span><span class="val" id="g6Time">60s</span></div>
+      <div class="hud-pill score"><span class="lbl">Score</span><span class="val" id="g6Score">0</span></div>
+      <div class="hud-pill combo"><span class="lbl">Combo</span><span class="val" id="g6Combo">×0</span></div>
+    </div>
+    <div class="sprint-arena">
+      <div class="sprint-start" id="g6Start">
+        <p style="font-size:16px; color:var(--ink-soft); margin-bottom:16px">Prêt·e à dérouler des boucles mentalement ?</p>
+        <button class="btn-fire" style="padding:14px 28px; font-size:16px; border:none; border-radius:10px; color:#fff; font-weight:600; cursor:pointer" onclick="g6Start()">▶ Démarrer</button>
+      </div>
+      <div id="g6Play" style="display:none">
+        <div class="timer-bar"><div class="fill" id="g6TimerFill"></div></div>
+        <pre class="vba-snippet" id="g6Code" style="margin:14px 0"></pre>
+        <div class="case-formula-row" style="justify-content:center; margin-top:12px">
+          <span style="font-size:14px; color:var(--ink-soft); font-weight:600" id="g6Ask">Valeur de A3 :</span>
+          <input type="text" id="g6Input" placeholder="?" autocomplete="off" style="max-width:130px">
+          <button class="btn-fire" onclick="g6Submit()">✓</button>
+        </div>
+        <div class="feedback" id="fb_g6" style="margin-top:10px"></div>
+      </div>
+      <div class="sprint-over" id="g6Over" style="display:none">
+        <div style="font-size:14px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.1em">Terminé</div>
+        <div class="final-score" id="g6Final">0</div>
+        <div class="rank-msg" id="g6Rank"></div>
+        <button class="btn-fire" style="padding:12px 24px; font-size:15px; border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer; margin-top:12px" onclick="g6Start()">↺ Rejouer</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ARCADE — JEU 7 : MEMORY VBA
+==================================================================== -->
+<section id="game7" class="arcade-section">
+  <div class="section-tag">▶ Arcade · Jeu 7</div>
+  <h2>🃏 Memory VBA</h2>
+  <div class="game-card">
+    <div class="game-head">
+      <div class="icon" style="background:#fff5d6">🃏</div>
+      <div>
+        <h3>Associe l'instruction à son effet !</h3>
+        <div class="sub">6 paires à retrouver · le moins de coups possible</div>
+      </div>
+    </div>
+    <div class="game-rules">
+      <strong>Mission :</strong> retourne les cartes deux par deux pour associer chaque
+      <strong>instruction VBA</strong> à son <strong>effet</strong>. Trouve les 6 paires.
+      Score = <strong>1000 − (coups × 20) − (temps × 2)</strong>.
+    </div>
+    <div class="game-hud">
+      <div class="hud-pill"><span class="lbl">Coups</span><span class="val" id="g7Moves">0</span></div>
+      <div class="hud-pill score"><span class="lbl">Paires</span><span class="val" id="g7Pairs">0</span>/6</div>
+      <div class="hud-pill timer"><span class="lbl">Temps</span><span class="val" id="g7Time">0s</span></div>
+    </div>
+    <div class="sprint-arena">
+      <div class="sprint-start" id="g7Start">
+        <p style="font-size:16px; color:var(--ink-soft); margin-bottom:16px">Prêt·e à muscler ta mémoire du VBA ?</p>
+        <button class="btn-fire" style="padding:14px 28px; font-size:16px; border:none; border-radius:10px; color:#fff; font-weight:600; cursor:pointer" onclick="g7Start()">▶ Démarrer</button>
+      </div>
+      <div id="g7Play" style="display:none">
+        <div id="g7Board" class="memory-board"></div>
+        <div class="feedback" id="fb_g7" style="margin-top:12px"></div>
+      </div>
+      <div class="sprint-over" id="g7Over" style="display:none">
+        <div style="font-size:14px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.1em">Bravo !</div>
+        <div class="final-score" id="g7Final">0</div>
+        <div class="rank-msg" id="g7Rank"></div>
+        <button class="btn-fire" style="padding:12px 24px; font-size:15px; border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer; margin-top:12px" onclick="g7Start()">↺ Rejouer</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ====================================================================
+     ARCADE — JEU 8 : CONSTRUIS LA MACRO
+==================================================================== -->
+<section id="game8" class="arcade-section">
+  <div class="section-tag">▶ Arcade · Jeu 8</div>
+  <h2>🧩 Construis la macro</h2>
+  <div class="game-card">
+    <div class="game-head">
+      <div class="icon" style="background:#ffe9d6">🧩</div>
+      <div>
+        <h3>Assemble les bonnes briques !</h3>
+        <div class="sub">5 défis · clique les morceaux dans le bon ordre</div>
+      </div>
+    </div>
+    <div class="game-rules">
+      <strong>Mission :</strong> un objectif est donné (ex : « écrire Bonjour dans A1 »).
+      Clique sur les <strong>briques</strong> de code dans le bon ordre pour reconstituer
+      l'instruction. <strong>20 points</strong> par réussite, −10 si tu réinitialises.
+    </div>
+    <div class="game-hud">
+      <div class="hud-pill score"><span class="lbl">Score</span><span class="val" id="g8Score">0</span></div>
+      <div class="hud-pill"><span class="lbl">Défi</span><span class="val" id="g8Round">1</span>/5</div>
+      <div class="hud-pill"><span class="lbl">Réussis</span><span class="val" id="g8Solved">0</span></div>
+    </div>
+    <div class="sprint-arena">
+      <div class="sprint-start" id="g8Start">
+        <p style="font-size:16px; color:var(--ink-soft); margin-bottom:16px">Prêt·e à construire des instructions VBA brique par brique ?</p>
+        <button class="btn-fire" style="padding:14px 28px; font-size:16px; border:none; border-radius:10px; color:#fff; font-weight:600; cursor:pointer" onclick="g8Start()">▶ Démarrer</button>
+      </div>
+      <div id="g8Play" style="display:none">
+        <div class="build-goal" id="g8Goal"></div>
+        <div class="build-zone" id="g8Zone"><span class="build-placeholder">Clique les briques ci-dessous…</span></div>
+        <div class="build-bricks" id="g8Bricks"></div>
+        <div class="target-buttons" style="margin-top:12px">
+          <button class="btn-fire" onclick="g8Check()">✓ Valider</button>
+          <button class="btn-ghost" onclick="g8ResetBuild()">↺ Effacer (−10)</button>
+          <button class="btn-next" onclick="g8Next()" id="g8NextBtn" style="display:none">▶ Défi suivant</button>
+        </div>
+        <div class="feedback" id="fb_g8" style="margin-top:10px"></div>
+      </div>
+      <div class="sprint-over" id="g8Over" style="display:none">
+        <div style="font-size:14px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.1em">Terminé</div>
+        <div class="final-score" id="g8Final">0</div>
+        <div class="rank-msg" id="g8Rank"></div>
+        <button class="btn-fire" style="padding:12px 24px; font-size:15px; border:none; border-radius:8px; color:#fff; font-weight:600; cursor:pointer; margin-top:12px" onclick="g8Start()">↺ Rejouer</button>
+      </div>
     </div>
   </div>
 </section>
@@ -4641,6 +4973,7 @@ window.addEventListener('load', ()=>{
   initLocks();
   attachStuckButtons();
   TPScore.restore();
+  updateArcadeLock();
 
   const pwdInput = document.getElementById('evalPwd');
   if(pwdInput){
@@ -5040,9 +5373,374 @@ function g3Next(){
 window.addEventListener('load', ()=>{
   g1NewTarget();
   g3Render();
+  updateArcadeLock();
 });
 document.getElementById('g3Input').addEventListener('keydown', e=>{
   if(e.key === 'Enter'){ e.preventDefault(); g3Submit(); }
+});
+
+/* ====================================================================
+   VERROUILLAGE DE L'ARCADE — tant que E1..E11 ne sont pas finis
+==================================================================== */
+function updateArcadeLock(){
+  const need = ['E1','E2','E3','E4','E5','E6','E7','E8','E9','E10','E11'];
+  const done = need.filter(id => TPScore.exercises.has(id)).length;
+  const allDone = done === need.length;
+  const banner = document.getElementById('arcadeLockBanner');
+  if(banner) banner.style.display = allDone ? 'none' : 'block';
+  const fill = document.getElementById('arcadeLockFill');
+  if(fill) fill.style.width = (done / need.length * 100) + '%';
+  const cnt = document.getElementById('arcadeLockDone');
+  if(cnt) cnt.textContent = done;
+  document.querySelectorAll('.arcade-section').forEach(sec => {
+    if(allDone) sec.classList.remove('locked-arcade');
+    else sec.classList.add('locked-arcade');
+  });
+}
+const _origAdd = TPScore.add.bind(TPScore);
+TPScore.add = function(id){ _origAdd(id); updateArcadeLock(); };
+
+function _g7Shuffle(arr){ for(let i = arr.length-1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [arr[i],arr[j]] = [arr[j],arr[i]]; } return arr; }
+
+/* ====================================================================
+   JEU 4 — PRÉDIS LA VALEUR
+==================================================================== */
+const G4 = { score:0, combo:0, timeLeft:60, timer:null, running:false, answer:null };
+function g4NewQuestion(){
+  const a = Math.floor(Math.random()*9)+2, b = Math.floor(Math.random()*9)+2;
+  const types = [
+    ()=>({code:`Sub M()\n    Range("A1").Value = ${a} * ${b}\nEnd Sub`, ask:'Valeur de A1 :', ans:a*b}),
+    ()=>({code:`Sub M()\n    Range("A1").Value = ${a} + ${b}\nEnd Sub`, ask:'Valeur de A1 :', ans:a+b}),
+    ()=>({code:`Sub M()\n    Dim n As Integer\n    n = ${a}\n    Range("B2").Value = n * ${b}\nEnd Sub`, ask:'Valeur de B2 :', ans:a*b}),
+    ()=>({code:`Sub M()\n    Range("A1").Value = ${a}\n    Range("A1").Value = ${b}\nEnd Sub`, ask:'Valeur de A1 :', ans:b}),
+    ()=>({code:`Sub M()\n    Cells(1, 1).Value = ${a*b}\nEnd Sub`, ask:'Valeur de A1 :', ans:a*b}),
+    ()=>({code:`Sub M()\n    Dim x As Integer\n    x = ${a}\n    x = x + ${b}\n    Range("C1").Value = x\nEnd Sub`, ask:'Valeur de C1 :', ans:a+b})
+  ];
+  const q = types[Math.floor(Math.random()*types.length)]();
+  G4.answer = q.ans;
+  document.getElementById('g4Code').textContent = q.code;
+  document.getElementById('g4Ask').textContent = q.ask;
+  document.getElementById('g4Input').value = '';
+  document.getElementById('g4Input').focus();
+}
+function g4Start(){
+  G4.score = 0; G4.combo = 0; G4.timeLeft = 60; G4.running = true;
+  document.getElementById('g4Start').style.display = 'none';
+  document.getElementById('g4Over').style.display = 'none';
+  document.getElementById('g4Play').style.display = 'block';
+  document.getElementById('g4Score').textContent = '0';
+  document.getElementById('g4Combo').textContent = '×0';
+  document.getElementById('g4Time').textContent = '60s';
+  document.getElementById('g4TimerFill').style.width = '100%';
+  g4NewQuestion();
+  if(G4.timer) clearInterval(G4.timer);
+  G4.timer = setInterval(()=>{
+    G4.timeLeft -= 0.25;
+    document.getElementById('g4Time').textContent = Math.max(0, Math.ceil(G4.timeLeft)) + 's';
+    document.getElementById('g4TimerFill').style.width = Math.max(0, G4.timeLeft/60*100) + '%';
+    if(G4.timeLeft <= 0){ clearInterval(G4.timer); g4End(); }
+  }, 250);
+}
+function g4Submit(){
+  if(!G4.running) return;
+  const val = parseFloat(document.getElementById('g4Input').value.trim().replace(',', '.'));
+  const fb = document.getElementById('fb_g4');
+  if(Math.abs(val - G4.answer) < 0.01){
+    G4.combo++; G4.score += 10 + (G4.combo-1)*3;
+    fb.className = 'feedback show ok'; fb.textContent = '✓ Exact !';
+    document.getElementById('g4Score').textContent = G4.score;
+    document.getElementById('g4Combo').textContent = '×' + G4.combo;
+    g4NewQuestion();
+  } else {
+    G4.combo = 0; document.getElementById('g4Combo').textContent = '×0';
+    fb.className = 'feedback show ko'; fb.textContent = '✗ C\'était ' + G4.answer + '.';
+    g4NewQuestion();
+  }
+}
+function g4End(){
+  G4.running = false;
+  document.getElementById('g4Play').style.display = 'none';
+  document.getElementById('g4Over').style.display = 'block';
+  document.getElementById('g4Final').textContent = G4.score;
+  document.getElementById('g4Rank').textContent = G4.score >= 150 ? '🌟 Lecteur·rice de code hors pair !' : G4.score >= 90 ? '🔥 Très bien !' : G4.score >= 40 ? '👍 Bien.' : '⚠ Entraîne-toi encore.';
+  if(G4.score >= 100) TPScore.add('🔮');
+}
+
+/* ====================================================================
+   JEU 5 — VRAI OU FAUX VBA
+==================================================================== */
+const G5 = { score:0, combo:0, timeLeft:60, timer:null, running:false, current:null };
+const VF5 = [
+  {t:'Une macro commence toujours par le mot-clé <code>Sub</code>.', v:true},
+  {t:'<code>Range("A1").Value = 5</code> écrit 5 dans la cellule A1.', v:true},
+  {t:'La boucle <code>For i = 1 To 5</code> effectue 6 tours.', v:false},
+  {t:'<code>Cells(2, 3)</code> désigne la cellule C2.', v:true},
+  {t:'On termine une macro par <code>End Sub</code>.', v:true},
+  {t:'<code>.Font.Bold = True</code> met le texte en gras.', v:true},
+  {t:'En VBA, un commentaire commence par <code>//</code>.', v:false},
+  {t:'<code>RGB(255, 0, 0)</code> représente la couleur rouge.', v:true},
+  {t:'Une boucle <code>For</code> se ferme avec <code>End For</code>.', v:false},
+  {t:'<code>i Mod 2 = 0</code> est vrai quand i est pair.', v:true},
+  {t:'<code>MsgBox "Salut"</code> affiche une fenêtre avec le texte Salut.', v:true},
+  {t:'<code>Cells(3, 1)</code> et <code>Range("A3")</code> désignent la même cellule.', v:true},
+  {t:'Le texte d\'une valeur doit être écrit sans guillemets.', v:false},
+  {t:'<code>Dim n As Integer</code> déclare une variable n de type entier.', v:true},
+  {t:'Dans <code>Cells(r, c)</code>, c est le numéro de ligne.', v:false}
+];
+function g5NewStatement(){
+  G5.current = VF5[Math.floor(Math.random()*VF5.length)];
+  document.getElementById('g5Statement').innerHTML = G5.current.t;
+  document.querySelectorAll('#g5Play .vf-btn').forEach(b => { b.classList.remove('correct','wrong'); b.disabled = false; });
+}
+function g5Start(){
+  G5.score = 0; G5.combo = 0; G5.timeLeft = 60; G5.running = true;
+  document.getElementById('g5Start').style.display = 'none';
+  document.getElementById('g5Over').style.display = 'none';
+  document.getElementById('g5Play').style.display = 'block';
+  document.getElementById('g5Score').textContent = '0';
+  document.getElementById('g5Combo').textContent = '×0';
+  document.getElementById('g5Time').textContent = '60s';
+  document.getElementById('g5TimerFill').style.width = '100%';
+  g5NewStatement();
+  if(G5.timer) clearInterval(G5.timer);
+  G5.timer = setInterval(()=>{
+    G5.timeLeft -= 0.25;
+    document.getElementById('g5Time').textContent = Math.max(0, Math.ceil(G5.timeLeft)) + 's';
+    document.getElementById('g5TimerFill').style.width = Math.max(0, G5.timeLeft/60*100) + '%';
+    if(G5.timeLeft <= 0){ clearInterval(G5.timer); g5End(); }
+  }, 250);
+}
+function g5Answer(choice, btn){
+  if(!G5.running) return;
+  const correct = (choice === G5.current.v);
+  document.querySelectorAll('#g5Play .vf-btn').forEach(b => b.disabled = true);
+  const fb = document.getElementById('fb_g5');
+  if(correct){
+    btn.classList.add('correct');
+    G5.combo++; G5.score += 10 + (G5.combo-1)*3;
+    fb.className = 'feedback show ok'; fb.textContent = '✓ Correct !';
+    document.getElementById('g5Score').textContent = G5.score;
+    document.getElementById('g5Combo').textContent = '×' + G5.combo;
+  } else {
+    btn.classList.add('wrong');
+    G5.combo = 0; document.getElementById('g5Combo').textContent = '×0';
+    fb.className = 'feedback show ko'; fb.textContent = '✗ La réponse était : ' + (G5.current.v ? 'VRAI' : 'FAUX') + '.';
+  }
+  setTimeout(()=>{ if(G5.running) g5NewStatement(); }, correct ? 500 : 1100);
+}
+function g5End(){
+  G5.running = false;
+  document.getElementById('g5Play').style.display = 'none';
+  document.getElementById('g5Over').style.display = 'block';
+  document.getElementById('g5Final').textContent = G5.score;
+  document.getElementById('g5Rank').textContent = G5.score >= 180 ? '🌟 Imbattable !' : G5.score >= 110 ? '🔥 Solide !' : G5.score >= 50 ? '👍 Pas mal.' : '⚠ Revois les notions.';
+  if(G5.score >= 100) TPScore.add('⚖️');
+}
+
+/* ====================================================================
+   JEU 6 — TRACE LA BOUCLE
+==================================================================== */
+const G6 = { score:0, combo:0, timeLeft:60, timer:null, running:false, answer:null };
+function g6NewQuestion(){
+  const n = Math.floor(Math.random()*3) + 4;       // 4..6 tours
+  const k = Math.floor(Math.random()*n) + 1;        // cellule cible 1..n
+  const types = [
+    ()=>({code:`Sub M()\n    For i = 1 To ${n}\n        Cells(i, 1).Value = i * 2\n    Next i\nEnd Sub`, ask:`Valeur de A${k} :`, ans:k*2}),
+    ()=>({code:`Sub M()\n    For i = 1 To ${n}\n        Cells(i, 1).Value = i * i\n    Next i\nEnd Sub`, ask:`Valeur de A${k} :`, ans:k*k}),
+    ()=>({code:`Sub M()\n    For i = 1 To ${n}\n        Cells(i, 1).Value = i + 10\n    Next i\nEnd Sub`, ask:`Valeur de A${k} :`, ans:k+10}),
+    ()=>({code:`Sub M()\n    For i = 1 To ${n}\n        Cells(i, 1).Value = ${n+1} - i\n    Next i\nEnd Sub`, ask:`Valeur de A${k} :`, ans:(n+1)-k}),
+    ()=>({code:`Sub M()\n    For i = 1 To ${n}\n        Cells(i, 1).Value = i * 3\n    Next i\nEnd Sub`, ask:`Valeur de A${k} :`, ans:k*3})
+  ];
+  const q = types[Math.floor(Math.random()*types.length)]();
+  G6.answer = q.ans;
+  document.getElementById('g6Code').textContent = q.code;
+  document.getElementById('g6Ask').textContent = q.ask;
+  document.getElementById('g6Input').value = '';
+  document.getElementById('g6Input').focus();
+}
+function g6Start(){
+  G6.score = 0; G6.combo = 0; G6.timeLeft = 60; G6.running = true;
+  document.getElementById('g6Start').style.display = 'none';
+  document.getElementById('g6Over').style.display = 'none';
+  document.getElementById('g6Play').style.display = 'block';
+  document.getElementById('g6Score').textContent = '0';
+  document.getElementById('g6Combo').textContent = '×0';
+  document.getElementById('g6Time').textContent = '60s';
+  document.getElementById('g6TimerFill').style.width = '100%';
+  g6NewQuestion();
+  if(G6.timer) clearInterval(G6.timer);
+  G6.timer = setInterval(()=>{
+    G6.timeLeft -= 0.25;
+    document.getElementById('g6Time').textContent = Math.max(0, Math.ceil(G6.timeLeft)) + 's';
+    document.getElementById('g6TimerFill').style.width = Math.max(0, G6.timeLeft/60*100) + '%';
+    if(G6.timeLeft <= 0){ clearInterval(G6.timer); g6End(); }
+  }, 250);
+}
+function g6Submit(){
+  if(!G6.running) return;
+  const val = parseFloat(document.getElementById('g6Input').value.trim().replace(',', '.'));
+  const fb = document.getElementById('fb_g6');
+  if(Math.abs(val - G6.answer) < 0.01){
+    G6.combo++; G6.score += 10 + (G6.combo-1)*3;
+    fb.className = 'feedback show ok'; fb.textContent = '✓ Bien déroulé !';
+    document.getElementById('g6Score').textContent = G6.score;
+    document.getElementById('g6Combo').textContent = '×' + G6.combo;
+    g6NewQuestion();
+  } else {
+    G6.combo = 0; document.getElementById('g6Combo').textContent = '×0';
+    fb.className = 'feedback show ko'; fb.textContent = '✗ C\'était ' + G6.answer + '.';
+    g6NewQuestion();
+  }
+}
+function g6End(){
+  G6.running = false;
+  document.getElementById('g6Play').style.display = 'none';
+  document.getElementById('g6Over').style.display = 'block';
+  document.getElementById('g6Final').textContent = G6.score;
+  document.getElementById('g6Rank').textContent = G6.score >= 150 ? '🌟 Maître des boucles !' : G6.score >= 90 ? '🔥 Excellent !' : G6.score >= 40 ? '👍 Bien.' : '⚠ Persévère.';
+  if(G6.score >= 100) TPScore.add('🔁');
+}
+
+/* ====================================================================
+   JEU 7 — MEMORY VBA
+==================================================================== */
+const G7 = { moves:0, pairs:0, time:0, timer:null, first:null, second:null, lock:false, running:false };
+const MEM7 = [
+  {fn:'Range("A1").Value = 5', desc:'Écrit 5 dans la cellule A1'},
+  {fn:'.Font.Bold = True', desc:'Met le texte en gras'},
+  {fn:'.Interior.Color = RGB(...)', desc:'Change la couleur de fond'},
+  {fn:'For i = 1 To 10', desc:'Répète un bloc 10 fois'},
+  {fn:'If ... Then ... End If', desc:'Exécute selon une condition'},
+  {fn:'MsgBox "Salut"', desc:'Affiche une fenêtre de message'}
+];
+function g7Start(){
+  G7.moves = 0; G7.pairs = 0; G7.time = 0; G7.first = null; G7.second = null; G7.lock = false; G7.running = true;
+  document.getElementById('g7Start').style.display = 'none';
+  document.getElementById('g7Over').style.display = 'none';
+  document.getElementById('g7Play').style.display = 'block';
+  document.getElementById('g7Moves').textContent = '0';
+  document.getElementById('g7Pairs').textContent = '0';
+  document.getElementById('g7Time').textContent = '0s';
+  let cards = [];
+  MEM7.forEach((p, i) => { cards.push({id:i, type:'fn', text:p.fn}); cards.push({id:i, type:'desc', text:p.desc}); });
+  cards = _g7Shuffle(cards);
+  document.getElementById('g7Board').innerHTML = cards.map((c, idx) =>
+    '<div class="mem-card" data-id="' + c.id + '" onclick="g7Flip(this)">' +
+      '<div class="mc-inner"><div class="mc-face mc-back">?</div>' +
+      '<div class="mc-face mc-front ' + (c.type === 'fn' ? 'fn' : '') + '">' + c.text.replace(/</g,'&lt;') + '</div></div></div>'
+  ).join('');
+  if(G7.timer) clearInterval(G7.timer);
+  G7.timer = setInterval(()=>{ G7.time++; document.getElementById('g7Time').textContent = G7.time + 's'; }, 1000);
+}
+function g7Flip(card){
+  if(G7.lock || !G7.running) return;
+  if(card.classList.contains('flipped') || card.classList.contains('matched')) return;
+  card.classList.add('flipped');
+  if(!G7.first){ G7.first = card; return; }
+  G7.second = card; G7.moves++;
+  document.getElementById('g7Moves').textContent = G7.moves;
+  G7.lock = true;
+  if(G7.first.dataset.id === G7.second.dataset.id){
+    setTimeout(()=>{
+      G7.first.classList.add('matched'); G7.second.classList.add('matched');
+      G7.first = null; G7.second = null; G7.lock = false;
+      G7.pairs++; document.getElementById('g7Pairs').textContent = G7.pairs;
+      if(G7.pairs === MEM7.length) g7End();
+    }, 500);
+  } else {
+    setTimeout(()=>{
+      G7.first.classList.remove('flipped'); G7.second.classList.remove('flipped');
+      G7.first = null; G7.second = null; G7.lock = false;
+    }, 900);
+  }
+}
+function g7End(){
+  G7.running = false;
+  if(G7.timer) clearInterval(G7.timer);
+  const score = Math.max(0, 1000 - G7.moves*20 - G7.time*2);
+  document.getElementById('g7Play').style.display = 'none';
+  document.getElementById('g7Over').style.display = 'block';
+  document.getElementById('g7Final').textContent = score;
+  document.getElementById('g7Rank').textContent = (score >= 700 ? '🌟 Mémoire d\'éléphant !' : score >= 450 ? '🔥 Excellent !' : score >= 200 ? '👍 Bien joué.' : '⚠ Réessaie.') + ' (' + G7.moves + ' coups, ' + G7.time + 's)';
+  if(score >= 400) TPScore.add('🃏');
+}
+
+/* ====================================================================
+   JEU 8 — CONSTRUIS LA MACRO
+==================================================================== */
+const G8 = { score:0, round:0, solved:0, building:[], current:null };
+const BUILD8 = [
+  {goal:'Écris le mot <strong>Bonjour</strong> dans la cellule <strong>A1</strong>.', bricks:['Range("A1")','.Value','=','"Bonjour"','.Font'], answer:['Range("A1")','.Value','=','"Bonjour"']},
+  {goal:'Mets la cellule <strong>A1</strong> en <strong>gras</strong>.', bricks:['Range("A1")','.Font','.Bold','=','True','.Value'], answer:['Range("A1")','.Font','.Bold','=','True']},
+  {goal:'Écris le nombre <strong>42</strong> dans <strong>B2</strong>.', bricks:['Range("B2")','.Value','=','42','"42"'], answer:['Range("B2")','.Value','=','42']},
+  {goal:'Colore <strong>A1</strong> en rouge avec <strong>RGB</strong>.', bricks:['Range("A1")','.Interior','.Color','=','RGB(255, 0, 0)'], answer:['Range("A1")','.Interior','.Color','=','RGB(255, 0, 0)']},
+  {goal:'Démarre une boucle qui va de <strong>1 à 10</strong>.', bricks:['For','i','=','1','To','10','Next'], answer:['For','i','=','1','To','10']}
+];
+function g8Start(){
+  G8.score = 0; G8.round = 0; G8.solved = 0;
+  document.getElementById('g8Start').style.display = 'none';
+  document.getElementById('g8Over').style.display = 'none';
+  document.getElementById('g8Play').style.display = 'block';
+  document.getElementById('g8Score').textContent = '0';
+  document.getElementById('g8Solved').textContent = '0';
+  g8LoadChallenge();
+}
+function g8LoadChallenge(){
+  if(G8.round >= BUILD8.length){ g8End(); return; }
+  G8.current = BUILD8[G8.round]; G8.building = [];
+  document.getElementById('g8Round').textContent = G8.round + 1;
+  document.getElementById('g8Goal').innerHTML = '🎯 ' + G8.current.goal;
+  const bricks = _g7Shuffle([...G8.current.bricks]);
+  document.getElementById('g8Bricks').innerHTML = bricks.map(b =>
+    '<button class="build-brick" data-brick="' + b.replace(/"/g,'&quot;') + '" onclick="g8AddBrick(this)">' + b.replace(/</g,'&lt;') + '</button>'
+  ).join('');
+  g8RenderZone();
+  document.getElementById('g8NextBtn').style.display = 'none';
+  document.getElementById('fb_g8').classList.remove('show');
+}
+function g8RenderZone(){
+  const zone = document.getElementById('g8Zone');
+  if(G8.building.length === 0) zone.innerHTML = '<span class="build-placeholder">Clique les briques ci-dessous…</span>';
+  else zone.innerHTML = G8.building.map(b => '<span class="build-token">' + b.replace(/</g,'&lt;') + '</span>').join('');
+}
+function g8AddBrick(btn){ G8.building.push(btn.dataset.brick); btn.disabled = true; g8RenderZone(); }
+function g8ResetBuild(){
+  G8.building = []; G8.score = Math.max(0, G8.score - 10);
+  document.getElementById('g8Score').textContent = G8.score;
+  document.querySelectorAll('#g8Bricks .build-brick').forEach(b => b.disabled = false);
+  g8RenderZone();
+}
+function g8Check(){
+  const fb = document.getElementById('fb_g8');
+  const ok = JSON.stringify(G8.building) === JSON.stringify(G8.current.answer);
+  if(ok){
+    G8.score += 20; G8.solved++;
+    document.getElementById('g8Score').textContent = G8.score;
+    document.getElementById('g8Solved').textContent = G8.solved;
+    fb.className = 'feedback show ok';
+    fb.innerHTML = '✓ Correct : <code>' + G8.current.answer.join(' ').replace(/</g,'&lt;') + '</code>';
+    document.getElementById('g8NextBtn').style.display = '';
+    document.querySelectorAll('#g8Bricks .build-brick').forEach(b => b.disabled = true);
+  } else {
+    fb.className = 'feedback show ko';
+    fb.textContent = '✗ Pas tout à fait. Vérifie l\'ordre des morceaux.';
+  }
+}
+function g8Next(){ G8.round++; g8LoadChallenge(); }
+function g8End(){
+  document.getElementById('g8Play').style.display = 'none';
+  document.getElementById('g8Over').style.display = 'block';
+  document.getElementById('g8Final').textContent = G8.score;
+  document.getElementById('g8Rank').textContent = G8.score >= 90 ? '🌟 Architecte du code !' : G8.score >= 60 ? '🔥 Très bien !' : G8.score >= 30 ? '👍 Correct.' : '⚠ Reprends la syntaxe.';
+  if(G8.score >= 60) TPScore.add('🧩');
+}
+
+// Enter dans les inputs des nouveaux jeux
+['g4Input','g6Input'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('keydown', e=>{
+    if(e.key === 'Enter'){ e.preventDefault(); (id === 'g4Input' ? g4Submit : g6Submit)(); }
+  });
 });
 </script>
 
